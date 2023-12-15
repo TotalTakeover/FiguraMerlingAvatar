@@ -43,7 +43,7 @@ function events.RENDER(delta, context)
 	local crossR      = rightItem.tag and rightItem.tag["Charged"] == 1
 	
 	-- Movement context
-	local shouldMove  = ticks.under >= 20
+	local shouldMove  = ticks.under >= 20 or animations.Merling.crawl:isPlaying()
 	
 	-- Offsets
 	local bodyOffset  = vanilla_model.BODY:getOriginRot() * 0.75

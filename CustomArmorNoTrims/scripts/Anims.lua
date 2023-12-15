@@ -26,9 +26,9 @@ t.normal   = shark and 0 or 1
 t.shark    = shark and 1 or 0
 
 -- Variables
-local ticks = require("scripts.WaterTicks")
-local pose  = require("scripts.Posing")
-local g     = require("scripts.GroundCheck")
+local ticks  = require("scripts.WaterTicks")
+local pose   = require("scripts.Posing")
+local ground = require("lib.GroundCheck")
 local time,     _time     = 0, 0
 local strength, _strength = 0, 0
 
@@ -106,10 +106,10 @@ function events.RENDER(delta, context)
 	
 	-- Animation variables
 	local tail       = modelRoot.Body.Tail:getScale().x > 0.5
-	local groundAnim = (g.ground or ticks.water >= 20) and not (pose.swim or pose.crawl) and not pose.elytra   and not pose.sleep and not player:getVehicle()
+	local groundAnim = (ground() or ticks.water >= 20) and not (pose.swim or pose.crawl) and not pose.elytra   and not pose.sleep and not player:getVehicle()
 	
 	-- Animation states
-	local swim  = tail and ((not g.ground and ticks.water < 20) or (pose.swim or pose.crawl or pose.elytra)) and not pose.sleep and not player:getVehicle()
+	local swim  = tail and ((not ground() and ticks.water < 20) or (pose.swim or pose.crawl or pose.elytra)) and not pose.sleep and not player:getVehicle()
 	local stand = tail and not isCrawl and groundAnim
 	local crawl = tail and     isCrawl and groundAnim
 	local mount = tail and player:getVehicle()

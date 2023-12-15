@@ -20,7 +20,7 @@ if fallSound == nil then fallSound = true end
 
 -- Variables setup
 local ticks    = require("scripts.WaterTicks")
-local g        = require("scripts.GroundCheck")
+local ground   = require("lib.GroundCheck")
 local formTail = tailActive
 local wasInAir = false
 
@@ -42,7 +42,7 @@ function events.TICK()
 	formTail = tailActive and waterState[water] <= (canDry and dryTimer or 20)
 	
 	-- Play sound if conditions are met
-	if fallSound and wasInAir and g.ground and scaleCurrentPos >= 0.5 and not player:getVehicle() and not player:isInWater() then
+	if fallSound and wasInAir and ground() and scaleCurrentPos >= 0.5 and not player:getVehicle() and not player:isInWater() then
 		local vel    = math.abs(-player:getVelocity().y + 1)
 		local dry    = canDry and (dryTimer - waterState[water]) / dryTimer or 1
 		local volume = math.clamp((vel * dry) / 2, 0, 1)
@@ -53,7 +53,7 @@ function events.TICK()
 	end
 	
 	-- Update ground variable
-	wasInAir = not g.ground
+	wasInAir = not ground()
 	
 	-- Scaling lerp
 	scaleCurrent  = scaleNextTick
