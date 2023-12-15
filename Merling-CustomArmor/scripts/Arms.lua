@@ -56,12 +56,10 @@ function events.RENDER(delta, context)
 	local firstPerson = context == "FIRST_PERSON"
 	
 	-- Left arm
-	leftArm:rot((-vanilla_model.LEFT_ARM:getOriginRot() + -idleRot + bodyOffset) * leftArmCurrentPos)
-		:visible(not firstPerson)
+	leftArm:rot(firstPerson and 0 or (-vanilla_model.LEFT_ARM:getOriginRot() + -idleRot + bodyOffset) * leftArmCurrentPos)
 	
 	-- Right arm
-	rightArm:rot((-vanilla_model.RIGHT_ARM:getOriginRot() + idleRot + bodyOffset) * rightArmCurrentPos)
-		:visible(not firstPerson)
+	rightArm:rot(firstPerson and 0 or (-vanilla_model.RIGHT_ARM:getOriginRot() + idleRot + bodyOffset) * rightArmCurrentPos)
 end
 
 -- Arm Movement toggler
