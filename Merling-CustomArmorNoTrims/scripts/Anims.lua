@@ -114,6 +114,7 @@ function events.RENDER(delta, context)
 	local crawl = tail and     isCrawl and groundAnim
 	local mount = tail and player:getVehicle()
 	local sleep = pose.sleep
+	local ears  = player:isUnderwater()
 	
 	-- Animations
 	anims.swim:playing(swim)
@@ -121,6 +122,7 @@ function events.RENDER(delta, context)
 	anims.crawl:playing(crawl)
 	anims.mount:playing(mount)
 	anims.sleep:playing(sleep)
+	anims.ears:playing(ears)
 end
 
 -- Fixing spyglass jank
@@ -142,7 +144,8 @@ do
 		{ anim = anims.stand, ticks = 7, type = "easeOutQuad" },
 		{ anim = anims.crawl, ticks = 7, type = "easeOutQuad" },
 		{ anim = anims.mount, ticks = 7, type = "easeOutQuad" },
-		{ anim = anims.sleep, ticks = 7, type = "easeOutQuad" }
+		{ anim = anims.sleep, ticks = 7, type = "easeOutQuad" },
+		{ anim = anims.ears,  ticks = 7, type = "easeOutQuad" }
 	}
 	
 	for _, blend in ipairs(blendAnims) do
