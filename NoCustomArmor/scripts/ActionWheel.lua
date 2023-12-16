@@ -6,6 +6,7 @@ local glowPage = action_wheel:newPage("GlowPage")
 local whirPage = action_wheel:newPage("WhirlpoolPage")
 local avatPage = action_wheel:newPage("AvatarPage")
 local camPage  = action_wheel:newPage("CameraPage")
+local animPage = action_wheel:newPage("AnimationPage")
 local backPage = action_wheel:newAction()
 	:title("§c§lGo Back?")
 	:hoverColor(vectors.hexToRGB("FF5555"))
@@ -57,6 +58,13 @@ mainPage
 			:hoverColor(vectors.hexToRGB("55FFFF"))
 			:item("minecraft:redstone")
 			:onLeftClick(function() action_wheel:setPage(camPage) end))
+	
+	:action( 7,
+		action_wheel:newAction()
+			:title("§9§lAnimations")
+			:hoverColor(vectors.hexToRGB("55FFFF"))
+			:item("minecraft:jukebox")
+			:onLeftClick(function() action_wheel:setPage(animPage) end))
 
 -- Eye glow actions
 do
@@ -72,15 +80,12 @@ end
 -- Tail actions
 do
 	local tail = require("scripts.Tail")
-	local anim = require("scripts.Anims")
 	tailPage
 		:action( 1, tail.tailPage)
 		:action( 2, tail.waterPage)
 		:action( 3, tail.dryPage)
 		:action( 4, tail.soundPage)
-		:action( 5, anim.sharkPage)
-		:action( 6, anim.crawlPage)
-		:action( 7, backPage)
+		:action( 5, backPage)
 end
 
 -- Glowing actions
@@ -119,4 +124,15 @@ do
 		:action( 1, camera.posPage)
 		:action( 2, camera.eyePage)
 		:action( 3, backPage)
+end
+
+-- Animation actions
+do
+    local anim = require("scripts.Anims")
+    animPage
+		:action( 1, anim.sharkPage)
+		:action( 2, anim.crawlPage)
+		:action( 3, anim.twirlPage)
+		:action( 4, anim.singPage)
+		:action( 5, backPage)
 end

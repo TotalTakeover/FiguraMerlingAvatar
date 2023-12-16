@@ -29,6 +29,7 @@ t.shark    = shark and 1 or 0
 local ticks  = require("scripts.WaterTicks")
 local pose   = require("scripts.Posing")
 local ground = require("lib.GroundCheck")
+local isSing = false
 local time,     _time     = 0, 0
 local strength, _strength = 0, 0
 
@@ -106,7 +107,7 @@ function events.RENDER(delta, context)
 	
 	-- Animation variables
 	local tail       = modelRoot.Body.Tail1:getScale().x > 0.5
-	local groundAnim = (ground() or ticks.water >= 20) and not (pose.swim or pose.crawl) and not pose.elytra   and not pose.sleep and not player:getVehicle()
+	local groundAnim = (ground() or ticks.water >= 20) and not (pose.swim or pose.crawl) and not pose.elytra and not pose.sleep and not player:getVehicle()
 	
 	-- Animation states
 	local swim  = tail and ((not ground() and ticks.water < 20) or (pose.swim or pose.crawl or pose.elytra)) and not pose.sleep and not player:getVehicle()
@@ -115,6 +116,7 @@ function events.RENDER(delta, context)
 	local mount = tail and player:getVehicle()
 	local sleep = pose.sleep
 	local ears  = player:isUnderwater()
+	local sing  = isSing and not pose.sleep
 	
 	-- Animations
 	anims.swim:playing(swim)
@@ -123,6 +125,28 @@ function events.RENDER(delta, context)
 	anims.mount:playing(mount)
 	anims.sleep:playing(sleep)
 	anims.ears:playing(ears)
+	anims.sing:playing(sing)
+	
+	if ground() or ticks.water >= 20 or pose.sleep then
+		anims.twirl:stop()
+	end
+	
+end
+
+-- Spawns notes
+local function notes()
+	local part = modelRoot.Head:partToWorldMatrix()
+	local pos  = part:apply(0, 0, 0)
+	particles["note"]
+		:pos(pos + vec(math.random(-100, 100)/100, math.random(-100, 100)/100, math.random(-100, 100)/100))
+		:setColor(math.random(51,200)/150, math.random(51,200)/150, math.random(51,200)/150)
+		:spawn()
+end
+
+function events.tick()
+	if isSing and world.getTime() % 5 == 0 then
+		notes()
+	end
 end
 
 -- Fixing spyglass jank
@@ -145,7 +169,8 @@ do
 		{ anim = anims.crawl, ticks = 7, type = "easeOutQuad" },
 		{ anim = anims.mount, ticks = 7, type = "easeOutQuad" },
 		{ anim = anims.sleep, ticks = 7, type = "easeOutQuad" },
-		{ anim = anims.ears,  ticks = 7, type = "easeOutQuad" }
+		{ anim = anims.ears,  ticks = 7, type = "easeOutQuad" },
+		{ anim = anims.sing,  ticks = 3, type = "easeOutQuad" }
 	}
 	
 	for _, blend in ipairs(blendAnims) do
@@ -166,22 +191,55 @@ local function setCrawl(boolean)
 	config:save("TailCrawl", isCrawl)
 end
 
+local function playTwirl()
+	if not ground() and ticks.water < 20 and not pose.sleep then
+		anims.twirl:play()
+	end
+end
+
+local function setSing(boolean)
+	isSing = boolean
+end
+
 -- Sync variables
-local function syncShark(a, b)
+local function syncAnims(a, b, c)
 	shark   = a
 	isCrawl = b
+	isSing  = c
 end
 
 -- Pings setup
-pings.setTailShark = setShark
-pings.setTailCrawl = setCrawl
-pings.syncShark    = syncShark
+pings.setTailShark  = setShark
+pings.setTailCrawl  = setCrawl
+pings.animPlayTwirl = playTwirl
+pings.setAnimSing   = setSing
+pings.syncAnims     = syncAnims
+
+local twirlBind   = config:load("AnimTwirlKeybind") or "key.keyboard.keypad.4"
+local setTwirlKey = keybinds:newKeybind("Twirl Animation"):onPress(pings.animPlayTwirl):key(twirlBind)
+
+local singBind   = config:load("AnimSingKeybind") or "key.keyboard.keypad.5"
+local setSingKey = keybinds:newKeybind("Singing Animation"):onPress(function() pings.setAnimSing(not isSing) end):key(singBind)
+
+-- Keybind updaters
+function events.TICK()
+	local twirlKey = setTwirlKey:getKey()
+	local singKey  = setSingKey:getKey()
+	if twirlKey ~= twirlBind then
+		twirlBind = twirlKey
+		config:save("AnimTwirlKeybind", twirlKey)
+	end
+	if singKey ~= singBind then
+		singBind = singKey
+		config:save("AnimSingKeybind", singKey)
+	end
+end
 
 -- Sync on tick
 if host:isHost() then
 	function events.TICK()
 		if world.getTime() % 200 == 0 then
-			pings.syncShark(shark, isCrawl)
+			pings.syncAnims(shark, isCrawl, isSing)
 		end
 	end
 end
@@ -208,6 +266,25 @@ t.crawlPage = action_wheel:newAction("TailCrawl")
 	:toggleItem("minecraft:oak_boat")
 	:onToggle(pings.setTailCrawl)
 	:toggled(isCrawl)
+
+t.twirlPage = action_wheel:newAction("AnimTwirl")
+	:title("§9§lPlay Twirl animation")
+	:hoverColor(vectors.hexToRGB("55FFFF"))
+    :item("minecraft:cod")
+    :onLeftClick(pings.animPlayTwirl)
+
+t.singPage = action_wheel:newAction("AnimSing")
+	:title("§9§lPlay Singing animation")
+	:hoverColor(vectors.hexToRGB("55FFFF"))
+	:toggleColor(vectors.hexToRGB("5555FF"))
+	:item("minecraft:music_disc_blocks")
+    :toggleItem("minecraft:music_disc_cat")
+    :onToggle(pings.setAnimSing)
+
+-- Updates sing page info
+function events.TICK()
+	t.singPage:toggled(isSing)
+end
 
 -- Returns table
 return t
