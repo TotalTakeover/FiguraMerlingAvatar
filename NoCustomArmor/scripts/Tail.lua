@@ -133,6 +133,17 @@ pings.setTailDry       = setDry
 pings.setTailFallSound = setFallSound
 pings.syncTail         = syncTail
 
+local tailBind   = config:load("TailToggleKeybind") or "key.keyboard.keypad.1"
+local setTailKey = keybinds:newKeybind("Tail Toggle"):onPress(function() pings.setTailActive(not tailActive) end):key(tailBind)
+
+-- Keybind updater
+function events.TICK()
+	local key = setTailKey:getKey()
+	if key ~= tailBind then
+		tailBind = key
+		config:save("TailToggleKeybind", key)
+	end
+end
 
 -- Sync on tick
 if host:isHost() then
@@ -160,7 +171,16 @@ t.tailPage = action_wheel:newAction("TailActive")
 	:item("minecraft:rabbit_foot")
 	:toggleItem("minecraft:tropical_fish")
 	:onToggle(pings.setTailActive)
-	:toggled(tailActive)
+
+-- Updates tail page info
+function events.TICK()
+	t.tailPage:toggled(tailActive)
+end
+
+t.waterPage = action_wheel:newAction("TailWater")
+	:hoverColor(vectors.hexToRGB("55FFFF"))
+	:onLeftClick(function() pings.setTailWater(1)end)
+	:onRightClick(function() pings.setTailWater(-1) end)
 
 -- Water context info table
 local waterInfo = {
@@ -186,22 +206,12 @@ local waterInfo = {
 	},
 }
 
--- Update page info
+-- Update water page info
 function events.TICK()
-	t.waterTitle = "§9§lWater Sensitivity\n\n§3Current configuration: "..waterInfo[water].title.."\n\n§bDetermines how your tail should form in contact with water."
-	t.waterItem  = waterInfo[water].item
-	t.waterColor = waterInfo[water].color
-end
-
-t.waterPage = action_wheel:newAction("TailWater")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:onLeftClick(function() pings.setTailWater(1)end)
-	:onRightClick(function() pings.setTailWater(-1) end)
-
--- Update page title
-function events.TICK()
-	local current = "§3Current drying timer: "..(canDry and ("§b§l"..(dryTimer / 20).." §3Seconds") or "§bNone")
-	t.dryTitle = "§9§lToggle Drying/Timer\n\n"..current.."\n\n§bToggles the gradual drying of your tail until your legs form again.\n\nScrolling up adds time, Scrolling down subtracts time.\nRight click resets timer to 20 seconds."
+	t.waterPage
+		:title("§9§lWater Sensitivity\n\n§3Current configuration: "..waterInfo[water].title.."\n\n§bDetermines how your tail should form in contact with water.")
+		:item(waterInfo[water].item)
+		:color(vectors.hexToRGB(waterInfo[water].color))
 end
 
 t.dryPage = action_wheel:newAction("TailDrying")
@@ -213,6 +223,14 @@ t.dryPage = action_wheel:newAction("TailDrying")
 	:onScroll(setDryTimer)
 	:onRightClick(function() dryTimer = 400 config:save("TailDryTimer", dryTimer) end)
 	:toggled(canDry)
+
+-- Update dry page info
+function events.TICK()
+	t.dryPage
+		:title("§9§lToggle Drying/Timer\n\n§3Current drying timer: "..
+		(canDry and ("§b§l"..(dryTimer / 20).." §3Seconds") or "§bNone")..
+		"\n\n§bToggles the gradual drying of your tail until your legs form again.\n\nScrolling up adds time, Scrolling down subtracts time.\nRight click resets timer to 20 seconds.")
+end
 
 t.soundPage = action_wheel:newAction("TailFallSound")
 	:title("§9§lToggle Flop Sound\n\n§bToggles flopping sound effects when landing on the ground.\nIf tail can dry, volume will gradually decrease over time until dry. (Acts like a timer!)")

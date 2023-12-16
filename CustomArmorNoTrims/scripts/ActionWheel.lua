@@ -16,42 +16,42 @@ action_wheel:setPage(mainPage)
 
 -- Main actions
 mainPage
-	:action( -1,
+	:action( 1,
 		action_wheel:newAction()
 			:title("§9§lGlowing Eyes Settings")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
 			:item("minecraft:ender_eye")
 			:onLeftClick(function() action_wheel:setPage(eyesPage) end))
 	
-	:action( -1,
+	:action( 2,
 		action_wheel:newAction()
 			:title("§9§lMerling Tail Settings")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
 			:item("minecraft:tropical_fish")
 			:onLeftClick(function() action_wheel:setPage(tailPage) end))
 	
-	:action( -1,
+	:action( 3,
 		action_wheel:newAction()
 			:title("§9§lGlowing Settings")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
 			:item("minecraft:glow_ink_sac")
 			:onLeftClick(function() action_wheel:setPage(glowPage) end))
 	
-	:action( -1,
+	:action( 4,
 		action_wheel:newAction()
 			:title("§9§lWhirlpool Settings")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
 			:item("minecraft:magma_block")
 			:onLeftClick(function() action_wheel:setPage(whirPage) end))
 	
-	:action( -1,
+	:action( 5,
 		action_wheel:newAction()
 			:title("§9§lAvatar Settings")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
 			:item("minecraft:armor_stand")
 			:onLeftClick(function() action_wheel:setPage(avatPage) end))
 	
-	:action( -1,
+	:action( 6,
 		action_wheel:newAction()
 			:title("§9§lCamera Settings")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
@@ -62,11 +62,11 @@ mainPage
 do
 	local eyes = require("scripts.GlowingEyes")
 	eyesPage
-		:action( -1, eyes.togglePage)
-		:action( -1, eyes.originsPage)
-		:action( -1, eyes.effectPage)
-		:action( -1, eyes.waterPage)
-		:action( -1, backPage)
+		:action( 1, eyes.togglePage)
+		:action( 2, eyes.originsPage)
+		:action( 3, eyes.effectPage)
+		:action( 4, eyes.waterPage)
+		:action( 5, backPage)
 end
 
 -- Tail actions
@@ -74,60 +74,49 @@ do
 	local tail = require("scripts.Tail")
 	local anim = require("scripts.Anims")
 	tailPage
-		:action( -1, tail.tailPage)
-		:action( -1, tail.waterPage)
-		:action( -1, tail.dryPage)
-		:action( -1, tail.soundPage)
-		:action( -1, anim.sharkPage)
-		:action( -1, anim.crawlPage)
-		:action( -1, backPage)
-	
-	function events.TICK()
-		action_wheel:getPage("TailPage"):getAction(2):title(tail.waterTitle)
-			:item(tail.waterItem)
-			:color(vectors.hexToRGB(tail.waterColor))
-		action_wheel:getPage("TailPage"):getAction(3):title(tail.dryTitle)
-	end
+		:action( 1, tail.tailPage)
+		:action( 2, tail.waterPage)
+		:action( 3, tail.dryPage)
+		:action( 4, tail.soundPage)
+		:action( 5, anim.sharkPage)
+		:action( 6, anim.crawlPage)
+		:action( 7, backPage)
 end
 
 -- Glowing actions
 do
 	local glow = require("scripts.GlowingTail")
 	glowPage
-		:action( -1, glow.glowPage)
-		:action( -1, glow.dynamicPage)
-		:action( -1, glow.waterPage)
-		:action( -1, backPage)
-	
-	function events.TICK()
-		action_wheel:getPage("GlowPage"):getAction(2):toggleItem(glow.dynamicItem)
-	end
+		:action( 1, glow.glowPage)
+		:action( 2, glow.dynamicPage)
+		:action( 3, glow.waterPage)
+		:action( 4, backPage)
 end
 
 -- Whirlpool actions
 do
 	local whir = require("scripts.WhirlpoolEffect")
 	whirPage
-		:action( -1, whir.bubblePage)
-		:action( -1, whir.effectPage)
-		:action( -1, backPage)
+		:action( 1, whir.bubblePage)
+		:action( 2, whir.effectPage)
+		:action( 3, backPage)
 end
 
 -- Avatar actions
 do
 	local avatar = require("scripts.Player")
 	avatPage
-		:action( -1, avatar.vanillaSkinPage)
-		:action( -1, avatar.modelPage)
-		:action( -1, require("scripts.Arms"))
-		:action( -1, backPage)
+		:action( 1, avatar.vanillaSkinPage)
+		:action( 2, avatar.modelPage)
+		:action( 3, require("scripts.Arms"))
+		:action( 4, backPage)
 end
 
 -- Camera actions
 do
 	local camera = require("scripts.CameraControl")
 	camPage
-		:action( -1, camera.posPage)
-		:action( -1, camera.eyePage)
-		:action( -1, backPage)
+		:action( 1, camera.posPage)
+		:action( 2, camera.eyePage)
+		:action( 3, backPage)
 end

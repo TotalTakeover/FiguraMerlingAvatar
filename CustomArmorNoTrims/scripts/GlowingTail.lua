@@ -19,8 +19,8 @@ local glowParts = {
 	
 	modelRoot.Body.Tail1.Segment,
 	modelRoot.Body.Tail1.Tail2.Segment,
-	modelRoot.Body.Tail1.Tail2.RightFin,
-	modelRoot.Body.Tail1.Tail2.LeftFin,
+	modelRoot.Body.Tail1.Tail2.Tail2RightFin,
+	modelRoot.Body.Tail1.Tail2.Tail2LeftFin,
 	modelRoot.Body.Tail1.Tail2.Tail3.Segment,
 	modelRoot.Body.Tail1.Tail2.Tail3.Tail4.Segment,
 	modelRoot.Body.Tail1.Tail2.Tail3.Tail4.Fluke,
@@ -84,6 +84,18 @@ pings.setGlowDynamic = setDynamic
 pings.setGlowWater   = setWater
 pings.syncGlow       = syncGlow
 
+local glowBind   = config:load("GlowToggleKeybind") or "key.keyboard.keypad.2"
+local setGlowKey = keybinds:newKeybind("Glow Toggle"):onPress(function() pings.setGlowToggle(not glow) end):key(glowBind)
+
+-- Keybind updater
+function events.TICK()
+	local key = setGlowKey:getKey()
+	if key ~= glowBind then
+		glowBind = key
+		config:save("GlowToggleKeybind", key)
+	end
+end
+
 -- Sync on tick
 if host:isHost() then
 	function events.TICK()
@@ -109,11 +121,11 @@ t.glowPage = action_wheel:newAction("GlowToggle")
 	:item("minecraft:ink_sac")
 	:toggleItem("minecraft:glow_ink_sac")
 	:onToggle(pings.setGlowToggle)
-	:toggled(glow)
 
--- Update page item
+-- Update glow page info
 function events.TICK()
-	t.dynamicItem = "minecraft:light{BlockStateTag:{level:"..world.getLightLevel(player:getPos()).."}}"
+	t.glowPage
+		:toggled(glow)
 end
 
 t.dynamicPage = action_wheel:newAction("GlowDynamic")
@@ -123,6 +135,12 @@ t.dynamicPage = action_wheel:newAction("GlowDynamic")
 	:item("minecraft:light")
 	:onToggle(pings.setGlowDynamic)
 	:toggled(dynamic)
+
+-- Update dynamic page info
+function events.TICK()
+	t.dynamicPage
+		:toggleItem("minecraft:light{BlockStateTag:{level:"..world.getLightLevel(player:getPos()).."}}")
+end
 
 t.waterPage = action_wheel:newAction("GlowWater")
 	:title("§9§lToggle Water Glowing\n\n§bToggles the glowing sensitivity to water.\nAny water will cause your tail to glow.")

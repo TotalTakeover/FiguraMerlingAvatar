@@ -29,7 +29,7 @@ function events.RENDER(delta, context)
 		else
 			glow = false
 		end
-		modelEyes:primaryRenderType(glow and "EMISSIVE" or "NONE")
+		modelEyes:secondaryRenderType(glow and "EMISSIVE" or "TRANSLUCENT")
 	end
 end
 
@@ -84,6 +84,18 @@ pings.setEyesEffect  = setEffect
 pings.setEyesWater   = setWater
 pings.syncEyes       = syncEyes
 
+local eyesBind   = config:load("EyesToggleKeybind") or "key.keyboard.keypad.3"
+local setEyesKey = keybinds:newKeybind("Glowing Eyes Toggle"):onPress(function() pings.setEyesToggle(not toggle) end):key(eyesBind)
+
+-- Keybind updater
+function events.TICK()
+	local key = setEyesKey:getKey()
+	if key ~= eyesBind then
+		eyesBind = key
+		config:save("EyesToggleKeybind", key)
+	end
+end
+
 -- Sync on tick
 if host:isHost() then
 	function events.TICK()
@@ -111,6 +123,12 @@ t.togglePage = action_wheel:newAction("GlowingEyes")
 	:toggleItem("minecraft:ender_eye")
 	:onToggle(pings.setEyesToggle)
 	:toggled(toggle)
+
+-- Update toggle page info
+function events.TICK()
+	t.togglePage
+		:toggled(toggle)
+end
 
 t.originsPage = action_wheel:newAction("GlowingEyesOrigins")
 	:title("§9§lOrigins Power Toggle\n\n§bToggles the glowing based on Origin's underwater sight power.\nThe eyes will only glow when this power is active.")
