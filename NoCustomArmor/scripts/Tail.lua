@@ -1,10 +1,11 @@
 -- Model setup
 local model     = models.Merling
 local modelRoot = model.Player
-local tail      = modelRoot.Body.Tail
+local tail      = modelRoot.Body.Tail1
 local legs      = {
 	modelRoot.LeftLeg,
 	modelRoot.RightLeg,
+	modelRoot.Body.LeggingsPivot,
 }
 
 -- Config setup

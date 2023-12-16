@@ -2,13 +2,10 @@
 local model     = models.Merling
 local modelRoot = model.Player
 
--- Setup table
-local t = {}
-
 -- Config setup
 config:name("Merling")
-t.vanillaSkin = config:load("AvatarVanillaSkin")
-if t.vanillaSkin == nil then t.vanillaSkin = true end
+local vanillaSkin = config:load("AvatarVanillaSkin")
+if vanillaSkin == nil then vanillaSkin = true end
 local slim = config:load("AvatarSlim") or false
 
 -- Vanilla parts table
@@ -19,11 +16,11 @@ local skinParts = {
 	modelRoot.Body.Body,
 	modelRoot.Body.BodyLayer,
 	
-	modelRoot.RightArm.Default,
-	modelRoot.RightArm.Slim,
+	modelRoot.RightArm.DefaultRightArm,
+	modelRoot.RightArm.SlimRightArm,
 	
-	modelRoot.LeftArm.Default,
-	modelRoot.LeftArm.Slim,
+	modelRoot.LeftArm.DefaultLeftArm,
+	modelRoot.LeftArm.SlimLeftArm,
 	
 	modelRoot.LeftLeg.Leg,
 	modelRoot.LeftLeg.LegLayer,
@@ -47,22 +44,22 @@ end
 -- Misc tick required events
 function events.TICK()
 	-- Model shape
-	local slimShape = (t.vanillaSkin and vanillaAvatarType == "SLIM") or (slim and not t.vanillaSkin)
+	local slimShape = (vanillaSkin and vanillaAvatarType == "SLIM") or (slim and not vanillaSkin)
 	
-	modelRoot.LeftArm.Default:setVisible(not slimShape)
-	modelRoot.RightArm.Default:setVisible(not slimShape)
+	modelRoot.LeftArm.DefaultLeftArm:setVisible(not slimShape)
+	modelRoot.RightArm.DefaultRightArm:setVisible(not slimShape)
 	
-	modelRoot.LeftArm.Slim:setVisible(slimShape)
-	modelRoot.RightArm.Slim:setVisible(slimShape)
+	modelRoot.LeftArm.SlimLeftArm:setVisible(slimShape)
+	modelRoot.RightArm.SlimRightArm:setVisible(slimShape)
 	
 	-- Skin textures
 	for _, part in ipairs(skinParts) do
-		part:primaryTexture(t.vanillaSkin and "SKIN" or nil)
+		part:primaryTexture(vanillaSkin and "SKIN" or nil)
 	end
 	
 	-- Cape/Elytra texture
-	modelRoot.Body.Cape:primaryTexture(t.vanillaSkin and "CAPE" or nil)
-	modelRoot.Body.Elytra:primaryTexture(t.vanillaSkin and player:hasCape() and (player:isSkinLayerVisible("CAPE") and "CAPE" or "ELYTRA") or nil)
+	modelRoot.Body.Cape:primaryTexture(vanillaSkin and "CAPE" or nil)
+	modelRoot.Body.Elytra:primaryTexture(vanillaSkin and player:hasCape() and (player:isSkinLayerVisible("CAPE") and "CAPE" or "ELYTRA") or nil)
 		:secondaryRenderType(player:getItem(5):hasGlint() and "GLINT" or "NONE")
 end
 
@@ -73,18 +70,14 @@ local layerParts = {
 	},
 	JACKET = {
 		modelRoot.Body.BodyLayer,
-		modelRoot.Body.Tail.Layer,
-		modelRoot.Body.Tail.Tail.Layer,
-		modelRoot.Body.Tail.Tail.Tail.Layer,
-		modelRoot.Body.Tail.Tail.Tail.Tail.Layer,
 	},
 	RIGHT_SLEEVE = {
-		modelRoot.RightArm.Default.ArmLayer,
-		modelRoot.RightArm.Slim.ArmLayer,
+		modelRoot.RightArm.DefaultRightArm.ArmLayer,
+		modelRoot.RightArm.SlimRightArm.ArmLayer,
 	},
 	LEFT_SLEEVE = {
-		modelRoot.LeftArm.Default.ArmLayer,
-		modelRoot.LeftArm.Slim.ArmLayer,
+		modelRoot.LeftArm.DefaultLeftArm.ArmLayer,
+		modelRoot.LeftArm.SlimLeftArm.ArmLayer,
 	},
 	RIGHT_PANTS_LEG = {
 		modelRoot.RightLeg.LegLayer,
@@ -95,10 +88,21 @@ local layerParts = {
 	CAPE = {
 		modelRoot.Body.Cape,
 	},
+	TAIL = {
+		modelRoot.Body.Tail1.Layer,
+		modelRoot.Body.Tail1.Tail2.Layer,
+		modelRoot.Body.Tail1.Tail2.Tail3.Layer,
+		modelRoot.Body.Tail1.Tail2.Tail3.Tail4.Layer,
+	},
 }
 function events.TICK()
 	for playerPart, parts in pairs(layerParts) do
-		local enabled = player:isSkinLayerVisible(playerPart)
+		local enabled = enabled
+		if playerPart == "TAIL" then
+			enabled = player:isSkinLayerVisible("RIGHT_PANTS_LEG") or player:isSkinLayerVisible("LEFT_PANTS_LEG")
+		else
+			enabled = player:isSkinLayerVisible(playerPart)
+		end
 		for _, part in ipairs(parts) do
 			part:visible(enabled)
 		end
@@ -107,8 +111,8 @@ end
 
 -- Vanilla skin toggle
 local function setVanillaSkin(boolean)
-	t.vanillaSkin = boolean
-	config:save("AvatarVanillaSkin", t.vanillaSkin)
+	vanillaSkin = boolean
+	config:save("AvatarVanillaSkin", vanillaSkin)
 end
 
 -- Model type toggle
@@ -119,7 +123,7 @@ end
 
 -- Sync variables
 local function syncPlayer(a, b)
-	t.vanillaSkin = a
+	vanillaSkin = a
 	slim = b
 end
 
@@ -132,14 +136,17 @@ pings.syncPlayer           = syncPlayer
 if host:isHost() then
 	function events.TICK()
 		if world.getTime() % 200 == 0 then
-			pings.syncPlayer(t.vanillaSkin, slim)
+			pings.syncPlayer(vanillaSkin, slim)
 		end
 	end
 end
 
 -- Activate actions
-setVanillaSkin(t.vanillaSkin)
+setVanillaSkin(vanillaSkin)
 setModelType(slim)
+
+-- Setup table
+local t = {}
 
 -- Action wheel pages
 t.vanillaSkinPage = action_wheel:newAction("VanillaSkin")
@@ -148,7 +155,7 @@ t.vanillaSkinPage = action_wheel:newAction("VanillaSkin")
 	:toggleColor(vectors.hexToRGB("5555FF"))
 	:item('minecraft:player_head{"SkullOwner":"'..avatar:getEntityName()..'"}')
 	:onToggle(pings.setAvatarVanillaSkin)
-	:toggled(t.vanillaSkin)
+	:toggled(vanillaSkin)
 
 t.modelPage = action_wheel:newAction("ModelShape")
 	:title("§9§lToggle Model Shape\n\n§bAdjust the model shape to use Default or Slim Proportions.\nWill be overridden by the vanilla skin toggle.")

@@ -11,36 +11,36 @@ kattArmor.Armor.Leggings:setLayer(1)
 -- Armor parts
 kattArmor.Armor.Leggings
 	:addParts(
-		modelRoot.Body.Tail.Armor.Leggings,
-		modelRoot.Body.Tail.Armor.Brim,
-		modelRoot.Body.Tail.Tail.Armor.Leggings
+		modelRoot.Body.Tail1.Tail1Armor.Leggings,
+		modelRoot.Body.Tail1.Tail1Armor.Brim,
+		modelRoot.Body.Tail1.Tail2.Tail2Armor.Leggings
 	)
 	:addTrimParts(
-		modelRoot.Body.Tail.Armor.LeggingsTrim,
-		modelRoot.Body.Tail.Armor.BrimTrim,
-		modelRoot.Body.Tail.Tail.Armor.LeggingsTrim
+		modelRoot.Body.Tail1.Tail1Armor.LeggingsTrim,
+		modelRoot.Body.Tail1.Tail1Armor.BrimTrim,
+		modelRoot.Body.Tail1.Tail2.Tail2Armor.LeggingsTrim
 	)
 kattArmor.Armor.Boots
 	:addParts(
-		modelRoot.Body.Tail.Tail.Tail.Armor.Boots,
-		modelRoot.Body.Tail.Tail.Tail.Tail.Armor.Boots
+		modelRoot.Body.Tail1.Tail2.Tail3.Tail3Armor.Boots,
+		modelRoot.Body.Tail1.Tail2.Tail3.Tail4.Tail4Armor.Boots
 	)
 	:addTrimParts(
-		modelRoot.Body.Tail.Tail.Tail.Armor.BootsTrim,
-		modelRoot.Body.Tail.Tail.Tail.Tail.Armor.BootsTrim
+		modelRoot.Body.Tail1.Tail2.Tail3.Tail3Armor.BootsTrim,
+		modelRoot.Body.Tail1.Tail2.Tail3.Tail4.Tail4Armor.BootsTrim
 	)
 
 -- Leather armor
 kattArmor.Materials.leather
 	:setTexture(textures["textures.armor.leatherArmor"])
 	:addParts(kattArmor.Armor.Leggings,
-		modelRoot.Body.Tail.Armor.LeggingsLeather,
-		modelRoot.Body.Tail.Armor.BrimLeather,
-		modelRoot.Body.Tail.Tail.Armor.LeggingsLeather
+		modelRoot.Body.Tail1.Tail1Armor.LeggingsLeather,
+		modelRoot.Body.Tail1.Tail1Armor.BrimLeather,
+		modelRoot.Body.Tail1.Tail2.Tail2Armor.LeggingsLeather
 	)
 	:addParts(kattArmor.Armor.Boots,
-		modelRoot.Body.Tail.Tail.Tail.Armor.BootsLeather,
-		modelRoot.Body.Tail.Tail.Tail.Tail.Armor.BootsLeather
+		modelRoot.Body.Tail1.Tail2.Tail3.Tail3Armor.BootsLeather,
+		modelRoot.Body.Tail1.Tail2.Tail3.Tail4.Tail4Armor.BootsLeather
 	)
 
 -- Chainmail armor

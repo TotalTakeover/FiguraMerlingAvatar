@@ -6,7 +6,7 @@
 -- │ └─┐ └─────┘└─────┘ ┌─┘ │ --
 -- └───┘                └───┘ --
 ---@module  "Passenger Pivot Library" <GSCarrier>
----@version v0.9.9
+---@version v1.0.0-pre.1
 ---@see     GrandpaScout @ https://github.com/GrandpaScout
 -- A library that allows Figura "vehicles" to specify custom passenger pivot points and Figura "riders" to sit at those
 -- custom pivot points.
@@ -30,7 +30,7 @@
 --]] =======================================================================
 
 local ID = "GSCarrier"
-local VER = "0.9.9"
+local VER = "1.0.0-pre.1"
 local FIG = {"0.1.2", "0.1.2"}
 
 
@@ -705,7 +705,7 @@ local ridercon = {}
 
 ---Gets the offset applied to everything (and the model roots) when sitting in a Carrier vehicle.
 ---@return Vector3?
-function ridercon.getGlobalOffset() return rcon_gbloffset:copy() end
+function ridercon.getGlobalOffset() return rcon_gbloffset and rcon_gbloffset:copy() or nil end
 
 ---Sets the offset applied to everything (and the model roots) when sitting in a Carrier vehicle.
 ---

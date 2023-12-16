@@ -12,12 +12,12 @@ carrier.rider.controller.setAimEnabled(false)
 -- GSCarrier vehicle
 carrier.vehicle.addTag("gscarrier:humanoid", "gscarrier:land", "gscarrier:water")
 
-carrier.vehicle.newSeat("Seat1", models.Merling.Player.Body.Tail.Seat1, {
+carrier.vehicle.newSeat("Seat1", models.Merling.Player.Body.Tail1.Seat1, {
 	priority = 1,
 	tags = {["gscarrier:piggyback"] = true}
 })
 
 function events.TICK()
 	local swim = player:getPose() == "SWIMMING" or player:getPose() == "CRAWLING" or animations.Merling.crawl:isPlaying()
-	models.Merling.Player.Body.Tail.Seat1:pos(swim and vec(0, 0, -4) or nil)
+	models.Merling.Player.Body.Tail1.Seat1:pos(swim and vec(0, 0, -4) or nil)
 end

@@ -14,16 +14,16 @@ local glowParts = {
 	modelRoot.Head.Ears.LeftEar.Ear,
 	modelRoot.Head.Ears.RightEar.Ear,
 	
-	model.Skull.Ears.LeftEar.Ear,
-	model.Skull.Ears.RightEar.Ear,
+	model.Skull.EarsSkull.LeftEarSkull.Ear,
+	model.Skull.EarsSkull.RightEarSkull.Ear,
 	
-	modelRoot.Body.Tail.Segment,
-	modelRoot.Body.Tail.Tail.Segment,
-	modelRoot.Body.Tail.Tail.RightFin,
-	modelRoot.Body.Tail.Tail.LeftFin,
-	modelRoot.Body.Tail.Tail.Tail.Segment,
-	modelRoot.Body.Tail.Tail.Tail.Tail.Segment,
-	modelRoot.Body.Tail.Tail.Tail.Tail.Fluke,
+	modelRoot.Body.Tail1.Segment,
+	modelRoot.Body.Tail1.Tail2.Segment,
+	modelRoot.Body.Tail1.Tail2.RightFin,
+	modelRoot.Body.Tail1.Tail2.LeftFin,
+	modelRoot.Body.Tail1.Tail2.Tail3.Segment,
+	modelRoot.Body.Tail1.Tail2.Tail3.Tail4.Segment,
+	modelRoot.Body.Tail1.Tail2.Tail3.Tail4.Fluke,
 }
 
 local ticks = require("scripts.WaterTicks")
