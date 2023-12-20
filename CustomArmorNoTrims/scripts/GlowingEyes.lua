@@ -9,35 +9,54 @@ local origins = config:load("EyesOrigins") or false
 local effect  = config:load("EyesEffect") or false
 local water   = config:load("EyesWater") or false
 
--- Eye glow renderer
-function events.RENDER(delta, context)
-	if context == "RENDER" or context == "FIRST_PERSON" or (not client.isHudEnabled() and context ~= "MINECRAFT_GUI") then
-		local glow = glow 
-		if toggle then -- Toggle check
-			glow = true
-			if origins then -- Origins check
-				local power = require("lib.OriginsAPI").getPowerData(player, "origins:water_vision")
-				glow = glow and power == 1
-			end
-			if water then -- Water check
-				glow = glow and not (water and not player:isUnderwater())
-			end
-			if effect then -- Night Vision check
-				local nV = require("scripts.SyncedVariables").nV
-				glow = glow or nV
-			end
-		else
-			glow = false
+-- Variables setup
+local glow = toggle
+local eyesStart = glow and 1 or 0
+local eyesCurrent, eyesNextTick, eyesTarget, eyesCurrentPos = eyesStart, eyesStart, eyesStart, eyesStart
+
+function events.TICK()
+	
+	glow = glow
+	if toggle then -- Toggle check
+		glow = true
+		if origins then -- Origins check
+			local power = require("lib.OriginsAPI").getPowerData(player, "origins:water_vision")
+			glow = glow and power == 1
 		end
-		modelEyes:secondaryRenderType(glow and "EMISSIVE" or "TRANSLUCENT")
+		if water then -- Water check
+			glow = glow and not (water and not player:isUnderwater())
+		end
+		if effect then -- Night Vision check
+			local nV = require("scripts.SyncedVariables").nV
+			glow = glow or nV
+		end
+	else
+		glow = false
 	end
+	
+	-- Glowing Lerp
+	eyesCurrent = eyesNextTick
+	eyesNextTick = math.lerp(eyesNextTick, eyesTarget, 0.2)
+	
+end
+
+function events.RENDER(delta, context)
+	
+	-- Glowing Lerp
+	eyesTarget = glow and 1 or 0
+	eyesCurrentPos = math.lerp(eyesCurrent, eyesNextTick, delta)
+	
+	-- Apply Glow
+	modelEyes:secondaryColor(eyesCurrentPos)
+	modelEyes:secondaryRenderType(context == "RENDER" and "EMISSIVE" or "EYES")
+	
 end
 
 -- Glowing eyes toggler
 local function setToggle(boolean)
 	toggle = boolean
 	config:save("EyesToggle", toggle)
-	if host:isHost() and player:isLoaded() and toggle then
+	if player:isLoaded() and toggle then
 		sounds:playSound("entity.glow_squid.ambient", player:getPos(), 0.75)
 	end
 end
