@@ -16,11 +16,11 @@ local skinParts = {
 	modelRoot.Body.Body,
 	modelRoot.Body.BodyLayer,
 	
-	modelRoot.RightArm.DefaultRightArm,
-	modelRoot.RightArm.SlimRightArm,
+	modelRoot.RightArm.rightArmDefault,
+	modelRoot.RightArm.rightArmSlim,
 	
-	modelRoot.LeftArm.DefaultLeftArm,
-	modelRoot.LeftArm.SlimLeftArm,
+	modelRoot.LeftArm.leftArmDefault,
+	modelRoot.LeftArm.leftArmSlim,
 	
 	modelRoot.LeftLeg.Leg,
 	modelRoot.LeftLeg.LegLayer,
@@ -46,11 +46,11 @@ function events.TICK()
 	-- Model shape
 	local slimShape = (vanillaSkin and vanillaAvatarType == "SLIM") or (slim and not vanillaSkin)
 	
-	modelRoot.LeftArm.DefaultLeftArm:setVisible(not slimShape)
-	modelRoot.RightArm.DefaultRightArm:setVisible(not slimShape)
+	modelRoot.LeftArm.leftArmDefault:setVisible(not slimShape)
+	modelRoot.RightArm.rightArmDefault:setVisible(not slimShape)
 	
-	modelRoot.LeftArm.SlimLeftArm:setVisible(slimShape)
-	modelRoot.RightArm.SlimRightArm:setVisible(slimShape)
+	modelRoot.LeftArm.leftArmSlim:setVisible(slimShape)
+	modelRoot.RightArm.rightArmSlim:setVisible(slimShape)
 	
 	-- Skin textures
 	for _, part in ipairs(skinParts) do
@@ -72,12 +72,12 @@ local layerParts = {
 		modelRoot.Body.BodyLayer,
 	},
 	RIGHT_SLEEVE = {
-		modelRoot.RightArm.DefaultRightArm.ArmLayer,
-		modelRoot.RightArm.SlimRightArm.ArmLayer,
+		modelRoot.RightArm.rightArmDefault.ArmLayer,
+		modelRoot.RightArm.rightArmSlim.ArmLayer,
 	},
 	LEFT_SLEEVE = {
-		modelRoot.LeftArm.DefaultLeftArm.ArmLayer,
-		modelRoot.LeftArm.SlimLeftArm.ArmLayer,
+		modelRoot.LeftArm.leftArmDefault.ArmLayer,
+		modelRoot.LeftArm.leftArmSlim.ArmLayer,
 	},
 	RIGHT_PANTS_LEG = {
 		modelRoot.RightLeg.LegLayer,

@@ -14,8 +14,8 @@ local glowParts = {
 	modelRoot.Head.Ears.LeftEar.Ear,
 	modelRoot.Head.Ears.RightEar.Ear,
 	
-	model.Skull.EarsSkull.LeftEarSkull.Ear,
-	model.Skull.EarsSkull.RightEarSkull.Ear,
+	model.Skull.skullEars.skullLeftEar.Ear,
+	model.Skull.skullEars.skullRightEar.Ear,
 	
 	modelRoot.Body.Tail1.Segment,
 	modelRoot.Body.Tail1.Tail2.Segment,
@@ -37,38 +37,46 @@ function events.TICK()
 end
 
 function events.RENDER(delta, context)
-	if context == "RENDER" or context == "FIRST_PERSON" or (not client.isHudEnabled() and context ~= "MINECRAFT_GUI") then
-		
-		local active = glow    and 1 or 0
-		local light  = dynamic and math.map(world.getLightLevel(player:getPos(delta)), 0, 15, 1, 0) or 1
-		local hydro  = water   and (ticks.wet < 20 and 1 or 0) or 1
-		
-		glowTarget = active * light * hydro
-		glowCurrentPos = math.lerp(glowCurrent, glowNextTick, delta)
-		
-		for _, part in ipairs(glowParts) do
-			part:secondaryColor(glowCurrentPos)
-		end
-		
+	
+	local active = glow    and 1 or 0
+	local light  = dynamic and math.map(world.getLightLevel(player:getPos(delta)), 0, 15, 1, 0) or 1
+	local hydro  = water   and (ticks.wet < 20 and 1 or 0) or 1
+	
+	glowTarget = active * light * hydro
+	glowCurrentPos = math.lerp(glowCurrent, glowNextTick, delta)
+	
+	for _, part in ipairs(glowParts) do
+		part:secondaryColor(glowCurrentPos)
+		part:secondaryRenderType(context == "RENDER" and "EMISSIVE" or "EYES")
 	end
+	
 end
 
 -- Glow toggle
 local function setGlow(boolean)
 	glow = boolean
 	config:save("GlowToggle", glow)
+	if player:isLoaded() and glow then
+		sounds:playSound("entity.glow_squid.ambient", player:getPos(), 0.75)
+	end
 end
 
 -- Dynamic toggle
 local function setDynamic(boolean)
 	dynamic = boolean
 	config:save("GlowDynamic", dynamic)
+	if host:isHost() and player:isLoaded() and dynamic then
+		sounds:playSound("entity.generic.drink", player:getPos(), 0.35)
+	end
 end
 
 -- Water toggle
 local function setWater(boolean)
 	water = boolean
 	config:save("GlowWater", water)
+	if host:isHost() and player:isLoaded() and water then
+		sounds:playSound("minecraft:ambient.underwater.enter", player:getPos(), 0.35)
+	end
 end
 
 -- Sync variables

@@ -25,11 +25,7 @@ Below is a list of all features this Avatar contains, but you could always watch
 	- Squishy API, GSAnimBlend, GSCarrier, KattArmor API, and KattOrigin API preinstalled
 	- And more!
 ## Installation
-This avatar is installed the [same way](https://wiki.figuramc.org/start_here/Avatar%20File%20Format) as any other Figura avatar,
-however, there are three different versions to choose from:
-- Custom Armor
-- Custom Armor (no trims)
-- No Custom Armor
+This avatar is installed the [same way](https://wiki.figuramc.org/start_here/Avatar%20File%20Format) as any other Figura avatar.
 ## Frequently Asked Questions
 >Q: "How do I texture the tail?"
 >A: "Using your favorite image editor, preferably one that can retain transparency of PNGs. If you are having a hard time understanding how to texture, treat this similar to editing a minecraft skin!"
