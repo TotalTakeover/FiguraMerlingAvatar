@@ -14,8 +14,8 @@ local glowParts = {
 	modelRoot.Head.Ears.LeftEar.Ear,
 	modelRoot.Head.Ears.RightEar.Ear,
 	
-	model.Skull.EarsSkull.LeftEarSkull.Ear,
-	model.Skull.EarsSkull.RightEarSkull.Ear,
+	model.Skull.skullEars.skullLeftEar.Ear,
+	model.Skull.skullEars.skullRightEar.Ear,
 	
 	modelRoot.Body.Tail1.Segment,
 	modelRoot.Body.Tail1.Tail2.Segment,
