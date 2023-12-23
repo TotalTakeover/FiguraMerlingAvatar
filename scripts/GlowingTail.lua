@@ -32,19 +32,27 @@ local glowCurrent, glowNextTick, glowTarget, glowCurrentPos = glowStart, glowSta
 
 -- Gradual values
 function events.TICK()
-	glowCurrent = glowNextTick
-	glowNextTick = math.lerp(glowNextTick, glowTarget, 0.05)
-end
-
-function events.RENDER(delta, context)
 	
+	-- Glowing color calculation
 	local active = glow    and 1 or 0
 	local light  = dynamic and math.map(world.getLightLevel(player:getPos(delta)), 0, 15, 1, 0) or 1
 	local hydro  = water   and (ticks.wet < 20 and 1 or 0) or 1
 	
+	-- Target
 	glowTarget = active * light * hydro
+	
+	-- Tick lerp
+	glowCurrent = glowNextTick
+	glowNextTick = math.lerp(glowNextTick, glowTarget, 0.05)
+	
+end
+
+function events.RENDER(delta, context)
+	
+	-- Render lerp
 	glowCurrentPos = math.lerp(glowCurrent, glowNextTick, delta)
 	
+	-- Apply
 	for _, part in ipairs(glowParts) do
 		part:secondaryColor(glowCurrentPos)
 		part:secondaryRenderType(context == "RENDER" and "EMISSIVE" or "EYES")

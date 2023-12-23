@@ -16,6 +16,7 @@ local eyesCurrent, eyesNextTick, eyesTarget, eyesCurrentPos = eyesStart, eyesSta
 
 function events.TICK()
 	
+	-- Glow check
 	glow = glow
 	if toggle then -- Toggle check
 		glow = true
@@ -34,7 +35,10 @@ function events.TICK()
 		glow = false
 	end
 	
-	-- Glowing Lerp
+	-- Target
+	eyesTarget = glow and 1 or 0
+	
+	-- Tick lerp
 	eyesCurrent = eyesNextTick
 	eyesNextTick = math.lerp(eyesNextTick, eyesTarget, 0.2)
 	
@@ -42,11 +46,10 @@ end
 
 function events.RENDER(delta, context)
 	
-	-- Glowing Lerp
-	eyesTarget = glow and 1 or 0
+	-- Render lerp
 	eyesCurrentPos = math.lerp(eyesCurrent, eyesNextTick, delta)
 	
-	-- Apply Glow
+	-- Apply
 	modelEyes:secondaryColor(eyesCurrentPos)
 	modelEyes:secondaryRenderType(context == "RENDER" and "EMISSIVE" or "EYES")
 	

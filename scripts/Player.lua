@@ -53,8 +53,9 @@ function events.TICK()
 	modelRoot.RightArm.rightArmSlim:setVisible(slimShape)
 	
 	-- Skin textures
+	local skinType = vanillaSkin and "SKIN" or "PRIMARY"
 	for _, part in ipairs(skinParts) do
-		part:primaryTexture(vanillaSkin and "SKIN" or nil)
+		part:primaryTexture(skinType)
 	end
 	
 	-- Cape/Elytra texture
