@@ -22,7 +22,7 @@ function events.POST_RENDER(delta, context)
 		-- Pehkui scaling
 		local nbt   = player:getNbt()
 		local types = nbt["pehkui:scale_data_types"]
-		local scale = (
+		local playerScale = (
 			types and
 			types["pehkui:base"] and
 			types["pehkui:base"]["scale"] or 1)
@@ -35,7 +35,7 @@ function events.POST_RENDER(delta, context)
 			types["pehkui:model_height"] and
 			types["pehkui:model_height"]["scale"] or 1)
 		
-		local offsetScale = vec(modelWidth, modelHeight, modelWidth) * scale
+		local offsetScale = vec(modelWidth, modelHeight, modelWidth) * playerScale
 		
 		-- Camera offset
 		local posOffset = (trueHeadPos - playerPos) * (context == "FIRST_PERSON" and offsetScale or 1) + vec(0, -player:getEyeHeight() + ((3/16) * offsetScale.y), 0)
