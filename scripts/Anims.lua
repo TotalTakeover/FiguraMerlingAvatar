@@ -106,7 +106,7 @@ function events.RENDER(delta, context)
 	t.normal    = math.map(t.shark, 0, 1, 1 ,0)
 	
 	-- Animation variables
-	local tail       = modelRoot.Body.Tail1:getScale():normalize():length() > 0.5
+	local tail       = modelRoot.Body.Tail1:getScale().x > 0.5
 	local groundAnim = (ground() or ticks.water >= 20) and not (pose.swim or pose.crawl) and not pose.elytra and not pose.sleep and not player:getVehicle()
 	
 	-- Animation states
