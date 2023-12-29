@@ -13,8 +13,19 @@ local armMove = config:load("AvatarArmMove") or false
 -- Variables setup
 local pose  = require("scripts.Posing")
 local ticks = require("scripts.WaterTicks")
+
+-- Lerp variables
 local leftArmCurrent,  leftArmNextTick,  leftArmTarget,  leftArmCurrentPos  = 0, 0, 0, 0
 local rightArmCurrent, rightArmNextTick, rightArmTarget, rightArmCurrentPos = 0, 0, 0, 0
+
+-- Get the average of a vector
+local function average(vec)
+	local sum = 0
+	for _, v in ipairs{vec:unpack()} do
+		sum = sum + v
+	end
+	return sum / #vec
+end
 
 -- Gradual value
 function events.TICK()
@@ -43,7 +54,7 @@ function events.RENDER(delta, context)
 	local crossR      = rightItem.tag and rightItem.tag["Charged"] == 1
 	
 	-- Movement context
-	local shouldMove  = ticks.under >= 20 or animations.Merling.crawl:isPlaying()
+	local shouldMove  = ticks.under >= 20 or average(modelRoot.Body.Tail1:getScale()) <= 0.5 or animations.Merling.crawl:isPlaying()
 	
 	-- Offsets
 	local bodyOffset  = vanilla_model.BODY:getOriginRot() * 0.75
