@@ -25,7 +25,7 @@ t.headY    = 0
 t.normal   = shark and 0 or 1
 t.shark    = shark and 1 or 0
 
--- Variables
+-- Variables setup
 local ticks  = require("scripts.WaterTicks")
 local pose   = require("scripts.Posing")
 local ground = require("lib.GroundCheck")
@@ -33,12 +33,23 @@ local isSing = false
 local time,     _time     = 0, 0
 local strength, _strength = 0, 0
 
+-- Lerp variables
 local pitchCurrent, pitchNextTick, pitchTarget = 0, 0, 0
 local yawCurrent,   yawNextTick,   yawTarget   = 0, 0, 0
 local rollCurrent,  rollNextTick,  rollTarget  = 0, 0, 0
 
 local sharkCurrent, sharkNextTick, sharkTarget = t.shark, t.shark, t.shark
 
+-- Get the average of a vector
+local function average(vec)
+	local sum = 0
+	for _, v in ipairs{vec:unpack()} do
+		sum = sum + v
+	end
+	return sum / #vec
+end
+
+-- Set staticYaw to Yaw on init
 local staticYaw = 0
 function events.ENTITY_INIT()
 	staticYaw = player:getBodyYaw(delta)
@@ -106,7 +117,7 @@ function events.RENDER(delta, context)
 	t.normal    = math.map(t.shark, 0, 1, 1 ,0)
 	
 	-- Animation variables
-	local tail       = modelRoot.Body.Tail1:getScale().x > 0.5
+	local tail       = average(modelRoot.Body.Tail1:getScale()) > 0.5
 	local groundAnim = (ground() or ticks.water >= 20) and not (pose.swim or pose.crawl) and not pose.elytra and not pose.sleep and not player:getVehicle()
 	
 	-- Animation states
