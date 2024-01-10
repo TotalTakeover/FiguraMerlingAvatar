@@ -11,15 +11,24 @@
 local pos = vectors.vec3()
 
 local function validBlock(block)
+	
 	return block and not block:isAir()
+	
 end
-function events.ENTITY_INIT() pos:set(player:getPos()) end
+
+function events.ENTITY_INIT()
+	
+	pos:set(player:getPos())
+	
+end
 
 function events.RENDER(delta, context)
 	if context == "FIRST_PERSON" then
+		
 		local entity, entityPos = player:getTargetedEntity(host:getReachDistance())
 		local block, blockPos = player:getTargetedBlock(true, host:getReachDistance())
 		local deltaDeltaPos = player:getPos(delta) - player:getPos()
+		
 		pos:set(entity and entityPos:add(deltaDeltaPos) or
 			validBlock(block) and blockPos:add(deltaDeltaPos) or
 			player:getPos(delta):add(0, player:getEyeHeight())
@@ -31,5 +40,6 @@ function events.RENDER(delta, context)
 		local coords = screenSpace.xy:add(0, 0):mul(client:getScaledWindowSize()):div(2, 2)
 		
 		renderer:crosshairOffset(coords)
+		
 	end
 end
