@@ -140,10 +140,9 @@ animsPage
 
 -- Armor actions
 armorPage
-	:action( -1, armor.helmetPage)
-	:action( -1, armor.chestplatePage)
-	:action( -1, armor.leggingsPage)
-	:action( -1, armor.bootsPage)
-	:action( -1, armor.tailPage)
 	:action( -1, armor.allPage)
+	:action( -1, armor.bootsPage)
+	:action( -1, armor.leggingsPage)
+	:action( -1, armor.chestplatePage)
+	:action( -1, armor.helmetPage)
 	:action( -1, backPage)

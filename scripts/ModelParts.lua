@@ -119,7 +119,10 @@ t.leggings = {
 	
 	t.body.LeggingsPivot,
 	t.leftLeg.LeftLeggingPivot,
-	t.rightLeg.RightLeggingPivot
+	t.rightLeg.RightLeggingPivot,
+	
+	t.tailRoot.Tail1ArmorLeggings,
+	t.tailRoot.Tail2.Tail2ArmorLeggings
 	
 }
 
@@ -127,17 +130,10 @@ t.leggings = {
 t.boots = {
 	
 	t.leftLeg.LeftBootPivot,
-	t.rightLeg.RightBootPivot
+	t.rightLeg.RightBootPivot,
 	
-}
-
--- All tail armor groups
-t.tailArmor = {
-	
-	t.tailRoot.Tail1Armor,
-	t.tailRoot.Tail2.Tail2Armor,
-	t.tailRoot.Tail2.Tail3.Tail3Armor,
-	t.tailRoot.Tail2.Tail3.Tail4.Tail4Armor
+	t.tailRoot.Tail2.Tail3.Tail3ArmorBoots,
+	t.tailRoot.Tail2.Tail3.Tail4.Tail4ArmorBoots
 	
 }
 

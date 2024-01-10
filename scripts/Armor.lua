@@ -8,36 +8,36 @@ kattArmor.Armor.Leggings:setLayer(1)
 -- Armor parts
 kattArmor.Armor.Leggings
 	:addParts(
-		model.tailRoot.Tail1Armor.Leggings,
-		model.tailRoot.Tail1Armor.Brim,
-		model.tailRoot.Tail2.Tail2Armor.Leggings
+		model.tailRoot.Tail1ArmorLeggings.Leggings,
+		model.tailRoot.Tail1ArmorLeggings.LeggingsBrim,
+		model.tailRoot.Tail2.Tail2ArmorLeggings.Leggings
 	)
 	:addTrimParts(
-		model.tailRoot.Tail1Armor.LeggingsTrim,
-		model.tailRoot.Tail1Armor.BrimTrim,
-		model.tailRoot.Tail2.Tail2Armor.LeggingsTrim
+		model.tailRoot.Tail1ArmorLeggings.LeggingsTrim,
+		model.tailRoot.Tail1ArmorLeggings.LeggingsBrimTrim,
+		model.tailRoot.Tail2.Tail2ArmorLeggings.LeggingsTrim
 	)
 kattArmor.Armor.Boots
 	:addParts(
-		model.tailRoot.Tail2.Tail3.Tail3Armor.Boots,
-		model.tailRoot.Tail2.Tail3.Tail4.Tail4Armor.Boots
+		model.tailRoot.Tail2.Tail3.Tail3ArmorBoots.Boots,
+		model.tailRoot.Tail2.Tail3.Tail4.Tail4ArmorBoots.Boots
 	)
 	:addTrimParts(
-		model.tailRoot.Tail2.Tail3.Tail3Armor.BootsTrim,
-		model.tailRoot.Tail2.Tail3.Tail4.Tail4Armor.BootsTrim
+		model.tailRoot.Tail2.Tail3.Tail3ArmorBoots.BootsTrim,
+		model.tailRoot.Tail2.Tail3.Tail4.Tail4ArmorBoots.BootsTrim
 	)
 
 -- Leather armor
 kattArmor.Materials.leather
 	:setTexture(textures["textures.armor.leatherArmor"])
 	:addParts(kattArmor.Armor.Leggings,
-		model.tailRoot.Tail1Armor.LeggingsLeather,
-		model.tailRoot.Tail1Armor.BrimLeather,
-		model.tailRoot.Tail2.Tail2Armor.LeggingsLeather
+		model.tailRoot.Tail1ArmorLeggings.LeggingsLeather,
+		model.tailRoot.Tail1ArmorLeggings.LeggingsBrimLeather,
+		model.tailRoot.Tail2.Tail2ArmorLeggings.LeggingsLeather
 	)
 	:addParts(kattArmor.Armor.Boots,
-		model.tailRoot.Tail2.Tail3.Tail3Armor.BootsLeather,
-		model.tailRoot.Tail2.Tail3.Tail4.Tail4Armor.BootsLeather
+		model.tailRoot.Tail2.Tail3.Tail3ArmorBoots.BootsLeather,
+		model.tailRoot.Tail2.Tail3.Tail4.Tail4ArmorBoots.BootsLeather
 	)
 
 -- Chainmail armor
@@ -135,12 +135,10 @@ local helmet     = config:load("ArmorHelmet")
 local chestplate = config:load("ArmorChestplate")
 local leggings   = config:load("ArmorLeggings")
 local boots      = config:load("ArmorBoots")
-local tail       = config:load("ArmorTail")
 if helmet     == nil then helmet     = true end
 if chestplate == nil then chestplate = true end
 if leggings   == nil then leggings   = true end
 if boots      == nil then boots      = true end
-if tail       == nil then tail       = true end
 
 function events.TICK()
 	
@@ -160,10 +158,6 @@ function events.TICK()
 		part:visible(boots)
 	end
 	
-	for _, part in ipairs(model.tailArmor) do
-		part:visible(tail)
-	end
-	
 end
 
 -- Armor all toggle
@@ -173,12 +167,10 @@ local function setAll(boolean)
 	chestplate = boolean
 	leggings   = boolean
 	boots      = boolean
-	tail       = boolean
 	config:save("ArmorHelmet", helmet)
 	config:save("ArmorChestplate", chestplate)
 	config:save("ArmorLeggings", leggings)
 	config:save("ArmorBoots", boots)
-	config:save("ArmorTail", tail)
 	if player:isLoaded() then
 		sounds:playSound("minecraft:item.armor.equip_generic", player:getPos(), 0.5)
 	end
@@ -229,25 +221,13 @@ local function setBoots(boolean)
 	
 end
 
--- Armor boots toggle
-local function setTail(boolean)
-	
-	tail = boolean
-	config:save("ArmorTail", tail)
-	if player:isLoaded() then
-		sounds:playSound("minecraft:item.armor.equip_generic", player:getPos(), 0.5)
-	end
-	
-end
-
 -- Sync variables
-local function syncArmor(a, b, c, d, e)
+local function syncArmor(a, b, c, d)
 	
 	helmet     = a
 	chestplate = b
 	leggings   = c
 	boots      = d
-	tail       = e
 	
 end
 
@@ -257,7 +237,6 @@ pings.setArmorHelmet     = setHelmet
 pings.setArmorChestplate = setChestplate
 pings.setArmorLeggings   = setLeggings
 pings.setArmorBoots      = setBoots
-pings.setArmorTail       = setTail
 pings.syncArmor          = syncArmor
 
 -- Sync on tick
@@ -265,7 +244,7 @@ if host:isHost() then
 	function events.TICK()
 		
 		if world.getTime() % 200 == 0 then
-			pings.syncArmor(helmet, chestplate, leggings, boots, tail)
+			pings.syncArmor(helmet, chestplate, leggings, boots)
 		end
 		
 	end
@@ -276,7 +255,6 @@ setHelmet(helmet)
 setChestplate(chestplate)
 setLeggings(leggings)
 setBoots(boots)
-setTail(tail)
 
 -- Setup table
 local t = {}
@@ -287,7 +265,7 @@ t.allPage = action_wheel:newAction("AllArmorToggle")
 	:hoverColor(vectors.hexToRGB("55FFFF"))
 	:toggleColor(vectors.hexToRGB("5555FF"))
 	:item("minecraft:armor_stand")
-	:toggleItem("minecraft:diamond")
+	:toggleItem("minecraft:netherite_chestplate")
 	:onToggle(pings.setArmorAll)
 
 t.helmetPage = action_wheel:newAction("HelmetArmorToggle")
@@ -322,23 +300,14 @@ t.bootsPage = action_wheel:newAction("BootsArmorToggle")
 	:toggleItem("minecraft:diamond_boots")
 	:onToggle(pings.setArmorBoots)
 
-t.tailPage = action_wheel:newAction("TailArmorToggle")
-	:title("§9§lToggle Tail Armor\n\n§bToggles visibility of tail armor parts.")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
-	:item("minecraft:cod")
-	:toggleItem("minecraft:tropical_fish")
-	:onToggle(pings.setArmorTail)
-
 -- Update action page info
 function events.TICK()
 	
-	t.allPage       :toggled(helmet and chestplate and leggings and boots and tail)
+	t.allPage       :toggled(helmet and chestplate and leggings and boots)
 	t.helmetPage    :toggled(helmet)
 	t.chestplatePage:toggled(chestplate)
 	t.leggingsPage  :toggled(leggings)
 	t.bootsPage     :toggled(boots)
-	t.tailPage      :toggled(tail)
 	
 end
 
