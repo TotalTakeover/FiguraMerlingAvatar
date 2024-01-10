@@ -142,19 +142,19 @@ if boots      == nil then boots      = true end
 
 function events.TICK()
 	
-	for _, part in ipairs(model.helmet) do
+	for _, part in ipairs(model.helmetToggle) do
 		part:visible(helmet)
 	end
 	
-	for _, part in ipairs(model.chestplate) do
+	for _, part in ipairs(model.chestplateToggle) do
 		part:visible(chestplate)
 	end
 	
-	for _, part in ipairs(model.leggings) do
+	for _, part in ipairs(model.leggingsToggle) do
 		part:visible(leggings)
 	end
 	
-	for _, part in ipairs(model.boots) do
+	for _, part in ipairs(model.bootsToggle) do
 		part:visible(boots)
 	end
 	

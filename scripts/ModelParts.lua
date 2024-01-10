@@ -97,16 +97,16 @@ t.layer = {
 	
 }
 
--- All helmet pivots
-t.helmet = {
+-- All helmet parts
+t.helmetToggle = {
 	
 	t.head.HelmetPivot,
 	t.head.HelmetItemPivot
 	
 }
 
--- All chestplate pivots
-t.chestplate = {
+-- All chestplate parts
+t.chestplateToggle = {
 	
 	t.body.ChestplatePivot,
 	t.leftArm.LeftShoulderPivot,
@@ -114,8 +114,8 @@ t.chestplate = {
 	
 }
 
--- All leggings pivots
-t.leggings = {
+-- All leggings parts
+t.leggingsToggle = {
 	
 	t.body.LeggingsPivot,
 	t.leftLeg.LeftLeggingPivot,
@@ -126,8 +126,8 @@ t.leggings = {
 	
 }
 
--- All boots pivots
-t.boots = {
+-- All boots parts
+t.bootsToggle = {
 	
 	t.leftLeg.LeftBootPivot,
 	t.rightLeg.RightBootPivot,
