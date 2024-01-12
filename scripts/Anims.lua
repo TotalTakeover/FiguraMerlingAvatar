@@ -1,11 +1,17 @@
--- Model setup
-local model     = models.Merling
-local modelRoot = model.Player
-local anims     = animations.Merling
+-- Required scripts
+require("lib.GSAnimBlend")
+local model      = require("scripts.ModelParts")
+local waterTicks = require("scripts.WaterTicks")
+local pose       = require("scripts.Posing")
+local ground     = require("lib.GroundCheck")
+local effects    = require("scripts.SyncedVariables")
+
+-- Animations setup
+local anims = animations.Merling
 
 -- Config setup
 config:name("Merling")
-local shark   = config:load("TailShark") or false
+local isShark = config:load("TailShark") or false
 local isCrawl = config:load("TailCrawl") or false
 
 -- Table setup
@@ -22,95 +28,189 @@ t.roll     = 0
 t.headY    = 0
 
 -- Animation types
-t.normal   = shark and 0 or 1
-t.shark    = shark and 1 or 0
+t.normal = isShark and 0 or 1
+t.shark  = isShark and 1 or 0
 
--- Variables
-local ticks  = require("scripts.WaterTicks")
-local pose   = require("scripts.Posing")
-local ground = require("lib.GroundCheck")
-local isSing = false
-local time,     _time     = 0, 0
-local strength, _strength = 0, 0
+local canTwirl = false
+local isSing   = false
 
-local pitchCurrent, pitchNextTick, pitchTarget = 0, 0, 0
-local yawCurrent,   yawNextTick,   yawTarget   = 0, 0, 0
-local rollCurrent,  rollNextTick,  rollTarget  = 0, 0, 0
+local time = {
+	prev    = 0,
+	current = 0
+}
 
-local sharkCurrent, sharkNextTick, sharkTarget = t.shark, t.shark, t.shark
+local strength = {
+	prev    = 1,
+	current = 1
+}
 
+local pitch = {
+	current    = 0,
+	nextTick   = 0,
+	target     = 0
+}
+
+local yaw = {
+	current    = 0,
+	nextTick   = 0,
+	target     = 0
+}
+
+local roll = {
+	current    = 0,
+	nextTick   = 0,
+	target     = 0
+}
+
+local shark = {
+	current    = 0,
+	nextTick   = 0,
+	target     = 0
+}
+
+-- Set lerp start on init
+function events.ENTITY_INIT()
+	
+	local apply = isShark and 1 or 0
+	for k, v in pairs(shark) do
+		shark[k] = apply
+	end
+	
+end
+
+-- Get the average of a vector
+local function average(vec)
+	
+	local sum = 0
+	for _, v in ipairs{vec:unpack()} do
+		sum = sum + v
+	end
+	return sum / #vec
+	
+end
+
+-- Spawns notes around a model part
+local function notes(part, blocks)
+	
+	local pos   = part:partToWorldMatrix():apply()
+	local range = blocks * 16
+	particles["note"]
+		:pos(pos + vec(math.random(-range, range)/16, math.random(-range, range)/16, math.random(-range, range)/16))
+		:setColor(math.random(51,200)/150, math.random(51,200)/150, math.random(51,200)/150)
+		:spawn()
+	
+end
+
+-- Set staticYaw to Yaw on init
 local staticYaw = 0
 function events.ENTITY_INIT()
-	staticYaw = player:getBodyYaw(delta)
+	
+	staticYaw = player:getBodyYaw()
+	
 end
 
 function events.TICK()
 	
-	-- Lerps
-	sharkCurrent = sharkNextTick
-	sharkNextTick = math.lerp(sharkNextTick, sharkTarget, 0.25)
+	-- Player variables
+	local vel      = player:getVelocity()
+	local dir      = player:getLookDir()
+	local bodyYaw  = player:getBodyYaw()
+	local onGround = ground()
 	
-	pitchCurrent,  yawCurrent,  rollCurrent  = pitchNextTick, yawNextTick, rollNextTick
-	pitchNextTick, yawNextTick, rollNextTick = math.lerp(pitchNextTick, pitchTarget, 0.1), math.lerp(yawNextTick, yawTarget, 0.1), math.lerp(rollNextTick, rollTarget, 0.1)
-	
-	-- Static yaw modifiers
-	local yaw = player:getBodyYaw(delta)
-	if yaw + 20 < staticYaw then
-		staticYaw = yaw + 20
-	elseif yaw - 20 > staticYaw then
-		staticYaw = yaw - 20
-	end
-	
-	-- Yaw static
-	staticYaw = player:getVelocity():length() ~= 0 and math.lerp(staticYaw, yaw, 0.5) or staticYaw
-	
-	-- Store previous vars
-	_time     = time
-	_strength = strength
-	
-	-- Animation timeline + target vars
-	local animSpeed = player:getVehicle() and 0 or math.min((ticks.water >= 20 and player:getVelocity().xz:length() or player:getVelocity():length()), 0.75)
-	time     = time + 0.1 + animSpeed
-	strength = (ticks.water >= 20 and math.clamp(player:getVelocity().xz:length() * 2, 0, 1) or math.clamp(player:getVelocity():length() * 2, 0, 2)) + 1
-	
-end
-
-function events.RENDER(delta, context)
-	
-	-- Velocity variables
-	local fbVel      = player:getVelocity():dot((player:getLookDir().x_z):normalize())
-	local lrVel      = player:getVelocity():cross(player:getLookDir().x_z:normalize()).y
-	local udVel      = player:getVelocity().y
+	-- Directional velocity
+	local fbVel = player:getVelocity():dot((dir.x_z):normalize())
+	local lrVel = player:getVelocity():cross(dir.x_z:normalize()).y
+	local udVel = player:getVelocity().y
 	local diagCancel = math.abs(lrVel) - math.abs(fbVel)
 	
-	-- Animation timeline deltas
-	t.time      = math.lerp(_time,     time,     delta)
-	t.strength  = math.lerp(_strength, strength, delta)
+	-- Static yaw
+	staticYaw = math.clamp(staticYaw, bodyYaw - 45, bodyYaw + 45)
+	staticYaw = math.lerp(staticYaw, bodyYaw, onGround and math.clamp(vel:length(), 0, 1) or 0.25)
+	local yawDif = staticYaw - bodyYaw
 	
-	-- Axis lerps
-	pitchTarget = math.clamp(pose.elytra and -udVel * 20 * (-math.abs(player:getLookDir().y) + 1) or (pose.swim or ticks.water >= 20) and -udVel * 40 * -(math.abs(player:getLookDir().y * 2) - 1) or fbVel * 80 + (math.abs(lrVel) * diagCancel) * 60, -20, 20)
-	t.pitch     = math.lerp(pitchCurrent, pitchNextTick, delta)
+	-- Store animation variables
+	time.prev     = time.current
+	strength.prev = strength.current
 	
-	yawTarget   = math.clamp((staticYaw - player:getBodyYaw(delta)) + t.roll, -20, 20)
-	t.yaw       = math.lerp(yawCurrent, yawNextTick, delta)
+	-- Animation control
+	if player:getVehicle() then
+		
+		-- In vehicle
+		time.current = time.current + 0.1
+		strength.current = 1
+		
+	elseif waterTicks.water >= 20 or onGround then
+		
+		-- Above water or on ground
+		time.current = time.current + math.clamp(fbVel < -0.1 and math.min(fbVel, math.abs(lrVel)) - 0.1 or math.max(fbVel, math.abs(lrVel)) + 0.1, -0.75, 0.75)
+		strength.current = math.clamp(vel.xz:length() * 2 + 1, 1,  2)
+		
+	else
+		
+		-- Assumed floating in water
+		time.current = time.current + math.clamp(vel:length(), -0.75, 0.75) + 0.1
+		strength.current = math.clamp(vel:length() * 2 + 1, 1,  2)
+		
+	end
 	
-	rollTarget  = math.clamp(require("scripts.SyncedVariables").dG and 0 or pose.elytra and -lrVel * 20 or (-lrVel * diagCancel) * 80, -20, 20)
-	t.roll      = math.lerp(rollCurrent, rollNextTick, delta)
+	-- Axis controls
+	-- X axis control
+	if pose.elytra then
+		
+		-- When using elytra
+		pitch.target = math.clamp(-udVel * 20 * (-math.abs(player:getLookDir().y) + 1), -20, 20)
+		
+	elseif pose.swim or waterTicks.water >= 20 then
+		
+		-- While "swimming" or outside of water
+		pitch.target = math.clamp(-udVel * 40 * -(math.abs(player:getLookDir().y * 2) - 1), -20, 20)
+		
+	else
+		
+		-- Assumed floating in water
+		pitch.target = math.clamp((fbVel + math.max(-udVel, 0) + (math.abs(lrVel) * diagCancel) * 4) * 80, -20, 20)
+		
+	end
 	
-	-- Head Y rot calc (for sleep offset)
-	t.headY     = (vanilla_model.HEAD:getOriginRot().y + 180) % 360 - 180
+	-- Y axis control
+	yaw.target = yawDif
 	
-	-- Shark anims lerp
-	sharkTarget = shark and 1 or 0
-	t.shark     = math.lerp(sharkCurrent, sharkNextTick, delta)
-	t.normal    = math.map(t.shark, 0, 1, 1 ,0)
+	-- Z Axis control
+	if effects.dG then
+		
+		-- Dolphins grace applied
+		roll.target = 0
+		
+	elseif pose.elytra then
+		
+		-- When using an elytra
+		roll.target = math.clamp((-lrVel * 20) - (yawDif * math.clamp(fbVel, -1, 1)), -20, 20)
+		
+	else
+		
+		-- Assumed floating in water
+		roll.target = math.clamp((-lrVel * diagCancel * 80) - (yawDif * math.clamp(fbVel, -1, 1)), -20, 20)
+		
+	end
+	
+	-- Tick lerps
+	shark.current = shark.nextTick
+	shark.nextTick = math.lerp(shark.nextTick, shark.target, 0.25)
+	
+	pitch.current = pitch.nextTick
+	yaw.current   = yaw.nextTick
+	roll.current  = roll.nextTick
+	
+	pitch.nextTick = math.lerp(pitch.nextTick, pitch.target, 0.1)
+	yaw.nextTick   = math.lerp(yaw.nextTick,   yaw.target,   1)
+	roll.nextTick  = math.lerp(roll.nextTick,  roll.target,  0.1)
 	
 	-- Animation variables
-	local tail       = modelRoot.Body.Tail1:getScale().x > 0.5
-	local groundAnim = (ground() or ticks.water >= 20) and not (pose.swim or pose.crawl) and not pose.elytra and not pose.sleep and not player:getVehicle()
+	local tail       = average(model.tailRoot:getScale()) > 0.5
+	local groundAnim = (onGround or waterTicks.water >= 20) and not (pose.swim or pose.crawl) and not pose.elytra and not pose.sleep and not player:getVehicle()
 	
 	-- Animation states
-	local swim  = tail and ((not ground() and ticks.water < 20) or (pose.swim or pose.crawl or pose.elytra)) and not pose.sleep and not player:getVehicle()
+	local swim  = tail and ((not onGround and waterTicks.water < 20) or (pose.swim or pose.crawl or pose.elytra)) and not pose.sleep and not player:getVehicle()
 	local stand = tail and not isCrawl and groundAnim
 	local crawl = tail and     isCrawl and groundAnim
 	local mount = tail and player:getVehicle()
@@ -127,85 +227,103 @@ function events.RENDER(delta, context)
 	anims.ears:playing(ears)
 	anims.sing:playing(sing)
 	
-	if ground() or ticks.water >= 20 or pose.sleep then
+	-- Spawns notes around head while singing
+	if isSing and world.getTime() % 5 == 0 then
+		notes(model.head, 1)
+	end
+	
+	-- Determins when to stop twirl animaton
+	canTwirl = tail and not onGround and waterTicks.water < 20 and not pose.sleep
+	if not canTwirl then
 		anims.twirl:stop()
 	end
 	
 end
 
--- Spawns notes
-local function notes()
-	local part = modelRoot.Head:partToWorldMatrix()
-	local pos  = part:apply(0, 0, 0)
-	particles["note"]
-		:pos(pos + vec(math.random(-100, 100)/100, math.random(-100, 100)/100, math.random(-100, 100)/100))
-		:setColor(math.random(51,200)/150, math.random(51,200)/150, math.random(51,200)/150)
-		:spawn()
+function events.RENDER(delta, context)
+	
+	-- Head Y rot calc (for sleep offset)
+	t.headY = (vanilla_model.HEAD:getOriginRot().y + 180) % 360 - 180
+	
+	-- Shark anims lerp
+	shark.target = isShark and 1 or 0
+	t.shark      = math.lerp(shark.current, shark.nextTick, delta)
+	t.normal     = math.map(t.shark, 0, 1, 1 ,0)
+	
+	-- Render lerps
+	t.time     = math.lerp(time.prev, time.current, delta)
+	t.strength = math.lerp(strength.prev, strength.current, delta)
+	
+	t.pitch = math.lerp(pitch.current, pitch.nextTick, delta)
+	t.yaw   = math.lerp(yaw.current, yaw.nextTick, delta)
+	t.roll  = math.lerp(roll.current, roll.nextTick, delta)
+	
 end
 
-function events.tick()
-	if isSing and world.getTime() % 5 == 0 then
-		notes()
-	end
+-- GS Blending Setup
+local blendAnims = {
+	{ anim = anims.swim,  ticks = 7 },
+	{ anim = anims.stand, ticks = 7 },
+	{ anim = anims.crawl, ticks = 7 },
+	{ anim = anims.mount, ticks = 7 },
+	{ anim = anims.sleep, ticks = 7 },
+	{ anim = anims.ears,  ticks = 7 },
+	{ anim = anims.sing,  ticks = 3 }
+}
+	
+for _, blend in ipairs(blendAnims) do
+	blend.anim:blendTime(blend.ticks):onBlend("easeOutQuad")
 end
 
 -- Fixing spyglass jank
 function events.RENDER(delta, context)
-	if context == "RENDER" or context == "FIRST_PERSON" or (not client.isHudEnabled() and context ~= "MINECRAFT_GUI") then
-		local rot = vanilla_model.HEAD:getOriginRot()
-		rot.x = math.clamp(rot.x, -90, 30)
-		modelRoot.Spyglass:rot(rot)
-			:pos(pose.crouch and vec(0, -4, 0) or nil)
-	end
-end
-
--- GS Blending Setup
-do
-	require("lib.GSAnimBlend")
 	
-	local blendAnims = {
-		{ anim = anims.swim,  ticks = 7, type = "easeOutQuad" },
-		{ anim = anims.stand, ticks = 7, type = "easeOutQuad" },
-		{ anim = anims.crawl, ticks = 7, type = "easeOutQuad" },
-		{ anim = anims.mount, ticks = 7, type = "easeOutQuad" },
-		{ anim = anims.sleep, ticks = 7, type = "easeOutQuad" },
-		{ anim = anims.ears,  ticks = 7, type = "easeOutQuad" },
-		{ anim = anims.sing,  ticks = 3, type = "easeOutQuad" }
-	}
-	
-	for _, blend in ipairs(blendAnims) do
-		blend.anim:blendTime(blend.ticks):onBlend(blend.type)
-	end
+	local rot = vanilla_model.HEAD:getOriginRot()
+	rot.x = math.clamp(rot.x, -90, 30)
+	model.root.Spyglass:rot(rot)
+		:pos(pose.crouch and vec(0, -4, 0) or nil)
 	
 end
 
--- Shark animation toggle
+-- Shark anim toggle
 local function setShark(boolean)
-	shark = boolean
-	config:save("TailShark", shark)
+	
+	isShark = boolean
+	config:save("TailShark", isShark)
+	
 end
 
--- Crawl animation toggle
+-- Crawl anim toggle
 local function setCrawl(boolean)
+	
 	isCrawl = boolean
 	config:save("TailCrawl", isCrawl)
+	
 end
 
+-- Play twirl anim
 local function playTwirl()
-	if not ground() and ticks.water < 20 and not pose.sleep then
+	
+	if canTwirl then
 		anims.twirl:play()
 	end
+	
 end
 
+-- Singing anim toggle
 local function setSing(boolean)
+	
 	isSing = boolean
+	
 end
 
 -- Sync variables
 local function syncAnims(a, b, c)
-	shark   = a
+	
+	isShark   = a
 	isCrawl = b
 	isSing  = c
+	
 end
 
 -- Pings setup
@@ -215,14 +333,17 @@ pings.animPlayTwirl = playTwirl
 pings.setAnimSing   = setSing
 pings.syncAnims     = syncAnims
 
+-- Twirl keybind
 local twirlBind   = config:load("AnimTwirlKeybind") or "key.keyboard.keypad.4"
 local setTwirlKey = keybinds:newKeybind("Twirl Animation"):onPress(pings.animPlayTwirl):key(twirlBind)
 
+-- Sing keybind
 local singBind   = config:load("AnimSingKeybind") or "key.keyboard.keypad.5"
 local setSingKey = keybinds:newKeybind("Singing Animation"):onPress(function() pings.setAnimSing(not isSing) end):key(singBind)
 
 -- Keybind updaters
 function events.TICK()
+	
 	local twirlKey = setTwirlKey:getKey()
 	local singKey  = setSingKey:getKey()
 	if twirlKey ~= twirlBind then
@@ -233,19 +354,22 @@ function events.TICK()
 		singBind = singKey
 		config:save("AnimSingKeybind", singKey)
 	end
+	
 end
 
 -- Sync on tick
 if host:isHost() then
 	function events.TICK()
+		
 		if world.getTime() % 200 == 0 then
-			pings.syncAnims(shark, isCrawl, isSing)
+			pings.syncAnims(isShark, isCrawl, isSing)
 		end
+		
 	end
 end
 
 -- Activate actions
-setShark(shark)
+setShark(isShark)
 setCrawl(isCrawl)
 
 -- Action wheel pages
@@ -256,7 +380,7 @@ t.sharkPage = action_wheel:newAction("TailShark")
 	:item("minecraft:dolphin_spawn_egg")
 	:toggleItem("minecraft:guardian_spawn_egg")
 	:onToggle(pings.setTailShark)
-	:toggled(shark)
+	:toggled(isShark)
 
 t.crawlPage = action_wheel:newAction("TailCrawl")
 	:title("§9§lToggle Crawl Animation\n\n§bToggles crawling over standing when you are touching the ground.\n\n§5§lNote: §5Heavily recommend using a crawling mod instead.\nThey are much cooler, and will play nicely :D")
@@ -281,10 +405,12 @@ t.singPage = action_wheel:newAction("AnimSing")
     :toggleItem("minecraft:music_disc_cat")
     :onToggle(pings.setAnimSing)
 
--- Updates sing page info
+-- Updates action page info
 function events.TICK()
+	
 	t.singPage:toggled(isSing)
+	
 end
 
--- Returns table
+-- Returns animation variables/action wheel pages
 return t

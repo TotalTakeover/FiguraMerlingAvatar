@@ -1,120 +1,153 @@
--- Model setup
-local model     = models.Merling
-local modelRoot = model.Player
+-- Required scripts
+local model      = require("scripts.ModelParts")
+local waterTicks = require("scripts.WaterTicks")
 
 -- Config setup
 config:name("Merling")
-local glow    = config:load("GlowToggle")
-if glow == nil then glow = true end
+local toggle  = config:load("GlowToggle")
 local dynamic = config:load("GlowDynamic") or false
 local water   = config:load("GlowWater") or false
+if toggle == nil then toggle = true end
 
--- Variables setup
-local glowParts = {
-	modelRoot.Head.Ears.LeftEar.Ear,
-	modelRoot.Head.Ears.RightEar.Ear,
-	
-	model.Skull.skullEars.skullLeftEar.Ear,
-	model.Skull.skullEars.skullRightEar.Ear,
-	
-	modelRoot.Body.Tail1.Segment,
-	modelRoot.Body.Tail1.Tail2.Segment,
-	modelRoot.Body.Tail1.Tail2.Tail2RightFin,
-	modelRoot.Body.Tail1.Tail2.Tail2LeftFin,
-	modelRoot.Body.Tail1.Tail2.Tail3.Segment,
-	modelRoot.Body.Tail1.Tail2.Tail3.Tail4.Segment,
-	modelRoot.Body.Tail1.Tail2.Tail3.Tail4.Fluke,
+-- Lerp glow table
+local glow = {
+	current    = 0,
+	nextTick   = 0,
+	target     = 0,
+	currentPos = 0
 }
 
-local ticks = require("scripts.WaterTicks")
-local glowStart = glow and 1 or 0
-local glowCurrent, glowNextTick, glowTarget, glowCurrentPos = glowStart, glowStart, glowStart, glowStart
+-- Set lerp start on init
+function events.ENTITY_INIT()
+	
+	local apply = toggle and 1 or 0
+	for k, v in pairs(glow) do
+		glow[k] = apply
+	end
+	
+end
 
 -- Gradual values
 function events.TICK()
-	glowCurrent = glowNextTick
-	glowNextTick = math.lerp(glowNextTick, glowTarget, 0.05)
+	
+	-- Set glow target
+	-- Toggle check
+	if toggle then
+		
+		glow.target = 1
+		
+		-- Light level check
+		if dynamic then
+			glow.target = glow.target * math.map(world.getLightLevel(player:getPos(delta)), 0, 15, 1, 0)
+		end
+		
+		-- Water check
+		if water then
+			glow.target = glow.target * math.map(math.clamp(waterTicks.wet, 0, 100), 0, 100, 1, 0)
+		end
+		
+	else
+		
+		glow.target = 0
+		
+	end
+	
+	-- Tick lerp
+	glow.current = glow.nextTick
+	glow.nextTick = math.lerp(glow.nextTick, glow.target, 0.05)
+	
 end
 
 function events.RENDER(delta, context)
 	
-	local active = glow    and 1 or 0
-	local light  = dynamic and math.map(world.getLightLevel(player:getPos(delta)), 0, 15, 1, 0) or 1
-	local hydro  = water   and (ticks.wet < 20 and 1 or 0) or 1
+	-- Render lerp
+	glow.currentPos = math.lerp(glow.current, glow.nextTick, delta)
 	
-	glowTarget = active * light * hydro
-	glowCurrentPos = math.lerp(glowCurrent, glowNextTick, delta)
-	
-	for _, part in ipairs(glowParts) do
-		part:secondaryColor(glowCurrentPos)
-		part:secondaryRenderType(context == "RENDER" and "EMISSIVE" or "EYES")
+	-- Apply
+	local renderType = context == "RENDER" and "EMISSIVE" or "EYES"
+	for _, part in ipairs(model.glowingParts) do
+		part:secondaryColor(glow.currentPos)
+		part:secondaryRenderType(renderType)
 	end
 	
 end
 
 -- Glow toggle
-local function setGlow(boolean)
-	glow = boolean
-	config:save("GlowToggle", glow)
-	if player:isLoaded() and glow then
+local function setToggle(boolean)
+	
+	toggle = boolean
+	config:save("GlowToggle", toggle)
+	if player:isLoaded() and toggle then
 		sounds:playSound("entity.glow_squid.ambient", player:getPos(), 0.75)
 	end
+	
 end
 
 -- Dynamic toggle
 local function setDynamic(boolean)
+	
 	dynamic = boolean
 	config:save("GlowDynamic", dynamic)
 	if host:isHost() and player:isLoaded() and dynamic then
 		sounds:playSound("entity.generic.drink", player:getPos(), 0.35)
 	end
+	
 end
 
 -- Water toggle
 local function setWater(boolean)
+	
 	water = boolean
 	config:save("GlowWater", water)
 	if host:isHost() and player:isLoaded() and water then
 		sounds:playSound("minecraft:ambient.underwater.enter", player:getPos(), 0.35)
 	end
+	
 end
 
 -- Sync variables
 local function syncGlow(a, b, c)
-	glow    = a
+	
+	toggle  = a
 	dynamic = b
 	water   = c
+	
 end
 
 -- Pings setup
-pings.setGlowToggle  = setGlow
+pings.setGlowToggle  = setToggle
 pings.setGlowDynamic = setDynamic
 pings.setGlowWater   = setWater
 pings.syncGlow       = syncGlow
 
-local glowBind   = config:load("GlowToggleKeybind") or "key.keyboard.keypad.2"
-local setGlowKey = keybinds:newKeybind("Glow Toggle"):onPress(function() pings.setGlowToggle(not glow) end):key(glowBind)
+-- Keybind
+local toggleBind   = config:load("GlowToggleKeybind") or "key.keyboard.keypad.2"
+local setToggleKey = keybinds:newKeybind("Glow Toggle"):onPress(function() pings.setGlowToggle(not toggle) end):key(toggleBind)
 
 -- Keybind updater
 function events.TICK()
-	local key = setGlowKey:getKey()
-	if key ~= glowBind then
-		glowBind = key
+	
+	local key = setToggleKey:getKey()
+	if key ~= toggleBind then
+		toggleBind = key
 		config:save("GlowToggleKeybind", key)
 	end
+	
 end
 
 -- Sync on tick
 if host:isHost() then
 	function events.TICK()
+		
 		if world.getTime() % 200 == 0 then
-			pings.syncGlow(glow, dynamic, water)
+			pings.syncGlow(toggle, dynamic, water)
 		end
+		
 	end
 end
 
 -- Activate actions
-setGlow(glow)
+setToggle(toggle)
 setDynamic(dynamic)
 setWater(water)
 
@@ -122,19 +155,13 @@ setWater(water)
 local t = {}
 
 -- Action wheel pages
-t.glowPage = action_wheel:newAction("GlowToggle")
+t.togglePage = action_wheel:newAction("GlowToggle")
 	:title("§9§lToggle Glowing\n\n§bToggles glowing for the tail, and misc parts.")
 	:hoverColor(vectors.hexToRGB("55FFFF"))
 	:toggleColor(vectors.hexToRGB("5555FF"))
 	:item("minecraft:ink_sac")
 	:toggleItem("minecraft:glow_ink_sac")
 	:onToggle(pings.setGlowToggle)
-
--- Update glow page info
-function events.TICK()
-	t.glowPage
-		:toggled(glow)
-end
 
 t.dynamicPage = action_wheel:newAction("GlowDynamic")
 	:title("§9§lToggle Dynamic Glowing\n\n§bToggles glowing based on lightlevel. The darker the location, the brighter your tail glows.")
@@ -143,12 +170,6 @@ t.dynamicPage = action_wheel:newAction("GlowDynamic")
 	:item("minecraft:light")
 	:onToggle(pings.setGlowDynamic)
 	:toggled(dynamic)
-
--- Update dynamic page info
-function events.TICK()
-	t.dynamicPage
-		:toggleItem("minecraft:light{BlockStateTag:{level:"..world.getLightLevel(player:getPos()).."}}")
-end
 
 t.waterPage = action_wheel:newAction("GlowWater")
 	:title("§9§lToggle Water Glowing\n\n§bToggles the glowing sensitivity to water.\nAny water will cause your tail to glow.")
@@ -159,5 +180,13 @@ t.waterPage = action_wheel:newAction("GlowWater")
 	:onToggle(pings.setGlowWater)
 	:toggled(water)
 
--- Return table
+-- Update action page info
+function events.TICK()
+	
+	t.togglePage:toggled(toggle)
+	t.dynamicPage:toggleItem("minecraft:light{BlockStateTag:{level:"..world.getLightLevel(player:getPos()).."}}")
+	
+end
+
+-- Return action wheel pages
 return t

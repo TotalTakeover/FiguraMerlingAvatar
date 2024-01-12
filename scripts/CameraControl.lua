@@ -1,71 +1,79 @@
--- Model setup
-local model     = models.Merling
-local modelRoot = model.Player
+-- Required scripts
+local model = require("scripts.ModelParts")
+local pose  = require("scripts.Posing")
 
 -- Config setup
 config:name("Merling")
 local camPos = config:load("CameraPos") or false
+
+-- Variable setup
 local eyePos = false
 
--- Startup camera pos
+-- Set starting head pos on init
 local trueHeadPos = 0
 function events.ENTITY_INIT()
+	
 	trueHeadPos = player:getPos()
+	
 end
 
 function events.POST_RENDER(delta, context)
 	if context == "FIRST_PERSON" or context == "RENDER" or (not client.isHudEnabled() and context ~= "MINECRAFT_GUI") then
-		-- Pos checking
-		local playerPos = player:getPos(delta)
-		trueHeadPos     = modelRoot.Head:partToWorldMatrix():apply()
-		
-		-- Pehkui scaling
-		local nbt   = player:getNbt()
-		local types = nbt["pehkui:scale_data_types"]
-		local scale = (
-			types and
-			types["pehkui:base"] and
-			types["pehkui:base"]["scale"] or 1)
-		local modelWidth = (
-			types and
-			types["pehkui:model_width"] and
-			types["pehkui:model_width"]["scale"] or 1)
-		local modelHeight = (
-			types and
-			types["pehkui:model_height"] and
-			types["pehkui:model_height"]["scale"] or 1)
-		
-		local offsetScale = vec(modelWidth, modelHeight, modelWidth) * scale
-		
-		-- Camera offset
-		local posOffset = (trueHeadPos - playerPos) * (context == "FIRST_PERSON" and offsetScale or 1) + vec(0, -player:getEyeHeight() + ((3/16) * offsetScale.y), 0)
-		
-		-- Renders offset
-		local posOffsetApply = player:getPose() == "STANDING" or player:getPose() == "CROUCHING"
-		renderer:offsetCameraPivot(camPos and posOffsetApply and posOffset or 0)
-			:eyeOffset(eyePos and camPos and posOffsetApply and posOffset or 0)
-		
-		-- Nameplate Placement
-		nameplate.ENTITY:pivot(posOffset + vec(0, player:getBoundingBox().y + 9/16, 0))
-		
+	-- Pos checking
+	local playerPos = player:getPos(delta)
+	trueHeadPos     = model.head:partToWorldMatrix():apply()
+	
+	-- Pehkui scaling
+	local nbt   = player:getNbt()
+	local types = nbt["pehkui:scale_data_types"]
+	local playerScale = (
+		types and
+		types["pehkui:base"] and
+		types["pehkui:base"]["scale"] or 1)
+	local modelWidth = (
+		types and
+		types["pehkui:model_width"] and
+		types["pehkui:model_width"]["scale"] or 1)
+	local modelHeight = (
+		types and
+		types["pehkui:model_height"] and
+		types["pehkui:model_height"]["scale"] or 1)
+	local offsetScale = vec(modelWidth, modelHeight, modelWidth) * playerScale
+	
+	-- Camera offset
+	local posOffset = (trueHeadPos - playerPos) * (context == "FIRST_PERSON" and offsetScale or 1) + vec(0, -player:getEyeHeight() + ((3/16) * offsetScale.y), 0)
+	
+	-- Renders offset
+	local posOffsetApply = pose.stand or pose.crouch
+	renderer:offsetCameraPivot(camPos and posOffsetApply and posOffset or 0)
+		:eyeOffset(eyePos and camPos and posOffsetApply and posOffset or 0)
+	
+	-- Nameplate Placement
+	nameplate.ENTITY:pivot(posOffset + vec(0, player:getBoundingBox().y + 9/16, 0))
 	end
 end
 
--- Camera pos toggler
+-- Camera pos toggle
 local function setPos(boolean)
+	
 	camPos = boolean
 	config:save("CameraPos", camPos)
+	
 end
 
--- Eye pos toggler
+-- Eye pos toggle
 local function setEye(boolean)
+	
 	eyePos = boolean
+	
 end
 
 -- Sync variables
 local function syncCamera(a, b)
+	
 	camPos = a
 	eyePos = b
+	
 end
 
 -- Setup pings
@@ -76,9 +84,11 @@ pings.syncCamera   = syncCamera
 -- Sync on tick
 if host:isHost() then
 	function events.TICK()
+		
 		if world.getTime() % 200 == 0 then
 			pings.syncCamera(camPos, eyePos)
 		end
+		
 	end
 end
 
