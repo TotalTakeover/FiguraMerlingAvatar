@@ -68,6 +68,16 @@ local shark = {
 	target     = 0
 }
 
+-- Set lerp start on init
+function events.ENTITY_INIT()
+	
+	local apply = isShark and 1 or 0
+	for k, v in pairs(shark) do
+		shark[k] = apply
+	end
+	
+end
+
 -- Get the average of a vector
 local function average(vec)
 	
@@ -101,10 +111,11 @@ end
 
 function events.TICK()
 	
-	-- Variables
-	local vel     = player:getVelocity()
-	local dir     = player:getLookDir()
-	local bodyYaw = player:getBodyYaw()
+	-- Player variables
+	local vel      = player:getVelocity()
+	local dir      = player:getLookDir()
+	local bodyYaw  = player:getBodyYaw()
+	local onGround = ground()
 	
 	-- Directional velocity
 	local fbVel = player:getVelocity():dot((dir.x_z):normalize())
@@ -114,42 +125,72 @@ function events.TICK()
 	
 	-- Static yaw
 	staticYaw = math.clamp(staticYaw, bodyYaw - 45, bodyYaw + 45)
-	staticYaw = math.lerp(staticYaw, bodyYaw, vel:length())
+	staticYaw = math.lerp(staticYaw, bodyYaw, onGround and math.clamp(vel:length(), 0, 1) or 0.25)
+	local yawDif = staticYaw - bodyYaw
 	
-	-- Store previous variables
+	-- Store animation variables
 	time.prev     = time.current
 	strength.prev = strength.current
 	
-	-- Animation modifiers
+	-- Animation control
 	if player:getVehicle() then
 		
 		-- In vehicle
 		time.current = time.current + 0.1
 		strength.current = 1
 		
-	elseif waterTicks.water >= 20 or ground() then
+	elseif waterTicks.water >= 20 or onGround then
 		
 		-- Above water or on ground
-		time.current = time.current + math.clamp(fbVel < -0.01 and math.min(fbVel, math.abs(lrVel)) - 0.1 or math.max(fbVel, math.abs(lrVel)) + 0.1, -0.75, 0.75)
-		strength.current = math.clamp(vel.xz:length() * 2, 0, 1) + 1
+		time.current = time.current + math.clamp(fbVel < -0.1 and math.min(fbVel, math.abs(lrVel)) - 0.1 or math.max(fbVel, math.abs(lrVel)) + 0.1, -0.75, 0.75)
+		strength.current = math.clamp(vel.xz:length() * 2 + 1, 1,  2)
 		
 	else
 		
 		-- Assumed floating in water
 		time.current = time.current + math.clamp(vel:length(), -0.75, 0.75) + 0.1
-		strength.current = math.clamp(vel:length() * 2, 0, 1) + 1
+		strength.current = math.clamp(vel:length() * 2 + 1, 1,  2)
 		
 	end
 	
-	-- Axis lerps
-	pitch.target = math.clamp(pose.elytra and -udVel * 20 * (-math.abs(player:getLookDir().y) + 1) or (pose.swim or waterTicks.water >= 20) and -udVel * 40 * -(math.abs(player:getLookDir().y * 2) - 1) or fbVel * 80 + (math.abs(lrVel) * diagCancel) * 60, -20, 20)
+	-- Axis controls
+	-- X axis control
+	if pose.elytra then
+		
+		-- When using elytra
+		pitch.target = math.clamp(-udVel * 20 * (-math.abs(player:getLookDir().y) + 1), -20, 20)
+		
+	elseif pose.swim or waterTicks.water >= 20 then
+		
+		-- While "swimming" or outside of water
+		pitch.target = math.clamp(-udVel * 40 * -(math.abs(player:getLookDir().y * 2) - 1), -20, 20)
+		
+	else
+		
+		-- Assumed floating in water
+		pitch.target = math.clamp((fbVel + math.max(-udVel, 0) + (math.abs(lrVel) * diagCancel) * 4) * 80, -20, 20)
+		
+	end
 	
-	yaw.target   = (staticYaw - bodyYaw) + t.roll
+	-- Y axis control
+	yaw.target = yawDif
 	
-	roll.target  = math.clamp(effects.dG and 0 or pose.elytra and -lrVel * 20 or (-lrVel * diagCancel) * 80, -20, 20)
-	
-	if isSing and world.getTime() % 5 == 0 then
-		notes(model.head, 1)
+	-- Z Axis control
+	if effects.dG then
+		
+		-- Dolphins grace applied
+		roll.target = 0
+		
+	elseif pose.elytra then
+		
+		-- When using an elytra
+		roll.target = math.clamp((-lrVel * 20) - (yawDif * math.clamp(fbVel, -1, 1)), -20, 20)
+		
+	else
+		
+		-- Assumed floating in water
+		roll.target = math.clamp((-lrVel * diagCancel * 80) - (yawDif * math.clamp(fbVel, -1, 1)), -20, 20)
+		
 	end
 	
 	-- Tick lerps
@@ -164,42 +205,18 @@ function events.TICK()
 	yaw.nextTick   = math.lerp(yaw.nextTick,   yaw.target,   1)
 	roll.nextTick  = math.lerp(roll.nextTick,  roll.target,  0.1)
 	
-end
-
-function events.RENDER(delta, context)
-	
-	-- Head Y rot calc (for sleep offset)
-	t.headY     = (vanilla_model.HEAD:getOriginRot().y + 180) % 360 - 180
-	
-	-- Shark anims lerp
-	shark.target = isShark and 1 or 0
-	t.shark     = math.lerp(shark.current, shark.nextTick, delta)
-	t.normal    = math.map(t.shark, 0, 1, 1 ,0)
-	
-	-- Render lerps
-	t.time     = math.lerp(time.prev, time.current, delta)
-	t.strength = math.lerp(strength.prev, strength.current, delta)
-	
-	t.pitch = math.lerp(pitch.current, pitch.nextTick, delta)
-	t.yaw   = math.lerp(yaw.current, yaw.nextTick, delta)
-	t.roll  = math.lerp(roll.current, roll.nextTick, delta)
-	
-end
-
-function events.TICK()
-	
 	-- Animation variables
 	local tail       = average(model.tailRoot:getScale()) > 0.5
-	local groundAnim = (ground() or waterTicks.water >= 20) and not (pose.swim or pose.crawl) and not pose.elytra and not pose.sleep and not player:getVehicle()
+	local groundAnim = (onGround or waterTicks.water >= 20) and not (pose.swim or pose.crawl) and not pose.elytra and not pose.sleep and not player:getVehicle()
 	
 	-- Animation states
-	local swim     = tail and ((not ground() and waterTicks.water < 20) or (pose.swim or pose.crawl or pose.elytra)) and not pose.sleep and not player:getVehicle()
-	local stand    = tail and not isCrawl and groundAnim
-	local crawl    = tail and     isCrawl and groundAnim
-	local mount    = tail and player:getVehicle()
-	local sleep    = pose.sleep
-	local ears     = player:isUnderwater()
-	local sing     = isSing and not pose.sleep
+	local swim  = tail and ((not onGround and waterTicks.water < 20) or (pose.swim or pose.crawl or pose.elytra)) and not pose.sleep and not player:getVehicle()
+	local stand = tail and not isCrawl and groundAnim
+	local crawl = tail and     isCrawl and groundAnim
+	local mount = tail and player:getVehicle()
+	local sleep = pose.sleep
+	local ears  = player:isUnderwater()
+	local sing  = isSing and not pose.sleep
 	
 	-- Animations
 	anims.swim:playing(swim)
@@ -210,10 +227,36 @@ function events.TICK()
 	anims.ears:playing(ears)
 	anims.sing:playing(sing)
 	
-	canTwirl = tail and not ground() and waterTicks.water < 20 and not pose.sleep
+	-- Spawns notes around head while singing
+	if isSing and world.getTime() % 5 == 0 then
+		notes(model.head, 1)
+	end
+	
+	-- Determins when to stop twirl animaton
+	canTwirl = tail and not onGround and waterTicks.water < 20 and not pose.sleep
 	if not canTwirl then
 		anims.twirl:stop()
 	end
+	
+end
+
+function events.RENDER(delta, context)
+	
+	-- Head Y rot calc (for sleep offset)
+	t.headY = (vanilla_model.HEAD:getOriginRot().y + 180) % 360 - 180
+	
+	-- Shark anims lerp
+	shark.target = isShark and 1 or 0
+	t.shark      = math.lerp(shark.current, shark.nextTick, delta)
+	t.normal     = math.map(t.shark, 0, 1, 1 ,0)
+	
+	-- Render lerps
+	t.time     = math.lerp(time.prev, time.current, delta)
+	t.strength = math.lerp(strength.prev, strength.current, delta)
+	
+	t.pitch = math.lerp(pitch.current, pitch.nextTick, delta)
+	t.yaw   = math.lerp(yaw.current, yaw.nextTick, delta)
+	t.roll  = math.lerp(roll.current, roll.nextTick, delta)
 	
 end
 
