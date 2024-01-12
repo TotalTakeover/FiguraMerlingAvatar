@@ -18,7 +18,7 @@ function events.ENTITY_INIT()
 end
 
 function events.POST_RENDER(delta, context)
-	
+	if context == "FIRST_PERSON" or context == "RENDER" or (not client.isHudEnabled() and context ~= "MINECRAFT_GUI") then
 	-- Pos checking
 	local playerPos = player:getPos(delta)
 	trueHeadPos     = model.head:partToWorldMatrix():apply()
@@ -50,7 +50,7 @@ function events.POST_RENDER(delta, context)
 	
 	-- Nameplate Placement
 	nameplate.ENTITY:pivot(posOffset + vec(0, player:getBoundingBox().y + 9/16, 0))
-	
+	end
 end
 
 -- Camera pos toggle
