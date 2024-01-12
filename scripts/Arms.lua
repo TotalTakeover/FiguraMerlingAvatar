@@ -1,6 +1,5 @@
 -- Required scripts
 local model      = require("scripts.ModelParts")
-local pose       = require("scripts.Posing")
 local waterTicks = require("scripts.WaterTicks")
 
 -- Config setup
