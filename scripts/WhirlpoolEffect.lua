@@ -1,12 +1,12 @@
+-- Required scripts
+local effects = require("scripts.SyncedVariables")
+local pose    = require("scripts.Posing")
+
 -- Config setup
 config:name("Merling")
 local bubbles       = config:load("WhirlpoolBubbles")
 local dolphinsGrace = config:load("WhirlpoolDolphinsGrace") or false
 if bubbles == nil then bubbles = true end
-
--- Required scripts
-local effects = require("scripts.SyncedVariables")
-local pose    = require("scripts.Posing")
 
 -- Bubble spawner
 local numBubbles = 8
