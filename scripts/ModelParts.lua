@@ -37,10 +37,10 @@ t.portrait:visible(true)
 t.skin = {
 	
 	t.head.Head,
-	t.head.HatLayer,
+	t.head.Layer,
 	
 	t.body.Body,
-	t.body.BodyLayer,
+	t.body.Layer,
 	
 	t.leftArm.leftArmDefault,
 	t.leftArm.leftArmSlim,
@@ -49,16 +49,16 @@ t.skin = {
 	t.rightArm.rightArmSlim,
 	
 	t.leftLeg.Leg,
-	t.leftLeg.LegLayer,
+	t.leftLeg.Layer,
 	
 	t.rightLeg.Leg,
-	t.rightLeg.LegLayer,
+	t.rightLeg.Layer,
 	
 	t.portrait.Head,
-	t.portrait.HatLayer,
+	t.portrait.Layer,
 	
 	t.skull.Head,
-	t.skull.HatLayer
+	t.skull.Layer
 	
 }
 
@@ -66,24 +66,24 @@ t.skin = {
 t.layer = {
 
 	HAT = {
-		t.head.HatLayer
+		t.head.Layer
 	},
 	JACKET = {
-		t.body.BodyLayer
+		t.body.Layer
 	},
 	LEFT_SLEEVE = {
-		t.leftArm.leftArmDefault.ArmLayer,
-		t.leftArm.leftArmSlim.ArmLayer
+		t.leftArm.leftArmDefault.Layer,
+		t.leftArm.leftArmSlim.Layer
 	},
 	RIGHT_SLEEVE = {
-		t.rightArm.rightArmDefault.ArmLayer,
-		t.rightArm.rightArmSlim.ArmLayer
+		t.rightArm.rightArmDefault.Layer,
+		t.rightArm.rightArmSlim.Layer
 	},
 	LEFT_PANTS_LEG = {
-		t.leftLeg.LegLayer
+		t.leftLeg.Layer
 	},
 	RIGHT_PANTS_LEG = {
-		t.rightLeg.LegLayer
+		t.rightLeg.Layer
 	},
 	TAIL = {
 		t.tailRoot.Layer,
@@ -143,8 +143,8 @@ t.glowingParts = {
 	t.ears.LeftEar.Ear,
 	t.ears.RightEar.Ear,
 	
-	t.skull.skullEars.skullLeftEar.Ear,
-	t.skull.skullEars.skullRightEar.Ear,
+	t.skull.EarsSkull.LeftEarSkull.Ear,
+	t.skull.EarsSkull.RightEarSkull.Ear,
 	
 	t.tailRoot.Segment,
 	t.tailRoot.Tail2.Segment,
@@ -174,8 +174,8 @@ t.planeParts = {
 	t.ears.LeftEar.Ear,
 	t.ears.RightEar.Ear,
 	
-	t.skull.skullEars.skullLeftEar.Ear,
-	t.skull.skullEars.skullRightEar.Ear,
+	t.skull.EarsSkull.LeftEarSkull.Ear,
+	t.skull.EarsSkull.RightEarSkull.Ear,
 	
 	t.tailRoot.Tail2.Tail2LeftFin.Fin,
 	t.tailRoot.Tail2.Tail2RightFin.Fin,
