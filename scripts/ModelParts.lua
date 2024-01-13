@@ -15,8 +15,8 @@ t.ears = t.head.Ears
 -- Body parts
 t.body     = t.root.Body
 t.tailRoot = t.body.Tail1
-t.cape     = t.body.Cape
 t.elytra   = t.body.Elytra
+t.cape     = t.body.Cape
 
 -- Arm parts
 t.leftArm  = t.root.LeftArm
