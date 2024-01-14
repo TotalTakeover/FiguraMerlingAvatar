@@ -18,8 +18,8 @@ local isCrawl = config:load("TailCrawl") or false
 local t = {}
 
 -- Animation variables
-t.time     = 0
-t.strength = 1
+t.anim_time = 0
+t.strength  = 1
 
 -- Axis variables
 t.pitch    = 0
@@ -251,8 +251,8 @@ function events.RENDER(delta, context)
 	t.normal     = math.map(t.shark, 0, 1, 1 ,0)
 	
 	-- Render lerps
-	t.time     = math.lerp(time.prev, time.current, delta)
-	t.strength = math.lerp(strength.prev, strength.current, delta)
+	t.anim_time = math.lerp(time.prev, time.current, delta)
+	t.strength  = math.lerp(strength.prev, strength.current, delta)
 	
 	t.pitch = math.lerp(pitch.current, pitch.nextTick, delta)
 	t.yaw   = math.lerp(yaw.current, yaw.nextTick, delta)
