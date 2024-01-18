@@ -30,6 +30,8 @@ t.rightLeg = t.root.RightLeg
 t.skull    = t.model.Skull
 t.portrait = t.model.Portrait
 
+t.leftLeg :visible(true)
+t.rightLeg:visible(true)
 t.skull   :visible(true)
 t.portrait:visible(true)
 
