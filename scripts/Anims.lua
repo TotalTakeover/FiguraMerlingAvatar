@@ -18,8 +18,8 @@ local isCrawl = config:load("TailCrawl") or false
 local t = {}
 
 -- Animation variables
-t.time     = 0
-t.strength = 1
+t.anim_time = 0
+t.strength  = 1
 
 -- Axis variables
 t.pitch    = 0
@@ -136,20 +136,20 @@ function events.TICK()
 	if player:getVehicle() then
 		
 		-- In vehicle
-		time.current = time.current + 0.1
+		time.current = time.current + 0.0005
 		strength.current = 1
 		
 	elseif waterTicks.water >= 20 or onGround then
 		
 		-- Above water or on ground
-		time.current = time.current + math.clamp(fbVel < -0.1 and math.min(fbVel, math.abs(lrVel)) - 0.1 or math.max(fbVel, math.abs(lrVel)) + 0.1, -0.75, 0.75)
-		strength.current = math.clamp(vel.xz:length() * 2 + 1, 1,  2)
+		time.current = time.current + math.clamp(fbVel < -0.1 and math.min(fbVel, math.abs(lrVel)) * 0.005 - 0.0005 or math.max(fbVel, math.abs(lrVel)) * 0.005 + 0.0005, -0.0045, 0.0045)
+		strength.current = math.clamp(vel.xz:length() * 2 + 1, 1, 2)
 		
 	else
 		
 		-- Assumed floating in water
-		time.current = time.current + math.clamp(vel:length(), -0.75, 0.75) + 0.1
-		strength.current = math.clamp(vel:length() * 2 + 1, 1,  2)
+		time.current = time.current + math.clamp(vel:length() * 0.005 + 0.0005, -0.0045, 0.0045)
+		strength.current = math.clamp(vel:length() * 2 + 1, 1, 2)
 		
 	end
 	
@@ -251,8 +251,8 @@ function events.RENDER(delta, context)
 	t.normal     = math.map(t.shark, 0, 1, 1 ,0)
 	
 	-- Render lerps
-	t.time     = math.lerp(time.prev, time.current, delta)
-	t.strength = math.lerp(strength.prev, strength.current, delta)
+	t.anim_time = math.lerp(time.prev, time.current, delta)
+	t.strength  = math.lerp(strength.prev, strength.current, delta)
 	
 	t.pitch = math.lerp(pitch.current, pitch.nextTick, delta)
 	t.yaw   = math.lerp(yaw.current, yaw.nextTick, delta)

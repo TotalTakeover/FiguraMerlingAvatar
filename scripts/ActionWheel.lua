@@ -121,7 +121,6 @@ whirlpoolPage
 avatarPage
 	:action( -1, avatar.vanillaSkinPage)
 	:action( -1, avatar.modelPage)
-	:action( -1, arms.movePage)
 	:action( -1, backPage)
 
 -- Camera actions
@@ -134,6 +133,7 @@ cameraPage
 animsPage
 	:action( -1, anims.sharkPage)
 	:action( -1, anims.crawlPage)
+	:action( -1, arms.movePage)
 	:action( -1, anims.twirlPage)
 	:action( -1, anims.singPage)
 	:action( -1, backPage)
