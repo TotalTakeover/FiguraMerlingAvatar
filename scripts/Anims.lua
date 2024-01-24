@@ -253,8 +253,8 @@ function events.RENDER(delta, context)
 	t.yaw   = math.lerp(yaw.current, yaw.nextTick, delta)
 	t.roll  = math.lerp(roll.current, roll.nextTick, delta)
 	
-	t.shark      = math.lerp(shark.current, shark.nextTick, delta)
-	t.normal     = math.map(t.shark, 0, 1, 1 ,0)
+	t.shark  = math.lerp(shark.current, shark.nextTick, delta)
+	t.normal = math.map(t.shark, 0, 1, 1 ,0)
 	
 	-- Head Y rot calc (for sleep offset)
 	t.headY = (vanilla_model.HEAD:getOriginRot().y + 180) % 360 - 180
