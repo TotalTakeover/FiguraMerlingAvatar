@@ -2,7 +2,7 @@
 	"name": "Merling",
 	"description": "\"Splish splash, I was taking a bath.\"",
 	"authors": [
-		"Detrilogue (Original avatar maker)\n",
+		"\nDetrilogue (Original avatar maker)\n",
 		"FlossenMonster (Template Designer, Support)\n",
 		"Snqwblind (Twirl & Sing Anims)\n",
 		"Katt (Updated scripts, APIs)\n",
@@ -11,7 +11,7 @@
 		"Squishy (APIs)\n",
 		"4P5 (APIs, Better Action Wheel)\n",
 		"Dragonearuss (Support)\n",
-		"Total (Avatar Maker)"
+		"Total (Avatar Maker)\n"
 	],
 	"version": "0.1.2",
 	"color": "5555FF"
