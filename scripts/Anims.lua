@@ -193,6 +193,9 @@ function events.TICK()
 		
 	end
 	
+	-- Shark control
+	shark.target = isShark and 1 or 0
+	
 	-- Tick lerps
 	shark.current = shark.nextTick
 	shark.nextTick = math.lerp(shark.nextTick, shark.target, 0.25)
@@ -242,14 +245,6 @@ end
 
 function events.RENDER(delta, context)
 	
-	-- Head Y rot calc (for sleep offset)
-	t.headY = (vanilla_model.HEAD:getOriginRot().y + 180) % 360 - 180
-	
-	-- Shark anims lerp
-	shark.target = isShark and 1 or 0
-	t.shark      = math.lerp(shark.current, shark.nextTick, delta)
-	t.normal     = math.map(t.shark, 0, 1, 1 ,0)
-	
 	-- Render lerps
 	t.anim_time = math.lerp(time.prev, time.current, delta)
 	t.strength  = math.lerp(strength.prev, strength.current, delta)
@@ -257,6 +252,12 @@ function events.RENDER(delta, context)
 	t.pitch = math.lerp(pitch.current, pitch.nextTick, delta)
 	t.yaw   = math.lerp(yaw.current, yaw.nextTick, delta)
 	t.roll  = math.lerp(roll.current, roll.nextTick, delta)
+	
+	t.shark      = math.lerp(shark.current, shark.nextTick, delta)
+	t.normal     = math.map(t.shark, 0, 1, 1 ,0)
+	
+	-- Head Y rot calc (for sleep offset)
+	t.headY = (vanilla_model.HEAD:getOriginRot().y + 180) % 360 - 180
 	
 end
 
