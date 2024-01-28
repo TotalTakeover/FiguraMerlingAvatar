@@ -20,12 +20,30 @@ local cameraPage    = action_wheel:newPage("CameraPage")
 local animsPage     = action_wheel:newPage("AnimationPage")
 local armorPage     = action_wheel:newPage("ArmorPage")
 
+-- Logs pages for navigation
+local navigation = {}
+
+-- Go forward a page
+local function descend(page)
+	
+	navigation[#navigation + 1] = action_wheel:getCurrentPage() 
+	action_wheel:setPage(page)
+	
+end
+
+-- Go back a page
+local function ascend()
+	
+	action_wheel:setPage(table.remove(navigation, #navigation))
+	
+end
+
 -- Action back to main page
 local backPage = action_wheel:newAction()
 	:title("§c§lGo Back?")
 	:hoverColor(vectors.hexToRGB("FF5555"))
 	:item("minecraft:barrier")
-	:onLeftClick(function() action_wheel:setPage(mainPage) end)
+	:onLeftClick(function() ascend() end)
 
 -- Set starting page to main page
 action_wheel:setPage(mainPage)
@@ -37,56 +55,56 @@ mainPage
 			:title("§9§lGlowing Eyes Settings")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
 			:item("minecraft:ender_eye")
-			:onLeftClick(function() action_wheel:setPage(eyesPage) end))
+			:onLeftClick(function() descend(eyesPage) end))
 	
 	:action( -1,
 		action_wheel:newAction()
 			:title("§9§lMerling Tail Settings")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
 			:item("minecraft:tropical_fish")
-			:onLeftClick(function() action_wheel:setPage(tailPage) end))
+			:onLeftClick(function() descend(tailPage) end))
 	
 	:action( -1,
 		action_wheel:newAction()
 			:title("§9§lGlowing Settings")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
 			:item("minecraft:glow_ink_sac")
-			:onLeftClick(function() action_wheel:setPage(glowPage) end))
+			:onLeftClick(function() descend(glowPage) end))
 	
 	:action( -1,
 		action_wheel:newAction()
 			:title("§9§lWhirlpool Settings")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
 			:item("minecraft:magma_block")
-			:onLeftClick(function() action_wheel:setPage(whirlpoolPage) end))
+			:onLeftClick(function() descend(whirlpoolPage) end))
 	
 	:action( -1,
 		action_wheel:newAction()
 			:title("§9§lAvatar Settings")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
 			:item("minecraft:armor_stand")
-			:onLeftClick(function() action_wheel:setPage(avatarPage) end))
+			:onLeftClick(function() descend(avatarPage) end))
 	
 	:action( -1,
 		action_wheel:newAction()
 			:title("§9§lCamera Settings")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
 			:item("minecraft:redstone")
-			:onLeftClick(function() action_wheel:setPage(cameraPage) end))
+			:onLeftClick(function() descend(cameraPage) end))
 	
 	:action( -1,
 		action_wheel:newAction()
 			:title("§9§lAnimations")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
 			:item("minecraft:jukebox")
-			:onLeftClick(function() action_wheel:setPage(animsPage) end))
+			:onLeftClick(function() descend(animsPage) end))
 	
 	:action( -1,
 		action_wheel:newAction()
 			:title("§9§lArmor Settings")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
 			:item("minecraft:iron_chestplate")
-			:onLeftClick(function() action_wheel:setPage(armorPage) end))
+			:onLeftClick(function() descend(armorPage) end))
 
 -- Eye glow actions
 eyesPage

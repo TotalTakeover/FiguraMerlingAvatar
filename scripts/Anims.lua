@@ -18,7 +18,7 @@ local isCrawl = config:load("TailCrawl") or false
 local t = {}
 
 -- Animation variables
-t.anim_time = 0
+t.time = 0
 t.strength  = 1
 
 -- Axis variables
@@ -35,13 +35,13 @@ local canTwirl = false
 local isSing   = false
 
 local time = {
-	prev    = 0,
-	current = 0
+	prev = 0,
+	next = 0
 }
 
 local strength = {
-	prev    = 1,
-	current = 1
+	prev = 1,
+	next = 1
 }
 
 local pitch = {
@@ -129,27 +129,27 @@ function events.TICK()
 	local yawDif = staticYaw - bodyYaw
 	
 	-- Store animation variables
-	time.prev     = time.current
-	strength.prev = strength.current
+	time.prev     = time.next
+	strength.prev = strength.next
 	
 	-- Animation control
 	if player:getVehicle() then
 		
 		-- In vehicle
-		time.current = time.current + 0.0005
-		strength.current = 1
+		time.next = time.next + 0.0005
+		strength.next = 1
 		
 	elseif waterTicks.water >= 20 or onGround then
 		
 		-- Above water or on ground
-		time.current = time.current + math.clamp(fbVel < -0.1 and math.min(fbVel, math.abs(lrVel)) * 0.005 - 0.0005 or math.max(fbVel, math.abs(lrVel)) * 0.005 + 0.0005, -0.0045, 0.0045)
-		strength.current = math.clamp(vel.xz:length() * 2 + 1, 1, 2)
+		time.next = time.next + math.clamp(fbVel < -0.1 and math.min(fbVel, math.abs(lrVel)) * 0.005 - 0.0005 or math.max(fbVel, math.abs(lrVel)) * 0.005 + 0.0005, -0.0045, 0.0045)
+		strength.next = math.clamp(vel.xz:length() * 2 + 1, 1, 2)
 		
 	else
 		
 		-- Assumed floating in water
-		time.current = time.current + math.clamp(vel:length() * 0.005 + 0.0005, -0.0045, 0.0045)
-		strength.current = math.clamp(vel:length() * 2 + 1, 1, 2)
+		time.next = time.next + math.clamp(vel:length() * 0.005 + 0.0005, -0.0045, 0.0045)
+		strength.next = math.clamp(vel:length() * 2 + 1, 1, 2)
 		
 	end
 	
@@ -192,6 +192,9 @@ function events.TICK()
 		roll.target = math.clamp((-lrVel * diagCancel * 80) - (yawDif * math.clamp(fbVel, -1, 1)), -20, 20)
 		
 	end
+	
+	-- Shark control
+	shark.target = isShark and 1 or 0
 	
 	-- Tick lerps
 	shark.current = shark.nextTick
@@ -242,21 +245,19 @@ end
 
 function events.RENDER(delta, context)
 	
-	-- Head Y rot calc (for sleep offset)
-	t.headY = (vanilla_model.HEAD:getOriginRot().y + 180) % 360 - 180
-	
-	-- Shark anims lerp
-	shark.target = isShark and 1 or 0
-	t.shark      = math.lerp(shark.current, shark.nextTick, delta)
-	t.normal     = math.map(t.shark, 0, 1, 1 ,0)
-	
 	-- Render lerps
-	t.anim_time = math.lerp(time.prev, time.current, delta)
-	t.strength  = math.lerp(strength.prev, strength.current, delta)
+	t.time     = math.lerp(time.prev, time.next, delta)
+	t.strength = math.lerp(strength.prev, strength.next, delta)
 	
 	t.pitch = math.lerp(pitch.current, pitch.nextTick, delta)
 	t.yaw   = math.lerp(yaw.current, yaw.nextTick, delta)
 	t.roll  = math.lerp(roll.current, roll.nextTick, delta)
+	
+	t.shark  = math.lerp(shark.current, shark.nextTick, delta)
+	t.normal = math.map(t.shark, 0, 1, 1 ,0)
+	
+	-- Head Y rot calc (for sleep offset)
+	t.headY = (vanilla_model.HEAD:getOriginRot().y + 180) % 360 - 180
 	
 end
 
