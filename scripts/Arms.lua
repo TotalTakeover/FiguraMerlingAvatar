@@ -1,5 +1,5 @@
 -- Required scripts
-local model      = require("scripts.ModelParts")
+local parts      = require("lib.GroupIndex")(models)
 local waterTicks = require("scripts.WaterTicks")
 
 -- Config setup
@@ -65,7 +65,7 @@ function events.TICK()
 	local crossR      = rightItem.tag and rightItem.tag["Charged"] == 1
 	
 	-- Movement overrides
-	local shouldMove = waterTicks.under >= 20 or average(model.tailRoot:getScale()) <= 0.5 or animations.Merling.crawl:isPlaying()
+	local shouldMove = waterTicks.under >= 20 or average(parts.Tail1:getScale()) <= 0.5 or animations.Merling.crawl:isPlaying()
 	
 	-- Targets
 	leftArm.target  = (armMove or shouldMove or leftSwing or ((crossL or crossR) or (using and usingL ~= "NONE"))) and 0 or 1
@@ -84,7 +84,7 @@ function events.RENDER(delta, context)
 	-- Override arm movements
 	local idleTimer  = world.getTime(delta)
 	local idleRot    = vec(math.deg(math.sin(idleTimer * 0.067) * 0.05), 0, math.deg(math.cos(idleTimer * 0.09) * 0.05 + 0.05))
-	local bodyOffset = (vanilla_model.BODY:getOriginRot() * 0.75) + model.body:getTrueRot()
+	local bodyOffset = (vanilla_model.BODY:getOriginRot() * 0.75) + parts.Body:getTrueRot()
 	
 	-- Render lerp
 	leftArm.currentPos  = math.lerp(leftArm.current,  leftArm.nextTick,  delta)
@@ -94,8 +94,8 @@ function events.RENDER(delta, context)
 	local firstPerson = context == "FIRST_PERSON"
 	
 	-- Apply
-	model.leftArm:rot( firstPerson and 0 or (-((vanilla_model.LEFT_ARM:getOriginRot()  + 180) % 360 - 180) + -idleRot + bodyOffset) * leftArm.currentPos)
-	model.rightArm:rot(firstPerson and 0 or (-((vanilla_model.RIGHT_ARM:getOriginRot() + 180) % 360 - 180) + idleRot + bodyOffset) * rightArm.currentPos)
+	parts.LeftArm:rot( firstPerson and 0 or (-((vanilla_model.LEFT_ARM:getOriginRot()  + 180) % 360 - 180) + -idleRot + bodyOffset) * leftArm.currentPos)
+	parts.RightArm:rot(firstPerson and 0 or (-((vanilla_model.RIGHT_ARM:getOriginRot() + 180) % 360 - 180) + idleRot + bodyOffset) * rightArm.currentPos)
 	
 end
 

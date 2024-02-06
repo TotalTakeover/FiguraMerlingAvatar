@@ -1,5 +1,5 @@
 -- Required scripts
-local model     = require("scripts.ModelParts")
+local parts     = require("lib.GroupIndex")(models)
 local kattArmor = require("lib.KattArmor")()
 
 -- Setting the leggings to layer 1
@@ -8,36 +8,36 @@ kattArmor.Armor.Leggings:setLayer(1)
 -- Armor parts
 kattArmor.Armor.Leggings
 	:addParts(
-		model.tailRoot.Tail1ArmorLeggings.Leggings,
-		model.tailRoot.Tail1ArmorLeggings.BrimLeggings,
-		model.tailRoot.Tail2.Tail2ArmorLeggings.Leggings
+		parts.Tail1ArmorLeggings.Leggings,
+		parts.Tail1ArmorLeggings.BrimLeggings,
+		parts.Tail2ArmorLeggings.Leggings
 	)
 	:addTrimParts(
-		model.tailRoot.Tail1ArmorLeggings.Trim,
-		model.tailRoot.Tail1ArmorLeggings.BrimTrim,
-		model.tailRoot.Tail2.Tail2ArmorLeggings.Trim
+		parts.Tail1ArmorLeggings.Trim,
+		parts.Tail1ArmorLeggings.BrimTrim,
+		parts.Tail2ArmorLeggings.Trim
 	)
 kattArmor.Armor.Boots
 	:addParts(
-		model.tailRoot.Tail2.Tail3.Tail3ArmorBoots.Boots,
-		model.tailRoot.Tail2.Tail3.Tail4.Tail4ArmorBoots.Boots
+		parts.Tail3ArmorBoots.Boots,
+		parts.Tail4ArmorBoots.Boots
 	)
 	:addTrimParts(
-		model.tailRoot.Tail2.Tail3.Tail3ArmorBoots.Trim,
-		model.tailRoot.Tail2.Tail3.Tail4.Tail4ArmorBoots.Trim
+		parts.Tail3ArmorBoots.Trim,
+		parts.Tail4ArmorBoots.Trim
 	)
 
 -- Leather armor
 kattArmor.Materials.leather
 	:setTexture(textures["textures.armor.leatherArmor"])
 	:addParts(kattArmor.Armor.Leggings,
-		model.tailRoot.Tail1ArmorLeggings.Leather,
-		model.tailRoot.Tail1ArmorLeggings.BrimLeather,
-		model.tailRoot.Tail2.Tail2ArmorLeggings.Leather
+		parts.Tail1ArmorLeggings.Leather,
+		parts.Tail1ArmorLeggings.BrimLeather,
+		parts.Tail2ArmorLeggings.Leather
 	)
 	:addParts(kattArmor.Armor.Boots,
-		model.tailRoot.Tail2.Tail3.Tail3ArmorBoots.Leather,
-		model.tailRoot.Tail2.Tail3.Tail4.Tail4ArmorBoots.Leather
+		parts.Tail3ArmorBoots.Leather,
+		parts.Tail4ArmorBoots.Leather
 	)
 
 -- Chainmail armor
@@ -140,21 +140,61 @@ if chestplate == nil then chestplate = true end
 if leggings   == nil then leggings   = true end
 if boots      == nil then boots      = true end
 
+-- All helmet parts
+local helmetGroups = {
+	
+	parts.HelmetPivot,
+	parts.HelmetItemPivot
+	
+}
+
+-- All chestplate parts
+local chestplateGroups = {
+	
+	parts.ChestplatePivot,
+	parts.LeftShoulderPivot,
+	parts.RightShoulderPivot
+	
+}
+
+-- All leggings parts
+local leggingsGroups = {
+	
+	parts.LeggingsPivot,
+	parts.LeftLeggingPivot,
+	parts.RightLeggingPivot,
+	
+	parts.Tail1ArmorLeggings,
+	parts.Tail2ArmorLeggings
+	
+}
+
+-- All boots parts
+local bootsGroups = {
+	
+	parts.LeftBootPivot,
+	parts.RightBootPivot,
+	
+	parts.Tail3ArmorBoots,
+	parts.Tail4ArmorBoots
+	
+}
+
 function events.TICK()
 	
-	for _, part in ipairs(model.helmetToggle) do
+	for _, part in ipairs(helmetGroups) do
 		part:visible(helmet)
 	end
 	
-	for _, part in ipairs(model.chestplateToggle) do
+	for _, part in ipairs(chestplateGroups) do
 		part:visible(chestplate)
 	end
 	
-	for _, part in ipairs(model.leggingsToggle) do
+	for _, part in ipairs(leggingsGroups) do
 		part:visible(leggings)
 	end
 	
-	for _, part in ipairs(model.bootsToggle) do
+	for _, part in ipairs(bootsGroups) do
 		part:visible(boots)
 	end
 	

@@ -1,5 +1,5 @@
 -- Required scripts
-local model = require("scripts.ModelParts")
+local parts = require("lib.GroupIndex")(models)
 local pose  = require("scripts.Posing")
 
 -- Config setup
@@ -22,7 +22,7 @@ function events.POST_RENDER(delta, context)
 		
 		-- Pos checking
 		local playerPos = player:getPos(delta)
-		trueHeadPos     = model.head:partToWorldMatrix():apply()
+		trueHeadPos     = parts.Head:partToWorldMatrix():apply()
 		
 		-- Pehkui scaling
 		local nbt   = player:getNbt()

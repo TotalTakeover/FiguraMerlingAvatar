@@ -1,5 +1,5 @@
 -- Required scripts
-local model   = require("scripts.ModelParts")
+local parts   = require("lib.GroupIndex")(models)
 local effects = require("scripts.SyncedVariables")
 local origins = require("lib.OriginsAPI")
 
@@ -73,8 +73,9 @@ function events.RENDER(delta, context)
 	eyes.currentPos = math.lerp(eyes.current, eyes.nextTick, delta)
 	
 	-- Apply
-	model.eyes:secondaryColor(eyes.currentPos)
-	model.eyes:secondaryRenderType(context == "RENDER" and "EMISSIVE" or "EYES")
+	parts.Head.Eyes
+		:secondaryColor(eyes.currentPos)
+		:secondaryRenderType(context == "RENDER" and "EMISSIVE" or "EYES")
 	
 end
 

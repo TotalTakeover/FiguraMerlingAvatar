@@ -1,5 +1,5 @@
 -- Required scripts
-local model      = require("scripts.ModelParts")
+local parts      = require("lib.GroupIndex")(models)
 local waterTicks = require("scripts.WaterTicks")
 local ground     = require("lib.GroundCheck")
 
@@ -72,12 +72,12 @@ function events.RENDER(delta, context)
 	scale.currentPos = math.lerp(scale.current, scale.nextTick, delta)
 	
 	-- Apply tail
-	model.tailRoot:scale(scale.currentPos)
+	parts.Tail1:scale(scale.currentPos)
 	
 	-- Apply legs
 	local legScale = math.map(scale.currentPos, 1, 0, 0, 1)
-	model.leftLeg:scale(legScale)
-	model.rightLeg:scale(legScale)
+	parts.LeftLeg:scale(legScale)
+	parts.RightLeg:scale(legScale)
 	
 end
 
