@@ -209,13 +209,15 @@ function events.TICK()
 	roll.nextTick  = math.lerp(roll.nextTick,  roll.target,  0.1)
 	
 	-- Animation variables
-	local tail       = average(parts.Tail1:getScale()) > 0.5
+	local tail       = average(parts.Tail1:getScale()) >= 0.75
+	local smallTail  = average(parts.Tail1:getScale()) < 0.75 and average(parts.Tail1:getScale()) > 0.25
 	local groundAnim = (onGround or waterTicks.water >= 20) and not (pose.swim or pose.crawl) and not pose.elytra and not pose.sleep and not player:getVehicle()
 	
 	-- Animation states
 	local swim  = tail and ((not onGround and waterTicks.water < 20) or (pose.swim or pose.crawl or pose.elytra)) and not pose.sleep and not player:getVehicle()
 	local stand = tail and not isCrawl and groundAnim
 	local crawl = tail and     isCrawl and groundAnim
+	local small = smallTail
 	local mount = tail and player:getVehicle()
 	local sleep = pose.sleep
 	local ears  = player:isUnderwater()
@@ -225,6 +227,7 @@ function events.TICK()
 	anims.swim:playing(swim)
 	anims.stand:playing(stand)
 	anims.crawl:playing(crawl)
+	anims.small:playing(small)
 	anims.mount:playing(mount)
 	anims.sleep:playing(sleep)
 	anims.ears:playing(ears)
@@ -266,6 +269,7 @@ local blendAnims = {
 	{ anim = anims.swim,  ticks = 7 },
 	{ anim = anims.stand, ticks = 7 },
 	{ anim = anims.crawl, ticks = 7 },
+	{ anim = anims.small, ticks = 7 },
 	{ anim = anims.mount, ticks = 7 },
 	{ anim = anims.sleep, ticks = 7 },
 	{ anim = anims.ears,  ticks = 7 },
@@ -335,11 +339,11 @@ pings.setAnimSing   = setSing
 pings.syncAnims     = syncAnims
 
 -- Twirl keybind
-local twirlBind   = config:load("AnimTwirlKeybind") or "key.keyboard.keypad.4"
+local twirlBind   = config:load("AnimTwirlKeybind") or "key.keyboard.keypad.6"
 local setTwirlKey = keybinds:newKeybind("Twirl Animation"):onPress(pings.animPlayTwirl):key(twirlBind)
 
 -- Sing keybind
-local singBind   = config:load("AnimSingKeybind") or "key.keyboard.keypad.5"
+local singBind   = config:load("AnimSingKeybind") or "key.keyboard.keypad.7"
 local setSingKey = keybinds:newKeybind("Singing Animation"):onPress(function() pings.setAnimSing(not isSing) end):key(singBind)
 
 -- Keybind updaters

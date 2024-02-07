@@ -52,14 +52,14 @@ action_wheel:setPage(mainPage)
 mainPage
 	:action( -1,
 		action_wheel:newAction()
-			:title("§9§lGlowing Eyes Settings")
+			:title("§9§lAvatar Settings")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
-			:item("minecraft:ender_eye")
-			:onLeftClick(function() descend(eyesPage) end))
+			:item("minecraft:armor_stand")
+			:onLeftClick(function() descend(avatarPage) end))
 	
 	:action( -1,
 		action_wheel:newAction()
-			:title("§9§lMerling Tail Settings")
+			:title("§9§lMerling Settings")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
 			:item("minecraft:tropical_fish")
 			:onLeftClick(function() descend(tailPage) end))
@@ -73,87 +73,33 @@ mainPage
 	
 	:action( -1,
 		action_wheel:newAction()
-			:title("§9§lWhirlpool Settings")
-			:hoverColor(vectors.hexToRGB("55FFFF"))
-			:item("minecraft:magma_block")
-			:onLeftClick(function() descend(whirlpoolPage) end))
-	
-	:action( -1,
-		action_wheel:newAction()
-			:title("§9§lAvatar Settings")
-			:hoverColor(vectors.hexToRGB("55FFFF"))
-			:item("minecraft:armor_stand")
-			:onLeftClick(function() descend(avatarPage) end))
-	
-	:action( -1,
-		action_wheel:newAction()
-			:title("§9§lCamera Settings")
-			:hoverColor(vectors.hexToRGB("55FFFF"))
-			:item("minecraft:redstone")
-			:onLeftClick(function() descend(cameraPage) end))
-	
-	:action( -1,
-		action_wheel:newAction()
 			:title("§9§lAnimations")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
 			:item("minecraft:jukebox")
 			:onLeftClick(function() descend(animsPage) end))
-	
+
+-- Avatar actions
+avatarPage
+	:action( -1, avatar.vanillaSkinPage)
+	:action( -1, avatar.modelPage)
 	:action( -1,
 		action_wheel:newAction()
 			:title("§9§lArmor Settings")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
 			:item("minecraft:iron_chestplate")
 			:onLeftClick(function() descend(armorPage) end))
-
--- Eye glow actions
-eyesPage
-	:action( -1, eyes.togglePage)
-	:action( -1, eyes.powerPage)
-	:action( -1, eyes.nightVisionPage)
-	:action( -1, eyes.waterPage)
-	:action( -1, backPage)
-
--- Tail actions
-tailPage
-	:action( -1, tail.tailPage)
-	:action( -1, tail.waterPage)
-	:action( -1, tail.dryPage)
-	:action( -1, tail.soundPage)
-	:action( -1, backPage)
-
--- Glowing actions
-glowPage
-	:action( -1, glow.togglePage)
-	:action( -1, glow.dynamicPage)
-	:action( -1, glow.waterPage)
-	:action( -1, backPage)
-
--- Whirlpool actions
-whirlpoolPage
-	:action( -1, whirlpool.bubblePage)
-	:action( -1, whirlpool.dolphinsGracePage)
-	:action( -1, backPage)
-
--- Avatar actions
-avatarPage
-	:action( -1, avatar.vanillaSkinPage)
-	:action( -1, avatar.modelPage)
-	:action( -1, backPage)
-
--- Camera actions
-cameraPage
-	:action( -1, camera.posPage)
-	:action( -1, camera.eyePage)
-	:action( -1, backPage)
-
--- Animation actions
-animsPage
-	:action( -1, anims.sharkPage)
-	:action( -1, anims.crawlPage)
-	:action( -1, arms.movePage)
-	:action( -1, anims.twirlPage)
-	:action( -1, anims.singPage)
+	:action( -1,
+		action_wheel:newAction()
+			:title("§9§lCamera Settings")
+			:hoverColor(vectors.hexToRGB("55FFFF"))
+			:item("minecraft:redstone")
+			:onLeftClick(function() descend(cameraPage) end))
+	:action( -1,
+		action_wheel:newAction()
+			:title("§9§lWhirlpool Settings")
+			:hoverColor(vectors.hexToRGB("55FFFF"))
+			:item("minecraft:magma_block")
+			:onLeftClick(function() descend(whirlpoolPage) end))
 	:action( -1, backPage)
 
 -- Armor actions
@@ -163,4 +109,56 @@ armorPage
 	:action( -1, armor.leggingsPage)
 	:action( -1, armor.chestplatePage)
 	:action( -1, armor.helmetPage)
+	:action( -1, backPage)
+
+-- Camera actions
+cameraPage
+	:action( -1, camera.posPage)
+	:action( -1, camera.eyePage)
+	:action( -1, backPage)
+
+-- Whirlpool actions
+whirlpoolPage
+	:action( -1, whirlpool.bubblePage)
+	:action( -1, whirlpool.dolphinsGracePage)
+	:action( -1, backPage)
+
+-- Tail actions
+tailPage
+	:action( -1, tail.activePage)
+	:action( -1, tail.waterPage)
+	:action( -1, tail.smallPage)
+	:action( -1, tail.earsPage)
+	:action( -1, tail.dryPage)
+	:action( -1, tail.soundPage)
+	:action( -1, backPage)
+
+-- Glowing actions
+glowPage
+	:action( -1, glow.togglePage)
+	:action( -1, glow.dynamicPage)
+	:action( -1, glow.waterPage)
+	:action( -1,
+		action_wheel:newAction()
+			:title("§9§lGlowing Eyes Settings")
+			:hoverColor(vectors.hexToRGB("55FFFF"))
+			:item("minecraft:ender_eye")
+			:onLeftClick(function() descend(eyesPage) end))
+	:action( -1, backPage)
+
+-- Eye glow actions
+eyesPage
+	:action( -1, eyes.togglePage)
+	:action( -1, eyes.powerPage)
+	:action( -1, eyes.nightVisionPage)
+	:action( -1, eyes.waterPage)
+	:action( -1, backPage)
+
+-- Animation actions
+animsPage
+	:action( -1, anims.sharkPage)
+	:action( -1, anims.crawlPage)
+	:action( -1, arms.movePage)
+	:action( -1, anims.twirlPage)
+	:action( -1, anims.singPage)
 	:action( -1, backPage)

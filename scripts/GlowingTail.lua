@@ -141,7 +141,7 @@ pings.setGlowWater   = setWater
 pings.syncGlow       = syncGlow
 
 -- Keybind
-local toggleBind   = config:load("GlowToggleKeybind") or "key.keyboard.keypad.2"
+local toggleBind   = config:load("GlowToggleKeybind") or "key.keyboard.keypad.4"
 local setToggleKey = keybinds:newKeybind("Glow Toggle"):onPress(function() pings.setGlowToggle(not toggle) end):key(toggleBind)
 
 -- Keybind updater

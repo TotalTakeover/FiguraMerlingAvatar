@@ -5,14 +5,17 @@ local ground     = require("lib.GroundCheck")
 
 -- Config setup
 config:name("Merling")
-local tailActive = config:load("TailActive")
-local water      = config:load("TailWater") or 3
-local canDry     = config:load("TailDry")
-local dryTimer   = config:load("TailDryTimer") or 400
-local fallSound  = config:load("TailFallSound")
-if tailActive == nil then tailActive = true end
-if canDry     == nil then canDry = true end
-if fallSound  == nil then fallSound = true end
+local active    = config:load("TailActive")
+local water     = config:load("TailWater") or 3
+local small     = config:load("TailSmallTail")
+local ears      = config:load("TailEars") or false
+local canDry    = config:load("TailDry")
+local dryTimer  = config:load("TailDryTimer") or 400
+local fallSound = config:load("TailFallSound")
+if active    == nil then active = true end
+if small     == nil then small = true end
+if canDry    == nil then canDry = true end
+if fallSound == nil then fallSound = true end
 
 -- Variables setup
 local wasInAir = false
@@ -25,12 +28,38 @@ local scale = {
 	currentPos = 0
 }
 
+-- Lerp small table
+local smallScale = {
+	current    = 0,
+	nextTick   = 0,
+	target     = 0,
+	currentPos = 0
+}
+
+-- Lerp ears table
+local earsScale = {
+	current    = 0,
+	nextTick   = 0,
+	target     = 0,
+	currentPos = 0
+}
+
 -- Set lerp start on init
 function events.ENTITY_INIT()
 	
-	local apply = tailActive and 1 or 0
+	local apply = active and 1 or 0
 	for k, v in pairs(scale) do
 		scale[k] = apply
+	end
+	
+	local apply = active and small and 1 or 0
+	for k, v in pairs(smallScale) do
+		smallScale[k] = apply
+	end
+	
+	local apply = ears and 1 or 0
+	for k, v in pairs(earsScale) do
+		earsScale[k] = apply
 	end
 	
 end
@@ -46,14 +75,20 @@ function events.TICK()
 	}
 	
 	-- Target
-	scale.target = tailActive and waterState[water] <= (canDry and dryTimer or 20) and 1 or 0
+	scale.target      = active and waterState[water] <= (canDry and dryTimer or 20) and 1 or 0
+	smallScale.target = active and small and 1 or 0
+	earsScale.target  = active and ears and 1 or 0
 	
 	-- Tick lerp
-	scale.current  = scale.nextTick
-	scale.nextTick = math.lerp(scale.nextTick, scale.target, 0.2)
+	scale.current       = scale.nextTick
+	smallScale.current  = smallScale.nextTick
+	earsScale.current   = earsScale.nextTick
+	scale.nextTick      = math.lerp(scale.nextTick,      scale.target,      0.2)
+	smallScale.nextTick = math.lerp(smallScale.nextTick, smallScale.target, 0.2)
+	earsScale.nextTick  = math.lerp(earsScale.nextTick,  earsScale.target,  0.2)
 	
 	-- Play sound if conditions are met
-	if fallSound and wasInAir and ground() and scale.currentPos >= 0.5 and not player:getVehicle() and not player:isInWater() then
+	if fallSound and wasInAir and ground() and scale.currentPos >= 0.75 and not player:getVehicle() and not player:isInWater() then
 		local vel    = math.abs(-player:getVelocity().y + 1)
 		local dry    = canDry and (dryTimer - waterState[water]) / dryTimer or 1
 		local volume = math.clamp((vel * dry) / 2, 0, 1)
@@ -69,23 +104,35 @@ end
 function events.RENDER(delta, context)
 	
 	-- Render lerp
-	scale.currentPos = math.lerp(scale.current, scale.nextTick, delta)
+	scale.currentPos      = math.lerp(scale.current,      scale.nextTick,      delta)
+	smallScale.currentPos = math.lerp(smallScale.current, smallScale.nextTick, delta)
+	earsScale.currentPos  = math.lerp(earsScale.current,  earsScale.nextTick,  delta)
+	
+	-- Variables
+	local tailScale = (scale.currentPos * math.map(smallScale.currentPos, 0, 1, 1, 0.5)) + (smallScale.currentPos * 0.5)
+	local legScale  = math.map(scale.currentPos, 1, 0, 0, 1)
+	local earScale  = earsScale.currentPos
 	
 	-- Apply tail
-	parts.Tail1:scale(scale.currentPos)
+	parts.Tail1:scale(tailScale)
 	
 	-- Apply legs
-	local legScale = math.map(scale.currentPos, 1, 0, 0, 1)
 	parts.LeftLeg:scale(legScale)
 	parts.RightLeg:scale(legScale)
 	
+	-- Apply Ears
+	parts.LeftEar:scale(earScale)
+	parts.RightEar:scale(earScale)
+	parts.LeftEarSkull:scale(earScale)
+	parts.RightEarSkull:scale(earScale)
+	
 end
 
--- Tail toggle
-local function setTail(boolean)
+-- Active toggle
+local function setActive(boolean)
 	
-	tailActive = boolean
-	config:save("TailActive", tailActive)
+	active = boolean
+	config:save("TailActive", active)
 	
 end
 
@@ -99,6 +146,22 @@ local function setWater(i)
 		sounds:playSound("minecraft:ambient.underwater.enter", player:getPos(), 0.35)
 	end
 	config:save("TailWater", water)
+	
+end
+
+-- Small toggle
+local function setSmall(boolean)
+	
+	small = boolean
+	config:save("TailSmall", small)
+	
+end
+
+-- Ears toggle
+local function setEars(boolean)
+	
+	ears = boolean
+	config:save("TailEars", ears)
 	
 end
 
@@ -130,34 +193,56 @@ local function setFallSound(boolean)
 end
 
 -- Sync variables
-local function syncTail(a, b, c, x, d)
+local function syncTail(a, b, c, d, e, x, f)
 	
-	tailActive = a
-	water      = b
-	canDry     = c
-	dryTimer   = x
-	fallSound  = d
+	active    = a
+	water     = b
+	small     = c
+	ears      = d
+	canDry    = e
+	dryTimer  = x
+	fallSound = f
 	
 end
 
 -- Pings setup
-pings.setTailActive    = setTail
+pings.setTailActive    = setActive
 pings.setTailWater     = setWater
+pings.setTailSmall     = setSmall
+pings.setTailEars      = setEars
 pings.setTailDry       = setDry
 pings.setTailFallSound = setFallSound
 pings.syncTail         = syncTail
 
--- Keybind
-local tailBind   = config:load("TailToggleKeybind") or "key.keyboard.keypad.1"
-local setTailKey = keybinds:newKeybind("Tail Toggle"):onPress(function() pings.setTailActive(not tailActive) end):key(tailBind)
+-- Tail Keybind
+local tailBind   = config:load("TailActiveKeybind") or "key.keyboard.keypad.1"
+local setTailKey = keybinds:newKeybind("Merling Toggle"):onPress(function() pings.setTailActive(not active) end):key(tailBind)
 
--- Keybind updater
+-- Small Tail keybind
+local smallBind   = config:load("TailSmallKeybind") or "key.keyboard.keypad.2"
+local setSmallKey = keybinds:newKeybind("Small Tail Toggle"):onPress(function() pings.setTailSmall(not small) end):key(smallBind)
+
+-- Ears keybind
+local earsBind   = config:load("TailEarsKeybind") or "key.keyboard.keypad.3"
+local setEarsKey = keybinds:newKeybind("Ears Toggle"):onPress(function() pings.setTailEars(not ears) end):key(earsBind)
+
+-- Keybind updaters
 function events.TICK()
 	
-	local key = setTailKey:getKey()
-	if key ~= tailBind then
-		tailBind = key
-		config:save("TailToggleKeybind", key)
+	local tailKey  = setTailKey:getKey()
+	local smallKey = setSmallKey:getKey()
+	local earsKey  = setEarsKey:getKey()
+	if tailKey ~= tailBind then
+		tailBind = tailKey
+		config:save("TailActiveKeybind", tailKey)
+	end
+	if smallKey ~= smallBind then
+		smallBind = smallKey
+		config:save("TailSmallKeybind", smallKey)
+	end
+	if earsKey ~= earsBind then
+		earsBind = earsKey
+		config:save("TailEarsKeybind", earsKey)
 	end
 	
 end
@@ -167,15 +252,17 @@ if host:isHost() then
 	function events.TICK()
 		
 		if world.getTime() % 200 == 0 then
-			pings.syncTail(tailActive, water, canDry, dryTimer, fallSound)
+			pings.syncTail(active, water, small, ears, canDry, dryTimer, fallSound)
 		end
 		
 	end
 end
 
 -- Activate actions
-setTail(tailActive)
+setActive(active)
 setWater(0)
+setSmall(small)
+setEars(ears)
 setDry(canDry)
 setFallSound(fallSound)
 
@@ -183,8 +270,8 @@ setFallSound(fallSound)
 local t = {}
 
 -- Action wheel pages
-t.tailPage = action_wheel:newAction("TailActive")
-	:title("§9§lToggle Tail Functionality\n\n§bToggles the ability for your tail to appear in place of your legs.")
+t.activePage = action_wheel:newAction("TailActive")
+	:title("§9§lToggle Merling Functionality\n\n§bToggles the ability for Merling attributes to appear.")
 	:hoverColor(vectors.hexToRGB("55FFFF"))
 	:toggleColor(vectors.hexToRGB("5555FF"))
 	:item("minecraft:rabbit_foot")
@@ -195,6 +282,22 @@ t.waterPage = action_wheel:newAction("TailWater")
 	:hoverColor(vectors.hexToRGB("55FFFF"))
 	:onLeftClick(function() pings.setTailWater(1)end)
 	:onRightClick(function() pings.setTailWater(-1) end)
+
+t.smallPage = action_wheel:newAction("TailSmall")
+	:title("§9§lToggle Small Tail\n\n§bWhen outside water, toggles the appearence of the tail into a smaller tail.")
+	:hoverColor(vectors.hexToRGB("55FFFF"))
+	:toggleColor(vectors.hexToRGB("5555FF"))
+	:item("minecraft:kelp")
+	:toggleItem("minecraft:scute")
+	:onToggle(pings.setTailSmall)
+
+t.earsPage = action_wheel:newAction("TailEars")
+	:title("§9§lToggle Ears\n\n§bToggles the appearence of your ears.")
+	:hoverColor(vectors.hexToRGB("55FFFF"))
+	:toggleColor(vectors.hexToRGB("5555FF"))
+	:item("minecraft:prismarine_crystals")
+	:toggleItem("minecraft:prismarine_shard")
+	:onToggle(pings.setTailEars)
 
 t.dryPage = action_wheel:newAction("TailDrying")
 	:hoverColor(vectors.hexToRGB("55FFFF"))
@@ -242,7 +345,9 @@ local waterInfo = {
 -- Updates action page info
 function events.TICK()
 	
-	t.tailPage:toggled(tailActive)
+	t.activePage:toggled(active)
+	t.smallPage:toggled(small)
+	t.earsPage:toggled(ears)
 	t.waterPage
 		:title("§9§lWater Sensitivity\n\n§3Current configuration: "..waterInfo[water].title.."\n\n§bDetermines how your tail should form in contact with water.")
 		:item(waterInfo[water].item)
