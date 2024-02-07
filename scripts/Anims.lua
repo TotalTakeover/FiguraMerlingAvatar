@@ -117,6 +117,11 @@ function events.TICK()
 	local bodyYaw  = player:getBodyYaw()
 	local onGround = ground()
 	
+	-- Animation variables
+	local tail       = average(parts.Tail1:getScale()) >= 0.6
+	local smallTail  = average(parts.Tail1:getScale()) < 0.6 and average(parts.Tail1:getScale()) > 0.25
+	local groundAnim = (onGround or waterTicks.water >= 20) and not (pose.swim or pose.crawl) and not pose.elytra and not pose.sleep and not player:getVehicle()
+	
 	-- Directional velocity
 	local fbVel = player:getVelocity():dot((dir.x_z):normalize())
 	local lrVel = player:getVelocity():cross(dir.x_z:normalize()).y
@@ -165,6 +170,11 @@ function events.TICK()
 		-- While "swimming" or outside of water
 		pitch.target = math.clamp(-udVel * 40 * -(math.abs(player:getLookDir().y * 2) - 1), -20, 20)
 		
+	elseif smallTail then
+		
+		-- Assumed floating in water, with small tail active
+		pitch.target = 0
+		
 	else
 		
 		-- Assumed floating in water
@@ -207,11 +217,6 @@ function events.TICK()
 	pitch.nextTick = math.lerp(pitch.nextTick, pitch.target, 0.1)
 	yaw.nextTick   = math.lerp(yaw.nextTick,   yaw.target,   1)
 	roll.nextTick  = math.lerp(roll.nextTick,  roll.target,  0.1)
-	
-	-- Animation variables
-	local tail       = average(parts.Tail1:getScale()) >= 0.75
-	local smallTail  = average(parts.Tail1:getScale()) < 0.75 and average(parts.Tail1:getScale()) > 0.25
-	local groundAnim = (onGround or waterTicks.water >= 20) and not (pose.swim or pose.crawl) and not pose.elytra and not pose.sleep and not player:getVehicle()
 	
 	-- Animation states
 	local swim  = tail and ((not onGround and waterTicks.water < 20) or (pose.swim or pose.crawl or pose.elytra)) and not pose.sleep and not player:getVehicle()
