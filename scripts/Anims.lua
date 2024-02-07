@@ -119,7 +119,6 @@ function events.TICK()
 	
 	-- Animation variables
 	local tail       = average(parts.Tail1:getScale()) >= 0.6
-	local smallTail  = average(parts.Tail1:getScale()) < 0.6 and average(parts.Tail1:getScale()) > 0.25
 	local groundAnim = (onGround or waterTicks.water >= 20) and not (pose.swim or pose.crawl) and not pose.elytra and not pose.sleep and not player:getVehicle()
 	
 	-- Directional velocity
@@ -170,7 +169,7 @@ function events.TICK()
 		-- While "swimming" or outside of water
 		pitch.target = math.clamp(-udVel * 40 * -(math.abs(player:getLookDir().y * 2) - 1), -20, 20)
 		
-	elseif smallTail then
+	elseif not tail then
 		
 		-- Assumed floating in water, with small tail active
 		pitch.target = 0
@@ -222,7 +221,7 @@ function events.TICK()
 	local swim  = tail and ((not onGround and waterTicks.water < 20) or (pose.swim or pose.crawl or pose.elytra)) and not pose.sleep and not player:getVehicle()
 	local stand = tail and not isCrawl and groundAnim
 	local crawl = tail and     isCrawl and groundAnim
-	local small = smallTail
+	local small = not tail
 	local mount = tail and player:getVehicle()
 	local sleep = pose.sleep
 	local ears  = player:isUnderwater()
