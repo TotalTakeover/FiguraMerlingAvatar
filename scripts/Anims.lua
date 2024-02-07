@@ -118,8 +118,8 @@ function events.TICK()
 	local onGround = ground()
 	
 	-- Animation variables
-	local tail       = average(parts.Tail1:getScale()) >= 0.6
 	local groundAnim = (onGround or waterTicks.water >= 20) and not (pose.swim or pose.crawl) and not pose.elytra and not pose.sleep and not player:getVehicle()
+	local tail       = average(parts.Tail1:getScale()) >= 0.75
 	
 	-- Directional velocity
 	local fbVel = player:getVelocity():dot((dir.x_z):normalize())
