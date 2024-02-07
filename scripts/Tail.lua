@@ -8,12 +8,13 @@ config:name("Merling")
 local active    = config:load("TailActive")
 local water     = config:load("TailWater") or 3
 local small     = config:load("TailSmallTail")
-local ears      = config:load("TailEars") or false
+local ears      = config:load("TailEars")
 local canDry    = config:load("TailDry")
 local dryTimer  = config:load("TailDryTimer") or 400
 local fallSound = config:load("TailFallSound")
 if active    == nil then active = true end
 if small     == nil then small = true end
+if ears      == nil then ears = true end
 if canDry    == nil then canDry = true end
 if fallSound == nil then fallSound = true end
 
