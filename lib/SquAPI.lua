@@ -475,8 +475,8 @@ function squapi.tails(tailsegs, intensity, tailintensityY, tailintensityX, tailY
 		local tailintensity = tailintensity/(math.abs((yvel*30))-vel*30 + 1)
 		local pose = player:getPose()
 		for i, tail in ipairs(tailsegs) do
-			local tailtargety = math.sin((time * tailxspeed)/10 - (i * segoffsetmultipler) + initialTailOffset) * tailintensity
-			local tailtargetx = math.sin((time * tailyspeed * (squapi.wagStrength))/10 - (i)) * tailintensityx * squapi.wagStrength
+			local tailtargety = math.sin((time * tailyspeed)/10 - (i * segoffsetmultipler) + initialTailOffset) * tailintensity
+			local tailtargetx = math.sin((time * tailxspeed * (squapi.wagStrength))/10 - (i)) * tailintensityx * squapi.wagStrength
 
 			tailtargetx = tailtargetx + bodyrotspeed*intensity*0.5-- + svel*intensity*40
 			tailtargety = tailtargety + yvel * 20 * intensity - vel*intensity*50*tailvelbend
