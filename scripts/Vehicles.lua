@@ -1,5 +1,5 @@
 -- Required scripts
-local model   = require("scripts.ModelParts")
+local parts   = require("lib.GroupIndex")(models)
 local carrier = require("lib.GSCarrier")
 local pose    = require("scripts.Posing")
 
@@ -15,7 +15,7 @@ carrier.rider.controller.setAimEnabled(false)
 carrier.vehicle.addTag("gscarrier:humanoid", "gscarrier:land", "gscarrier:water")
 
 -- Seat 1
-carrier.vehicle.newSeat("Seat1", model.tailRoot.Seat1, {
+carrier.vehicle.newSeat("Seat1", parts.Seat1, {
 	priority = 1,
 	tags = {["gscarrier:piggyback"] = true}
 })
@@ -23,6 +23,6 @@ carrier.vehicle.newSeat("Seat1", model.tailRoot.Seat1, {
 function events.TICK()
 	
 	local swim = pose.swim or pose.crawl or animations.Merling.crawl:isPlaying()
-	model.tailRoot.Seat1:pos(swim and vec(0, 0, -4) or nil)
+	parts.Seat1:pos(swim and vec(0, 0, -4) or nil)
 	
 end

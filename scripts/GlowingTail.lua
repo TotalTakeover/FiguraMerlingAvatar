@@ -1,5 +1,5 @@
 -- Required scripts
-local model      = require("scripts.ModelParts")
+local parts      = require("lib.GroupIndex")(models)
 local waterTicks = require("scripts.WaterTicks")
 
 -- Config setup
@@ -8,6 +8,25 @@ local toggle  = config:load("GlowToggle")
 local dynamic = config:load("GlowDynamic") or false
 local water   = config:load("GlowWater") or false
 if toggle == nil then toggle = true end
+
+-- All glowing parts
+local glowingParts = {
+	
+	parts.LeftEar.Ear,
+	parts.RightEar.Ear,
+	
+	parts.LeftEarSkull.Ear,
+	parts.RightEarSkull.Ear,
+	
+	parts.Tail1.Segment,
+	parts.Tail2.Segment,
+	parts.Tail2LeftFin.Fin,
+	parts.Tail2RightFin.Fin,
+	parts.Tail3.Segment,
+	parts.Tail4.Segment,
+	parts.Fluke
+	
+}
 
 -- Lerp glow table
 local glow = {
@@ -65,9 +84,10 @@ function events.RENDER(delta, context)
 	
 	-- Apply
 	local renderType = context == "RENDER" and "EMISSIVE" or "EYES"
-	for _, part in ipairs(model.glowingParts) do
-		part:secondaryColor(glow.currentPos)
-		part:secondaryRenderType(renderType)
+	for _, part in ipairs(glowingParts) do
+		part
+			:secondaryColor(glow.currentPos)
+			:secondaryRenderType(renderType)
 	end
 	
 end
@@ -121,7 +141,7 @@ pings.setGlowWater   = setWater
 pings.syncGlow       = syncGlow
 
 -- Keybind
-local toggleBind   = config:load("GlowToggleKeybind") or "key.keyboard.keypad.2"
+local toggleBind   = config:load("GlowToggleKeybind") or "key.keyboard.keypad.4"
 local setToggleKey = keybinds:newKeybind("Glow Toggle"):onPress(function() pings.setGlowToggle(not toggle) end):key(toggleBind)
 
 -- Keybind updater

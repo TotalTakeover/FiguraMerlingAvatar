@@ -1,11 +1,113 @@
 -- Required scripts
-local model = require("scripts.ModelParts")
+local parts = require("lib.GroupIndex")(models)
 
 -- Config setup
 config:name("Merling")
 local vanillaSkin = config:load("AvatarVanillaSkin")
 local slim        = config:load("AvatarSlim") or false
 if vanillaSkin == nil then vanillaSkin = true end
+
+-- Set legs, skull, and portrait groups to visible (incase disabled in blockbench)
+parts.LeftLeg :visible(true)
+parts.RightLeg:visible(true)
+parts.Skull   :visible(true)
+parts.Portrait:visible(true)
+
+-- All vanilla skin parts
+local skin = {
+	
+	parts.Head.Head,
+	parts.Head.Layer,
+	
+	parts.Body.Body,
+	parts.Body.Layer,
+	
+	parts.leftArmDefault,
+	parts.leftArmSlim,
+	
+	parts.rightArmDefault,
+	parts.rightArmSlim,
+	
+	parts.LeftLeg.Leg,
+	parts.LeftLeg.Layer,
+	
+	parts.RightLeg.Leg,
+	parts.RightLeg.Layer,
+	
+	parts.Portrait.Head,
+	parts.Portrait.Layer,
+	
+	parts.Skull.Head,
+	parts.Skull.Layer
+	
+}
+
+-- All layer parts
+local layer = {
+
+	HAT = {
+		parts.Head.Layer
+	},
+	JACKET = {
+		parts.Body.Layer
+	},
+	LEFT_SLEEVE = {
+		parts.leftArmDefault.Layer,
+		parts.leftArmSlim.Layer
+	},
+	RIGHT_SLEEVE = {
+		parts.rightArmDefault.Layer,
+		parts.rightArmSlim.Layer
+	},
+	LEFT_PANTS_LEG = {
+		parts.LeftLeg.Layer
+	},
+	RIGHT_PANTS_LEG = {
+		parts.RightLeg.Layer
+	},
+	TAIL = {
+		parts.Tail1.Layer,
+		parts.Tail2.Layer,
+		parts.Tail3.Layer,
+		parts.Tail4.Layer
+	},
+	CAPE = {
+		parts.Cape
+	}
+	
+}
+
+--[[
+	
+	Because flat parts in the model are 2 faces directly on top
+	of eachother, and have 0 inflate, the two faces will z-fight.
+	This prevents z-fighting, as well as z-fighting at a distance,
+	as well as translucent stacking.
+	
+	Please add plane/flat parts with 2 faces to the table below.
+	0.01 works, but this works much better :)
+	
+--]]
+
+-- All plane parts
+local planeParts = {
+	
+	parts.LeftEar.Ear,
+	parts.RightEar.Ear,
+	
+	parts.LeftEarSkull.Ear,
+	parts.RightEarSkull.Ear,
+	
+	parts.Tail2LeftFin.Fin,
+	parts.Tail2RightFin.Fin,
+	parts.Fluke
+	
+}
+
+-- Apply
+for _, part in ipairs(planeParts) do
+	part:primaryRenderType("TRANSLUCENT_CULL")
+end
 
 -- Determine vanilla player type on init
 local vanillaAvatarType
@@ -21,25 +123,25 @@ function events.TICK()
 	-- Model shape
 	local slimShape = (vanillaSkin and vanillaAvatarType == "SLIM") or (slim and not vanillaSkin)
 	
-	model.leftArm.leftArmDefault:setVisible(not slimShape)
-	model.rightArm.rightArmDefault:setVisible(not slimShape)
+	parts.leftArmDefault:visible(not slimShape)
+	parts.rightArmDefault:visible(not slimShape)
 	
-	model.leftArm.leftArmSlim:setVisible(slimShape)
-	model.rightArm.rightArmSlim:setVisible(slimShape)
+	parts.leftArmSlim:visible(slimShape)
+	parts.rightArmSlim:visible(slimShape)
 	
 	-- Skin textures
 	local skinType = vanillaSkin and "SKIN" or "PRIMARY"
-	for _, part in ipairs(model.skin) do
+	for _, part in ipairs(skin) do
 		part:primaryTexture(skinType)
 	end
 	
 	-- Cape/Elytra texture
-	model.cape:primaryTexture(vanillaSkin and "CAPE" or nil)
-	model.elytra:primaryTexture(vanillaSkin and player:hasCape() and (player:isSkinLayerVisible("CAPE") and "CAPE" or "ELYTRA") or nil)
+	parts.Cape:primaryTexture(vanillaSkin and "CAPE" or nil)
+	parts.Elytra:primaryTexture(vanillaSkin and player:hasCape() and (player:isSkinLayerVisible("CAPE") and "CAPE" or "ELYTRA") or nil)
 		:secondaryRenderType(player:getItem(5):hasGlint() and "GLINT" or "NONE")
 	
 	-- Layer toggling
-	for layerType, parts in pairs(model.layer) do
+	for layerType, parts in pairs(layer) do
 		local enabled = enabled
 		if layerType == "TAIL" then
 			enabled = player:isSkinLayerVisible("RIGHT_PANTS_LEG") or player:isSkinLayerVisible("LEFT_PANTS_LEG")

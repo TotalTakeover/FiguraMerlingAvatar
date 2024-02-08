@@ -1,6 +1,6 @@
 -- Required scripts
 require("lib.GSAnimBlend")
-local model      = require("scripts.ModelParts")
+local parts      = require("lib.GroupIndex")(models)
 local waterTicks = require("scripts.WaterTicks")
 local pose       = require("scripts.Posing")
 local ground     = require("lib.GroundCheck")
@@ -117,6 +117,10 @@ function events.TICK()
 	local bodyYaw  = player:getBodyYaw()
 	local onGround = ground()
 	
+	-- Animation variables
+	local tail       = average(parts.Tail1:getScale()) >= 0.75
+	local groundAnim = (onGround or waterTicks.water >= 20) and not (pose.climb or pose.swim or pose.crawl) and not pose.elytra and not pose.sleep and not player:getVehicle()
+	
 	-- Directional velocity
 	local fbVel = player:getVelocity():dot((dir.x_z):normalize())
 	local lrVel = player:getVelocity():cross(dir.x_z:normalize()).y
@@ -160,7 +164,12 @@ function events.TICK()
 		-- When using elytra
 		pitch.target = math.clamp(-udVel * 20 * (-math.abs(player:getLookDir().y) + 1), -20, 20)
 		
-	elseif pose.swim or waterTicks.water >= 20 then
+	elseif pose.climb then
+		
+		-- Assumed climbing
+		pitch.target = 0
+		
+	elseif (pose.swim or waterTicks.water >= 20) then
 		
 		-- While "swimming" or outside of water
 		pitch.target = math.clamp(-udVel * 40 * -(math.abs(player:getLookDir().y * 2) - 1), -20, 20)
@@ -208,14 +217,11 @@ function events.TICK()
 	yaw.nextTick   = math.lerp(yaw.nextTick,   yaw.target,   1)
 	roll.nextTick  = math.lerp(roll.nextTick,  roll.target,  0.1)
 	
-	-- Animation variables
-	local tail       = average(model.tailRoot:getScale()) > 0.5
-	local groundAnim = (onGround or waterTicks.water >= 20) and not (pose.swim or pose.crawl) and not pose.elytra and not pose.sleep and not player:getVehicle()
-	
 	-- Animation states
-	local swim  = tail and ((not onGround and waterTicks.water < 20) or (pose.swim or pose.crawl or pose.elytra)) and not pose.sleep and not player:getVehicle()
+	local swim  = tail and ((not onGround and waterTicks.water < 20) or (pose.climb or pose.swim or pose.crawl or pose.elytra)) and not pose.sleep and not player:getVehicle()
 	local stand = tail and not isCrawl and groundAnim
 	local crawl = tail and     isCrawl and groundAnim
+	local small = not tail
 	local mount = tail and player:getVehicle()
 	local sleep = pose.sleep
 	local ears  = player:isUnderwater()
@@ -225,6 +231,7 @@ function events.TICK()
 	anims.swim:playing(swim)
 	anims.stand:playing(stand)
 	anims.crawl:playing(crawl)
+	anims.small:playing(small)
 	anims.mount:playing(mount)
 	anims.sleep:playing(sleep)
 	anims.ears:playing(ears)
@@ -232,7 +239,7 @@ function events.TICK()
 	
 	-- Spawns notes around head while singing
 	if isSing and world.getTime() % 5 == 0 then
-		notes(model.head, 1)
+		notes(parts.Head, 1)
 	end
 	
 	-- Determins when to stop twirl animaton
@@ -266,6 +273,7 @@ local blendAnims = {
 	{ anim = anims.swim,  ticks = 7 },
 	{ anim = anims.stand, ticks = 7 },
 	{ anim = anims.crawl, ticks = 7 },
+	{ anim = anims.small, ticks = 7 },
 	{ anim = anims.mount, ticks = 7 },
 	{ anim = anims.sleep, ticks = 7 },
 	{ anim = anims.ears,  ticks = 7 },
@@ -281,7 +289,7 @@ function events.RENDER(delta, context)
 	
 	local rot = vanilla_model.HEAD:getOriginRot()
 	rot.x = math.clamp(rot.x, -90, 30)
-	model.root.Spyglass:rot(rot)
+	parts.Spyglass:rot(rot)
 		:pos(pose.crouch and vec(0, -4, 0) or nil)
 	
 end
@@ -335,11 +343,11 @@ pings.setAnimSing   = setSing
 pings.syncAnims     = syncAnims
 
 -- Twirl keybind
-local twirlBind   = config:load("AnimTwirlKeybind") or "key.keyboard.keypad.4"
+local twirlBind   = config:load("AnimTwirlKeybind") or "key.keyboard.keypad.6"
 local setTwirlKey = keybinds:newKeybind("Twirl Animation"):onPress(pings.animPlayTwirl):key(twirlBind)
 
 -- Sing keybind
-local singBind   = config:load("AnimSingKeybind") or "key.keyboard.keypad.5"
+local singBind   = config:load("AnimSingKeybind") or "key.keyboard.keypad.7"
 local setSingKey = keybinds:newKeybind("Singing Animation"):onPress(function() pings.setAnimSing(not isSing) end):key(singBind)
 
 -- Keybind updaters
