@@ -164,15 +164,15 @@ function events.TICK()
 		-- When using elytra
 		pitch.target = math.clamp(-udVel * 20 * (-math.abs(player:getLookDir().y) + 1), -20, 20)
 		
-	elseif (pose.swim or waterTicks.water >= 20) and not pose.climb then
+	elseif pose.climb then
+		
+		-- Assumed climbing
+		pitch.target = 0
+		
+	elseif (pose.swim or waterTicks.water >= 20) then
 		
 		-- While "swimming" or outside of water
 		pitch.target = math.clamp(-udVel * 40 * -(math.abs(player:getLookDir().y * 2) - 1), -20, 20)
-		
-	elseif not tail or pose.climb then
-		
-		-- Assumed floating in water with small tail active, or climbing
-		pitch.target = 0
 		
 	else
 		
