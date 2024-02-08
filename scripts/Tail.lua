@@ -7,7 +7,7 @@ local ground     = require("lib.GroundCheck")
 config:name("Merling")
 local active    = config:load("TailActive")
 local water     = config:load("TailWater") or 3
-local small     = config:load("TailSmallTail")
+local small     = config:load("TailSmall")
 local ears      = config:load("TailEars")
 local canDry    = config:load("TailDry")
 local dryTimer  = config:load("TailDryTimer") or 400
@@ -51,11 +51,6 @@ function events.ENTITY_INIT()
 	local apply = active and 1 or 0
 	for k, v in pairs(scale) do
 		scale[k] = apply
-	end
-	
-	local apply = active and small and 1 or 0
-	for k, v in pairs(smallScale) do
-		smallScale[k] = apply
 	end
 	
 	local apply = ears and 1 or 0
