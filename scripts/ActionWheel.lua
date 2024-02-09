@@ -1,24 +1,24 @@
 -- Required scripts
-local eyes      = require("scripts.GlowingEyes")
+local avatar    = require("scripts.Player")
+local armor     = require("scripts.Armor")
+local camera    = require("scripts.CameraControl")
+local whirlpool = require("scripts.WhirlpoolEffect")
 local tail      = require("scripts.Tail")
 local glow      = require("scripts.GlowingTail")
-local whirlpool = require("scripts.WhirlpoolEffect")
-local avatar    = require("scripts.Player")
-local arms      = require("scripts.Arms")
-local camera    = require("scripts.CameraControl")
+local eyes      = require("scripts.GlowingEyes")
 local anims     = require("scripts.Anims")
-local armor     = require("scripts.Armor")
+local arms      = require("scripts.Arms")
 
 -- Page setups
 local mainPage      = action_wheel:newPage("MainPage")
-local eyesPage      = action_wheel:newPage("GlowingEyesPage")
+local avatarPage    = action_wheel:newPage("AvatarPage")
+local armorPage     = action_wheel:newPage("ArmorPage")
+local cameraPage    = action_wheel:newPage("CameraPage")
+local whirlpoolPage = action_wheel:newPage("WhirlpoolPage")
 local tailPage      = action_wheel:newPage("TailPage")
 local glowPage      = action_wheel:newPage("GlowPage")
-local whirlpoolPage = action_wheel:newPage("WhirlpoolPage")
-local avatarPage    = action_wheel:newPage("AvatarPage")
-local cameraPage    = action_wheel:newPage("CameraPage")
+local eyesPage      = action_wheel:newPage("GlowingEyesPage")
 local animsPage     = action_wheel:newPage("AnimationPage")
-local armorPage     = action_wheel:newPage("ArmorPage")
 
 -- Logs pages for navigation
 local navigation = {}
