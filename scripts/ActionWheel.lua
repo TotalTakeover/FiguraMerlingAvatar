@@ -39,7 +39,7 @@ local function ascend()
 	
 end
 
--- Action back to main page
+-- Action back to previous page
 local backPage = action_wheel:newAction()
 	:title("§c§lGo Back?")
 	:hoverColor(vectors.hexToRGB("FF5555"))
