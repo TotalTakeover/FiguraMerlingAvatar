@@ -118,7 +118,7 @@ function events.TICK()
 	local onGround = ground()
 	
 	-- Animation variables
-	local tail       = average(parts.Tail1:getScale()) >= 0.75
+	local largeTail  = average(parts.Tail1:getScale()) >= 0.75
 	local groundAnim = (onGround or waterTicks.water >= 20) and not (pose.climb or pose.swim or pose.crawl) and not pose.elytra and not pose.sleep and not player:getVehicle()
 	
 	-- Directional velocity
@@ -143,7 +143,7 @@ function events.TICK()
 		time.next = time.next + 0.0005
 		strength.next = 1
 		
-	elseif waterTicks.water >= 20 or onGround then
+	elseif (waterTicks.water >= 20 or onGround) and largeTail then
 		
 		-- Above water or on ground
 		time.next = time.next + math.clamp(fbVel < -0.1 and math.min(fbVel, math.abs(lrVel)) * 0.005 - 0.0005 or math.max(fbVel, math.abs(lrVel)) * 0.005 + 0.0005, -0.0045, 0.0045)
@@ -164,7 +164,7 @@ function events.TICK()
 		-- When using elytra
 		pitch.target = math.clamp(-udVel * 20 * (-math.abs(player:getLookDir().y) + 1), -20, 20)
 		
-	elseif pose.climb then
+	elseif pose.climb or not largeTail then
 		
 		-- Assumed climbing
 		pitch.target = 0
@@ -218,11 +218,11 @@ function events.TICK()
 	roll.nextTick  = math.lerp(roll.nextTick,  roll.target,  0.1)
 	
 	-- Animation states
-	local swim  = tail and ((not onGround and waterTicks.water < 20) or (pose.climb or pose.swim or pose.crawl or pose.elytra)) and not pose.sleep and not player:getVehicle()
-	local stand = tail and not isCrawl and groundAnim
-	local crawl = tail and     isCrawl and groundAnim
-	local small = not tail
-	local mount = tail and player:getVehicle()
+	local swim  = ((not onGround and waterTicks.water < 20) or (pose.climb or pose.swim or pose.crawl or pose.elytra)) and not pose.sleep and not player:getVehicle()
+	local stand = largeTail and not isCrawl and groundAnim
+	local crawl = largeTail and     isCrawl and groundAnim
+	local small = not largeTail
+	local mount = player:getVehicle()
 	local sleep = pose.sleep
 	local ears  = player:isUnderwater()
 	local sing  = isSing and not pose.sleep
@@ -243,7 +243,7 @@ function events.TICK()
 	end
 	
 	-- Determins when to stop twirl animaton
-	canTwirl = tail and not onGround and waterTicks.water < 20 and not pose.sleep
+	canTwirl = largeTail and not onGround and waterTicks.water < 20 and not pose.sleep
 	if not canTwirl then
 		anims.twirl:stop()
 	end

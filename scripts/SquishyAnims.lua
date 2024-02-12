@@ -27,19 +27,19 @@ local tail = {
 
 -- Tail function
 squapi.tails(tail,
-	nil,   --intensity
-	5,     --tailintensityY
-	25,    --tailintensityX
-	1,     --tailYSpeed
-	0.5,   --tailXSpeed
-	nil,   --tailVelBend
+	2.5,   --intensity
+	0,     --tailintensityY
+	0,     --tailintensityX
+	0,     --tailYSpeed
+	0,     --tailXSpeed
+	0.25,  --tailVelBend
 	nil,   --initialTailOffset
 	0.5,   --segOffsetMultiplier
 	0.01,  --tailStiff
 	0.025, --tailBounce
 	60,    --tailFlyOffset
-	5,     --downlimit
-	7.5    --uplimit
+	4,     --downlimit
+	6      --uplimit
 )
 
 function events.RENDER(delta, context)
