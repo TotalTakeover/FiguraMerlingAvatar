@@ -218,7 +218,7 @@ function events.TICK()
 	roll.nextTick  = math.lerp(roll.nextTick,  roll.target,  0.1)
 	
 	-- Animation states
-	local swim  = ((not onGround and waterTicks.water < 20) or (pose.climb or pose.swim or pose.crawl or pose.elytra)) and not pose.sleep and not player:getVehicle()
+	local swim  = largeTail and ((not onGround and waterTicks.water < 20) or (pose.climb or pose.swim or pose.crawl or pose.elytra)) and not pose.sleep and not player:getVehicle()
 	local stand = largeTail and not isCrawl and groundAnim
 	local crawl = largeTail and     isCrawl and groundAnim
 	local small = not largeTail
