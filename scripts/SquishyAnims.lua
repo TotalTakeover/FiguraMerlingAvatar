@@ -18,11 +18,13 @@ squapi.ear(parts.LeftEar, parts.RightEar, false, _, 0.35, true, 1, 0.05, 0.05)
 
 -- Tails table
 local tail = {
+	
 	parts.Tail1,
 	parts.Tail2,
 	parts.Tail3,
 	parts.Tail4,
 	parts.Fluke
+	
 }
 
 -- Tail function
