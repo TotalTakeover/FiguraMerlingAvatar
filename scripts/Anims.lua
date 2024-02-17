@@ -119,7 +119,7 @@ function events.TICK()
 	
 	-- Animation variables
 	local largeTail  = average(parts.Tail1:getScale()) >= 0.75
-	local groundAnim = (onGround or waterTicks.water >= 20) and not (pose.climb or pose.swim or pose.crawl) and not pose.elytra and not pose.sleep and not player:getVehicle()
+	local groundAnim = (onGround or waterTicks.water >= 20) and not (pose.climb or pose.swim or pose.crawl) and not pose.elytra and not pose.sleep and not player:getVehicle() and not effects.cF
 	
 	-- Directional velocity
 	local fbVel = player:getVelocity():dot((dir.x_z):normalize())
@@ -143,7 +143,7 @@ function events.TICK()
 		time.next = time.next + 0.0005
 		strength.next = 1
 		
-	elseif (waterTicks.water >= 20 or onGround) and largeTail then
+	elseif (waterTicks.water >= 20 or onGround) and largeTail and not effects.cF then
 		
 		-- Above water or on ground
 		time.next = time.next + math.clamp(fbVel < -0.1 and math.min(fbVel, math.abs(lrVel)) * 0.005 - 0.0005 or math.max(fbVel, math.abs(lrVel)) * 0.005 + 0.0005, -0.0045, 0.0045)
@@ -169,7 +169,7 @@ function events.TICK()
 		-- Assumed climbing
 		pitch.target = 0
 		
-	elseif (pose.swim or waterTicks.water >= 20) then
+	elseif (pose.swim or waterTicks.water >= 20) and not effects.cF then
 		
 		-- While "swimming" or outside of water
 		pitch.target = math.clamp(-udVel * 40 * -(math.abs(player:getLookDir().y * 2) - 1), -20, 20)
@@ -206,7 +206,7 @@ function events.TICK()
 	shark.target = isShark and 1 or 0
 	
 	-- Tick lerps
-	shark.current = shark.nextTick
+	shark.current  = shark.nextTick
 	shark.nextTick = math.lerp(shark.nextTick, shark.target, 0.25)
 	
 	pitch.current = pitch.nextTick
@@ -218,7 +218,7 @@ function events.TICK()
 	roll.nextTick  = math.lerp(roll.nextTick,  roll.target,  0.1)
 	
 	-- Animation states
-	local swim  = largeTail and ((not onGround and waterTicks.water < 20) or (pose.climb or pose.swim or pose.crawl or pose.elytra)) and not pose.sleep and not player:getVehicle()
+	local swim  = largeTail and ((not onGround and waterTicks.water < 20) or (pose.climb or pose.swim or pose.crawl or pose.elytra) or effects.cF) and not pose.sleep and not player:getVehicle()
 	local stand = largeTail and not isCrawl and groundAnim
 	local crawl = largeTail and     isCrawl and groundAnim
 	local small = not largeTail
