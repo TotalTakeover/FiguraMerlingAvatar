@@ -2,6 +2,7 @@
 local parts      = require("lib.GroupIndex")(models)
 local waterTicks = require("scripts.WaterTicks")
 local ground     = require("lib.GroundCheck")
+local effects    = require("scripts.SyncedVariables")
 
 -- Config setup
 config:name("Merling")
@@ -84,7 +85,7 @@ function events.TICK()
 	earsScale.nextTick  = math.lerp(earsScale.nextTick,  earsScale.target,  0.2)
 	
 	-- Play sound if conditions are met
-	if fallSound and wasInAir and ground() and scale.currentPos >= 0.75 and not player:getVehicle() and not player:isInWater() then
+	if fallSound and wasInAir and ground() and scale.currentPos >= 0.75 and not player:getVehicle() and not player:isInWater() and not effects.cF then
 		local vel    = math.abs(-player:getVelocity().y + 1)
 		local dry    = canDry and (dryTimer - waterState[water]) / dryTimer or 1
 		local volume = math.clamp((vel * dry) / 2, 0, 1)
