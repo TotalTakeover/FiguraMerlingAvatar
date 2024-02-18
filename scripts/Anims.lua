@@ -146,7 +146,7 @@ function events.TICK()
 	elseif (waterTicks.water >= 20 or onGround) and largeTail and not effects.cF then
 		
 		-- Above water or on ground
-		time.next = time.next + math.clamp(fbVel < -0.1 and math.min(fbVel, math.abs(lrVel)) * 0.005 - 0.0005 or math.max(fbVel, math.abs(lrVel)) * 0.005 + 0.0005, -0.0045, 0.0045)
+		time.next = time.next + math.clamp(fbVel < -0.05 and math.min(fbVel, math.abs(lrVel)) * 0.005 - 0.0005 or math.max(fbVel, math.abs(lrVel)) * 0.005 + 0.0005, -0.0045, 0.0045)
 		strength.next = math.clamp(vel.xz:length() * 2 + 1, 1, 2)
 		
 	else
