@@ -7,7 +7,7 @@ local ground     = require("lib.GroundCheck")
 local effects    = require("scripts.SyncedVariables")
 
 -- Animations setup
-local anims = animations.Merling
+local anims = animations["models.Merling"]
 
 -- Config setup
 config:name("Merling")
