@@ -18,8 +18,8 @@ local isCrawl = config:load("TailCrawl") or false
 local t = {}
 
 -- Animation variables
-t.time = 0
-t.strength  = 1
+t.time     = 0
+t.strength = 1
 
 -- Axis variables
 t.pitch    = 0
@@ -45,27 +45,27 @@ local strength = {
 }
 
 local pitch = {
-	current    = 0,
-	nextTick   = 0,
-	target     = 0
+	current  = 0,
+	nextTick = 0,
+	target   = 0
 }
 
 local yaw = {
-	current    = 0,
-	nextTick   = 0,
-	target     = 0
+	current  = 0,
+	nextTick = 0,
+	target   = 0
 }
 
 local roll = {
-	current    = 0,
-	nextTick   = 0,
-	target     = 0
+	current  = 0,
+	nextTick = 0,
+	target   = 0
 }
 
 local shark = {
-	current    = 0,
-	nextTick   = 0,
-	target     = 0
+	current  = 0,
+	nextTick = 0,
+	target   = 0
 }
 
 -- Set lerp start on init
@@ -329,7 +329,7 @@ end
 -- Sync variables
 local function syncAnims(a, b, c)
 	
-	isShark   = a
+	isShark = a
 	isCrawl = b
 	isSing  = c
 	
