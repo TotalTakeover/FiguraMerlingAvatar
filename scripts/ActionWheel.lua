@@ -1,24 +1,25 @@
 -- Required scripts
-local eyes      = require("scripts.GlowingEyes")
-local tail      = require("scripts.Tail")
-local glow      = require("scripts.GlowingTail")
-local whirlpool = require("scripts.WhirlpoolEffect")
 local avatar    = require("scripts.Player")
-local arms      = require("scripts.Arms")
-local camera    = require("scripts.CameraControl")
-local anims     = require("scripts.Anims")
 local armor     = require("scripts.Armor")
+local camera    = require("scripts.CameraControl")
+local tail      = require("scripts.Tail")
+local whirlpool = require("scripts.WhirlpoolEffect")
+local glow      = require("scripts.GlowingTail")
+local eyes      = require("scripts.GlowingEyes")
+local anims     = require("scripts.Anims")
+local arms      = require("scripts.Arms")
 
 -- Page setups
 local mainPage      = action_wheel:newPage("MainPage")
-local eyesPage      = action_wheel:newPage("GlowingEyesPage")
-local tailPage      = action_wheel:newPage("TailPage")
-local glowPage      = action_wheel:newPage("GlowPage")
-local whirlpoolPage = action_wheel:newPage("WhirlpoolPage")
 local avatarPage    = action_wheel:newPage("AvatarPage")
-local cameraPage    = action_wheel:newPage("CameraPage")
-local animsPage     = action_wheel:newPage("AnimationPage")
 local armorPage     = action_wheel:newPage("ArmorPage")
+local cameraPage    = action_wheel:newPage("CameraPage")
+local tailPage      = action_wheel:newPage("TailPage")
+local dryPage       = action_wheel:newPage("DryPage")
+local whirlpoolPage = action_wheel:newPage("WhirlpoolPage")
+local glowPage      = action_wheel:newPage("GlowPage")
+local eyesPage      = action_wheel:newPage("GlowingEyesPage")
+local animsPage     = action_wheel:newPage("AnimationPage")
 
 -- Logs pages for navigation
 local navigation = {}
@@ -38,7 +39,7 @@ local function ascend()
 	
 end
 
--- Action back to main page
+-- Action back to previous page
 local backPage = action_wheel:newAction()
 	:title("§c§lGo Back?")
 	:hoverColor(vectors.hexToRGB("FF5555"))
@@ -94,12 +95,6 @@ avatarPage
 			:hoverColor(vectors.hexToRGB("55FFFF"))
 			:item("minecraft:redstone")
 			:onLeftClick(function() descend(cameraPage) end))
-	:action( -1,
-		action_wheel:newAction()
-			:title("§9§lWhirlpool Settings")
-			:hoverColor(vectors.hexToRGB("55FFFF"))
-			:item("minecraft:magma_block")
-			:onLeftClick(function() descend(whirlpoolPage) end))
 	:action( -1, backPage)
 
 -- Armor actions
@@ -117,20 +112,37 @@ cameraPage
 	:action( -1, camera.eyePage)
 	:action( -1, backPage)
 
--- Whirlpool actions
-whirlpoolPage
-	:action( -1, whirlpool.bubblePage)
-	:action( -1, whirlpool.dolphinsGracePage)
-	:action( -1, backPage)
-
 -- Tail actions
 tailPage
 	:action( -1, tail.activePage)
 	:action( -1, tail.waterPage)
 	:action( -1, tail.smallPage)
 	:action( -1, tail.earsPage)
+	:action( -1,
+		action_wheel:newAction()
+			:title("§9§lDrying Settings")
+			:hoverColor(vectors.hexToRGB("55FFFF"))
+			:item("minecraft:sponge")
+			:onLeftClick(function() descend(dryPage) end))
+	:action( -1,
+		action_wheel:newAction()
+			:title("§9§lWhirlpool Settings")
+			:hoverColor(vectors.hexToRGB("55FFFF"))
+			:item("minecraft:magma_block")
+			:onLeftClick(function() descend(whirlpoolPage) end))
+	:action( -1, backPage)
+
+-- Dry actions
+dryPage
 	:action( -1, tail.dryPage)
 	:action( -1, tail.soundPage)
+	:action( -1, backPage)
+
+
+-- Whirlpool actions
+whirlpoolPage
+	:action( -1, whirlpool.bubblePage)
+	:action( -1, whirlpool.dolphinsGracePage)
 	:action( -1, backPage)
 
 -- Glowing actions

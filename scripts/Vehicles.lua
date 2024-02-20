@@ -22,7 +22,7 @@ carrier.vehicle.newSeat("Seat1", parts.Seat1, {
 
 function events.TICK()
 	
-	local swim = pose.swim or pose.crawl or animations.Merling.crawl:isPlaying()
+	local swim = pose.swim or pose.crawl or animations["models.Merling"].crawl:isPlaying()
 	parts.Seat1:pos(swim and vec(0, 0, -4) or nil)
 	
 end
