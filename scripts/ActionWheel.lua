@@ -138,7 +138,6 @@ dryPage
 	:action( -1, tail.soundPage)
 	:action( -1, backPage)
 
-
 -- Whirlpool actions
 whirlpoolPage
 	:action( -1, whirlpool.bubblePage)
