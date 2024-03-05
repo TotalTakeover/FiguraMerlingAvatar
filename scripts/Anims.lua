@@ -222,7 +222,7 @@ function events.TICK()
 	local stand = largeTail and not isCrawl and groundAnim
 	local crawl = largeTail and     isCrawl and groundAnim
 	local small = not largeTail
-	local mount = player:getVehicle()
+	local mount = largeTail and player:getVehicle()
 	local sleep = pose.sleep
 	local ears  = player:isUnderwater()
 	local sing  = isSing and not pose.sleep
