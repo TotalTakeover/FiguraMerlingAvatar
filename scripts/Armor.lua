@@ -212,7 +212,7 @@ local function setAll(boolean)
 	config:save("ArmorLeggings", leggings)
 	config:save("ArmorBoots", boots)
 	if player:isLoaded() then
-		sounds:playSound("minecraft:item.armor.equip_generic", player:getPos(), 0.5)
+		sounds:playSound("item.armor.equip_generic", player:getPos(), 0.5)
 	end
 	
 end
@@ -223,7 +223,7 @@ local function setHelmet(boolean)
 	helmet = boolean
 	config:save("ArmorHelmet", helmet)
 	if player:isLoaded() then
-		sounds:playSound("minecraft:item.armor.equip_generic", player:getPos(), 0.5)
+		sounds:playSound("item.armor.equip_generic", player:getPos(), 0.5)
 	end
 	
 end
@@ -234,7 +234,7 @@ local function setChestplate(boolean)
 	chestplate = boolean
 	config:save("ArmorChestplate", chestplate)
 	if player:isLoaded() then
-		sounds:playSound("minecraft:item.armor.equip_generic", player:getPos(), 0.5)
+		sounds:playSound("item.armor.equip_generic", player:getPos(), 0.5)
 	end
 	
 end
@@ -245,7 +245,7 @@ local function setLeggings(boolean)
 	leggings = boolean
 	config:save("ArmorLeggings", leggings)
 	if player:isLoaded() then
-		sounds:playSound("minecraft:item.armor.equip_generic", player:getPos(), 0.5)
+		sounds:playSound("item.armor.equip_generic", player:getPos(), 0.5)
 	end
 	
 end
@@ -256,7 +256,7 @@ local function setBoots(boolean)
 	boots = boolean
 	config:save("ArmorBoots", boots)
 	if player:isLoaded() then
-		sounds:playSound("minecraft:item.armor.equip_generic", player:getPos(), 0.5)
+		sounds:playSound("item.armor.equip_generic", player:getPos(), 0.5)
 	end
 	
 end
@@ -304,40 +304,40 @@ t.allPage = action_wheel:newAction("AllArmorToggle")
 	:title("§9§lToggle All Armor\n\n§bToggles visibility of all armor parts.")
 	:hoverColor(vectors.hexToRGB("55FFFF"))
 	:toggleColor(vectors.hexToRGB("5555FF"))
-	:item("minecraft:armor_stand")
-	:toggleItem("minecraft:netherite_chestplate")
+	:item("armor_stand")
+	:toggleItem("netherite_chestplate")
 	:onToggle(pings.setArmorAll)
 
 t.helmetPage = action_wheel:newAction("HelmetArmorToggle")
 	:title("§9§lToggle Helmet\n\n§bToggles visibility of helmet parts.")
 	:hoverColor(vectors.hexToRGB("55FFFF"))
 	:toggleColor(vectors.hexToRGB("5555FF"))
-	:item("minecraft:iron_helmet")
-	:toggleItem("minecraft:diamond_helmet")
+	:item("iron_helmet")
+	:toggleItem("diamond_helmet")
 	:onToggle(pings.setArmorHelmet)
 
 t.chestplatePage = action_wheel:newAction("ChestplateArmorToggle")
 	:title("§9§lToggle Chestplate\n\n§bToggles visibility of chestplate parts.")
 	:hoverColor(vectors.hexToRGB("55FFFF"))
 	:toggleColor(vectors.hexToRGB("5555FF"))
-	:item("minecraft:iron_chestplate")
-	:toggleItem("minecraft:diamond_chestplate")
+	:item("iron_chestplate")
+	:toggleItem("diamond_chestplate")
 	:onToggle(pings.setArmorChestplate)
 
 t.leggingsPage = action_wheel:newAction("LeggingsArmorToggle")
 	:title("§9§lToggle Leggings\n\n§bToggles visibility of leggings parts.")
 	:hoverColor(vectors.hexToRGB("55FFFF"))
 	:toggleColor(vectors.hexToRGB("5555FF"))
-	:item("minecraft:iron_leggings")
-	:toggleItem("minecraft:diamond_leggings")
+	:item("iron_leggings")
+	:toggleItem("diamond_leggings")
 	:onToggle(pings.setArmorLeggings)
 
 t.bootsPage = action_wheel:newAction("BootsArmorToggle")
 	:title("§9§lToggle Boots\n\n§bToggles visibility of boots.")
 	:hoverColor(vectors.hexToRGB("55FFFF"))
 	:toggleColor(vectors.hexToRGB("5555FF"))
-	:item("minecraft:iron_boots")
-	:toggleItem("minecraft:diamond_boots")
+	:item("iron_boots")
+	:toggleItem("diamond_boots")
 	:onToggle(pings.setArmorBoots)
 
 -- Update action page info

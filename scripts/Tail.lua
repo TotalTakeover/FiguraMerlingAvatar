@@ -91,7 +91,7 @@ function events.TICK()
 		local volume = math.clamp((vel * dry) / 2, 0, 1)
 		
 		if volume ~= 0 then
-			sounds:playSound("minecraft:entity.puffer_fish.flop", player:getPos(), volume, math.map(volume, 1, 0, 0.45, 0.65))
+			sounds:playSound("entity.puffer_fish.flop", player:getPos(), volume, math.map(volume, 1, 0, 0.45, 0.65))
 		end
 	end
 	wasInAir = not ground()
@@ -140,7 +140,7 @@ local function setWater(i)
 	if water > 4 then water = 1 end
 	if water < 1 then water = 4 end
 	if player:isLoaded() and host:isHost() and i ~= 0 then
-		sounds:playSound("minecraft:ambient.underwater.enter", player:getPos(), 0.35)
+		sounds:playSound("ambient.underwater.enter", player:getPos(), 0.35)
 	end
 	config:save("TailWater", water)
 	
@@ -184,7 +184,7 @@ local function setFallSound(boolean)
 	fallSound = boolean
 	config:save("TailFallSound", fallSound)
 	if host:isHost() and player:isLoaded() and fallSound then
-		sounds:playSound("minecraft:entity.puffer_fish.flop", player:getPos(), 0.35, 0.6)
+		sounds:playSound("entity.puffer_fish.flop", player:getPos(), 0.35, 0.6)
 	end
 	
 end
@@ -271,8 +271,8 @@ t.activePage = action_wheel:newAction("TailActive")
 	:title("§9§lToggle Merling Functionality\n\n§bToggles the ability for Merling attributes to appear.")
 	:hoverColor(vectors.hexToRGB("55FFFF"))
 	:toggleColor(vectors.hexToRGB("5555FF"))
-	:item("minecraft:rabbit_foot")
-	:toggleItem("minecraft:tropical_fish")
+	:item("rabbit_foot")
+	:toggleItem("tropical_fish")
 	:onToggle(pings.setTailActive)
 
 t.waterPage = action_wheel:newAction("TailWater")
@@ -284,23 +284,23 @@ t.smallPage = action_wheel:newAction("TailSmall")
 	:title("§9§lToggle Small Tail\n\n§bWhen outside water, toggles the appearence of the tail into a smaller tail.")
 	:hoverColor(vectors.hexToRGB("55FFFF"))
 	:toggleColor(vectors.hexToRGB("5555FF"))
-	:item("minecraft:kelp")
-	:toggleItem("minecraft:scute")
+	:item("kelp")
+	:toggleItem("scute")
 	:onToggle(pings.setTailSmall)
 
 t.earsPage = action_wheel:newAction("TailEars")
 	:title("§9§lToggle Ears\n\n§bToggles the appearence of your ears.")
 	:hoverColor(vectors.hexToRGB("55FFFF"))
 	:toggleColor(vectors.hexToRGB("5555FF"))
-	:item("minecraft:prismarine_crystals")
-	:toggleItem("minecraft:prismarine_shard")
+	:item("prismarine_crystals")
+	:toggleItem("prismarine_shard")
 	:onToggle(pings.setTailEars)
 
 t.dryPage = action_wheel:newAction("TailDrying")
 	:hoverColor(vectors.hexToRGB("55FFFF"))
 	:toggleColor(vectors.hexToRGB("5555FF"))
-	:item("minecraft:water_bucket")
-	:toggleItem("minecraft:leather")
+	:item("water_bucket")
+	:toggleItem("leather")
 	:onToggle(pings.setTailDry)
 	:onScroll(setDryTimer)
 	:onRightClick(function() dryTimer = 400 config:save("TailDryTimer", dryTimer) end)
@@ -310,8 +310,8 @@ t.soundPage = action_wheel:newAction("TailFallSound")
 	:title("§9§lToggle Flop Sound\n\n§bToggles flopping sound effects when landing on the ground.\nIf tail can dry, volume will gradually decrease over time until dry. (Acts like a timer!)")
 	:hoverColor(vectors.hexToRGB("55FFFF"))
 	:toggleColor(vectors.hexToRGB("5555FF"))
-	:item("minecraft:sponge")
-	:toggleItem("minecraft:wet_sponge")
+	:item("sponge")
+	:toggleItem("wet_sponge")
 	:onToggle(pings.setTailFallSound)
 	:toggled(fallSound)
 
@@ -319,22 +319,22 @@ t.soundPage = action_wheel:newAction("TailFallSound")
 local waterInfo = {
 	{
 		title  = "§c§lLow §r| §bReactive to being underwater.",
-		item   = "minecraft:glass_bottle",
+		item   = "glass_bottle",
 		color  = "FF5555"
 	},
 	{
 		title  = "§e§lMedium §r| §bReactive to being in water.",
-		item   = "minecraft:potion{\"CustomPotionColor\":" .. tostring(0x0094FF) .. "}",
+		item   = "potion{'CustomPotionColor':" .. tostring(0x0094FF) .. "}",
 		color  = "FFFF55"
 	},
 	{
 		title  = "§a§lHigh §r| §bReactive to any form of water.",
-		item   = "minecraft:splash_potion{\"CustomPotionColor\":" .. tostring(0x0094FF) .. "}",
+		item   = "splash_potion{'CustomPotionColor':" .. tostring(0x0094FF) .. "}",
 		color  = "55FF55"
 	},
 	{
 		title  = "§9§lMax §r| §bAlways active.",
-		item   = "minecraft:lingering_potion{\"CustomPotionColor\":" .. tostring(0x0094FF) .. "}",
+		item   = "lingering_potion{'CustomPotionColor':" .. tostring(0x0094FF) .. "}",
 		color  = "5555FF"
 	},
 }

@@ -43,7 +43,7 @@ end
 local backPage = action_wheel:newAction()
 	:title("§c§lGo Back?")
 	:hoverColor(vectors.hexToRGB("FF5555"))
-	:item("minecraft:barrier")
+	:item("barrier")
 	:onLeftClick(function() ascend() end)
 
 -- Set starting page to main page
@@ -55,28 +55,28 @@ mainPage
 		action_wheel:newAction()
 			:title("§9§lAvatar Settings")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
-			:item("minecraft:armor_stand")
+			:item("armor_stand")
 			:onLeftClick(function() descend(avatarPage) end))
 	
 	:action( -1,
 		action_wheel:newAction()
 			:title("§9§lMerling Settings")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
-			:item("minecraft:tropical_fish")
+			:item("tropical_fish")
 			:onLeftClick(function() descend(tailPage) end))
 	
 	:action( -1,
 		action_wheel:newAction()
 			:title("§9§lGlowing Settings")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
-			:item("minecraft:glow_ink_sac")
+			:item("glow_ink_sac")
 			:onLeftClick(function() descend(glowPage) end))
 	
 	:action( -1,
 		action_wheel:newAction()
 			:title("§9§lAnimations")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
-			:item("minecraft:jukebox")
+			:item("jukebox")
 			:onLeftClick(function() descend(animsPage) end))
 
 -- Avatar actions
@@ -87,13 +87,13 @@ avatarPage
 		action_wheel:newAction()
 			:title("§9§lArmor Settings")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
-			:item("minecraft:iron_chestplate")
+			:item("iron_chestplate")
 			:onLeftClick(function() descend(armorPage) end))
 	:action( -1,
 		action_wheel:newAction()
 			:title("§9§lCamera Settings")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
-			:item("minecraft:redstone")
+			:item("redstone")
 			:onLeftClick(function() descend(cameraPage) end))
 	:action( -1, backPage)
 
@@ -122,13 +122,13 @@ tailPage
 		action_wheel:newAction()
 			:title("§9§lDrying Settings")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
-			:item("minecraft:sponge")
+			:item("sponge")
 			:onLeftClick(function() descend(dryPage) end))
 	:action( -1,
 		action_wheel:newAction()
 			:title("§9§lWhirlpool Settings")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
-			:item("minecraft:magma_block")
+			:item("magma_block")
 			:onLeftClick(function() descend(whirlpoolPage) end))
 	:action( -1, backPage)
 
@@ -153,7 +153,7 @@ glowPage
 		action_wheel:newAction()
 			:title("§9§lGlowing Eyes Settings")
 			:hoverColor(vectors.hexToRGB("55FFFF"))
-			:item("minecraft:ender_eye")
+			:item("ender_eye")
 			:onLeftClick(function() descend(eyesPage) end))
 	:action( -1, backPage)
 
