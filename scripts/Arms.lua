@@ -137,7 +137,7 @@ setArmMove(armMove)
 local t = {}
 
 -- Action wheel
-t.movePage = action_wheel:newAction("ArmMovement")
+t.movePage = action_wheel:newAction()
 	:title("§9§lArm Movement Toggle\n\n§bToggles the movement swing movement of the arms.\nActions are not effected.")
 	:hoverColor(vectors.hexToRGB("55FFFF"))
 	:toggleColor(vectors.hexToRGB("5555FF"))

@@ -175,7 +175,7 @@ setWater(water)
 local t = {}
 
 -- Action wheel pages
-t.togglePage = action_wheel:newAction("GlowToggle")
+t.togglePage = action_wheel:newAction()
 	:title("§9§lToggle Glowing\n\n§bToggles glowing for the tail, and misc parts.")
 	:hoverColor(vectors.hexToRGB("55FFFF"))
 	:toggleColor(vectors.hexToRGB("5555FF"))
@@ -183,7 +183,7 @@ t.togglePage = action_wheel:newAction("GlowToggle")
 	:toggleItem("glow_ink_sac")
 	:onToggle(pings.setGlowToggle)
 
-t.dynamicPage = action_wheel:newAction("GlowDynamic")
+t.dynamicPage = action_wheel:newAction()
 	:title("§9§lToggle Dynamic Glowing\n\n§bToggles glowing based on lightlevel. The darker the location, the brighter your tail glows.")
 	:hoverColor(vectors.hexToRGB("55FFFF"))
 	:toggleColor(vectors.hexToRGB("5555FF"))
@@ -191,7 +191,7 @@ t.dynamicPage = action_wheel:newAction("GlowDynamic")
 	:onToggle(pings.setGlowDynamic)
 	:toggled(dynamic)
 
-t.waterPage = action_wheel:newAction("GlowWater")
+t.waterPage = action_wheel:newAction()
 	:title("§9§lToggle Water Glowing\n\n§bToggles the glowing sensitivity to water.\nAny water will cause your tail to glow.")
 	:hoverColor(vectors.hexToRGB("55FFFF"))
 	:toggleColor(vectors.hexToRGB("5555FF"))

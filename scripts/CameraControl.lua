@@ -101,7 +101,7 @@ setPos(camPos)
 local t = {}
 
 -- Action wheel pages
-t.posPage = action_wheel:newAction("CameraPos")
+t.posPage = action_wheel:newAction()
 	:title("§9§lCamera Position Toggle\n\n§bSets the camera position to where your avatar's head is.\n(Perfect for the crawling toggle!)")
 	:hoverColor(vectors.hexToRGB("55FFFF"))
 	:toggleColor(vectors.hexToRGB("5555FF"))
@@ -110,7 +110,7 @@ t.posPage = action_wheel:newAction("CameraPos")
 	:onToggle(pings.setCameraPos)
 	:toggled(camPos)
 	
-t.eyePage = action_wheel:newAction("OffsetEye")
+t.eyePage = action_wheel:newAction()
 	:title("§9§lEye Position Toggle\n\n§bSets the eye position to match the avatar's head.\nRequires camera position toggle.\n\n§4§lWARNING: §cThis feature is dangerous!\nIt can and will be flagged on servers with anticheat!\nFurthermore, \"In Wall\" damage is possible.\nThis setting will §c§lNOT §cbe saved between sessions for your safety.\n\nPlease use with extreme caution!")
 	:hoverColor(vectors.hexToRGB("FF0000"))
 	:toggleColor(vectors.hexToRGB("7F0000"))

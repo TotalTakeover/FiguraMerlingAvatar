@@ -201,7 +201,7 @@ setModelType(slim)
 local t = {}
 
 -- Action wheel pages
-t.vanillaSkinPage = action_wheel:newAction("VanillaSkin")
+t.vanillaSkinPage = action_wheel:newAction()
 	:title("§9§lToggle Vanilla Texture\n\n§bToggles the usage of your vanilla skin.")
 	:hoverColor(vectors.hexToRGB("55FFFF"))
 	:toggleColor(vectors.hexToRGB("5555FF"))
@@ -209,7 +209,7 @@ t.vanillaSkinPage = action_wheel:newAction("VanillaSkin")
 	:onToggle(pings.setAvatarVanillaSkin)
 	:toggled(vanillaSkin)
 
-t.modelPage = action_wheel:newAction("ModelShape")
+t.modelPage = action_wheel:newAction()
 	:title("§9§lToggle Model Shape\n\n§bAdjust the model shape to use Default or Slim Proportions.\nWill be overridden by the vanilla skin toggle.")
 	:hoverColor(vectors.hexToRGB("55FFFF"))
 	:toggleColor(vectors.hexToRGB("5555FF"))

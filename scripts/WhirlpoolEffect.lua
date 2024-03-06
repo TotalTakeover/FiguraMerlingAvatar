@@ -78,7 +78,7 @@ setDolphinsGrace(dolphinsGrace)
 local t = {}
 
 -- Action wheel pages
-t.bubblePage = action_wheel:newAction("Whirlpool")
+t.bubblePage = action_wheel:newAction()
 	:title("§9§lWhirlpool Effect Toggle\n\n§bToggles the whirlpool created while swimming.")
 	:hoverColor(vectors.hexToRGB("55FFFF"))
 	:toggleColor(vectors.hexToRGB("5555FF"))
@@ -87,7 +87,7 @@ t.bubblePage = action_wheel:newAction("Whirlpool")
 	:onToggle(pings.setWhirlpoolBubbles)
 	:toggled(bubbles)
 
-t.dolphinsGracePage = action_wheel:newAction("WhirlpoolDolphinsGrace")
+t.dolphinsGracePage = action_wheel:newAction()
 	:title("§9§lDolphin's Grace Toggle\n\n§bToggles the whirlpool based on having the Dolphin's Grace Effect.")
 	:hoverColor(vectors.hexToRGB("55FFFF"))
 	:toggleColor(vectors.hexToRGB("5555FF"))
