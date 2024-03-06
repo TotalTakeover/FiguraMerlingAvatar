@@ -1,22 +1,12 @@
 -- Required scripts
 local parts      = require("lib.GroupIndex")(models)
+local average    = require("lib.Average")
 local waterTicks = require("scripts.WaterTicks")
 local effects    = require("scripts.SyncedVariables")
 
 -- Config setup
 config:name("Merling")
 local armMove = config:load("AvatarArmMove") or false
-
--- Get the average of a vector
-local function average(vec)
-	
-	local sum = 0
-	for _, v in ipairs{vec:unpack()} do
-		sum = sum + v
-	end
-	return sum / #vec
-	
-end
 
 -- Left arm lerp table
 local leftArm = {
@@ -66,7 +56,7 @@ function events.TICK()
 	local crossR      = rightItem.tag and rightItem.tag["Charged"] == 1
 	
 	-- Movement overrides
-	local shouldMove = (waterTicks.under >= 20 and not effects.cF) or average(parts.Tail1:getScale()) <= 0.6 or animations["models.Merling"].crawl:isPlaying()
+	local shouldMove = (waterTicks.under >= 20 and not effects.cF) or average(parts.Tail1:getScale():unpack()) <= 0.6 or animations["models.Merling"].crawl:isPlaying()
 	
 	-- Targets
 	leftArm.target  = (armMove or shouldMove or leftSwing or ((crossL or crossR) or (using and usingL ~= "NONE"))) and 0 or 1

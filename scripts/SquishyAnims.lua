@@ -1,17 +1,7 @@
 -- Required scripts
-local parts  = require("lib.GroupIndex")(models)
-local squapi = require("lib.SquAPI")
-
--- Get the average of a vector
-local function average(vec)
-	
-	local sum = 0
-	for _, v in ipairs{vec:unpack()} do
-		sum = sum + v
-	end
-	return sum / #vec
-	
-end
+local parts   = require("lib.GroupIndex")(models)
+local squapi  = require("lib.SquAPI")
+local average = require("lib.Average")
 
 -- Ear function
 squapi.ear(parts.LeftEar, parts.RightEar, false, _, 0.35, true, 1, 0.05, 0.05)
@@ -47,7 +37,7 @@ squapi.tails(tail,
 function events.RENDER(delta, context)
 	
 	-- Control the intensity of the tail function based on its scale
-	local scale = (-math.abs(average(parts.Tail1:getScale()) - 0.5) + 0.5) * 2
+	local scale = (-math.abs(average(parts.Tail1:getScale():unpack()) - 0.5) + 0.5) * 2
 	for _, part in ipairs(tail) do
 		part:offsetRot(part:getOffsetRot() * scale)
 	end

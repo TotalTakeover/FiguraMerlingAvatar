@@ -1,6 +1,7 @@
 -- Required scripts
 require("lib.GSAnimBlend")
 local parts      = require("lib.GroupIndex")(models)
+local average    = require("lib.Average")
 local waterTicks = require("scripts.WaterTicks")
 local pose       = require("scripts.Posing")
 local ground     = require("lib.GroundCheck")
@@ -78,17 +79,6 @@ function events.ENTITY_INIT()
 	
 end
 
--- Get the average of a vector
-local function average(vec)
-	
-	local sum = 0
-	for _, v in ipairs{vec:unpack()} do
-		sum = sum + v
-	end
-	return sum / #vec
-	
-end
-
 -- Spawns notes around a model part
 local function notes(part, blocks)
 	
@@ -118,7 +108,7 @@ function events.TICK()
 	local onGround = ground()
 	
 	-- Animation variables
-	local largeTail  = average(parts.Tail1:getScale()) >= 0.75
+	local largeTail  = average(parts.Tail1:getScale():unpack()) >= 0.75
 	local groundAnim = (onGround or waterTicks.water >= 20) and not (pose.climb or pose.swim or pose.crawl) and not pose.elytra and not pose.sleep and not player:getVehicle() and not effects.cF
 	
 	-- Directional velocity
