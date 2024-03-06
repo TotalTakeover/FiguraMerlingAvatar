@@ -135,10 +135,8 @@ function events.TICK()
 		part:primaryTexture(skinType)
 	end
 	
-	-- Cape/Elytra textures
+	-- Cape textures
 	parts.Cape:primaryTexture(vanillaSkin and "CAPE" or "PRIMARY")
-	parts.Elytra:primaryTexture(vanillaSkin and player:hasCape() and (player:isSkinLayerVisible("CAPE") and "CAPE" or "ELYTRA") or "PRIMARY")
-		:secondaryRenderType(player:getItem(5):hasGlint() and "GLINT" or "NONE")
 	
 	-- Layer toggling
 	for layerType, parts in pairs(layer) do
