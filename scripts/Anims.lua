@@ -6,6 +6,7 @@ local waterTicks = require("scripts.WaterTicks")
 local pose       = require("scripts.Posing")
 local ground     = require("lib.GroundCheck")
 local effects    = require("scripts.SyncedVariables")
+local color      = require("scripts.ColorProperties")
 
 -- Animations setup
 local anims = animations["models.Merling"]
@@ -373,33 +374,33 @@ setCrawl(isCrawl)
 
 -- Action wheel pages
 t.sharkPage = action_wheel:newAction()
-	:title("§9§lToggle Shark Animations\n\n§bToggles the movement of the tail to be more shark based.")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
+	:title(color.primary.."Toggle Shark Animations\n\n"..color.secondary.."Toggles the movement of the tail to be more shark based.")
+	:hoverColor(color.hover)
+	:toggleColor(color.active)
 	:item("dolphin_spawn_egg")
 	:toggleItem("guardian_spawn_egg")
 	:onToggle(pings.setTailShark)
 	:toggled(isShark)
 
 t.crawlPage = action_wheel:newAction()
-	:title("§9§lToggle Crawl Animation\n\n§bToggles crawling over standing when you are touching the ground.\n\n§5§lNote: §5Heavily recommend using a crawling mod instead.\nThey are much cooler, and will play nicely :D")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
+	:title(color.primary.."Toggle Crawl Animation\n\n"..color.secondary.."Toggles crawling over standing when you are touching the ground.")
+	:hoverColor(color.hover)
+	:toggleColor(color.active)
 	:item("armor_stand")
 	:toggleItem("oak_boat")
 	:onToggle(pings.setTailCrawl)
 	:toggled(isCrawl)
 
 t.twirlPage = action_wheel:newAction()
-	:title("§9§lPlay Twirl animation")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
+	:title(color.primary.."Play Twirl animation")
+	:hoverColor(color.hover)
 	:item("cod")
 	:onLeftClick(pings.animPlayTwirl)
 
 t.singPage = action_wheel:newAction()
-	:title("§9§lPlay Singing animation")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
+	:title(color.primary.."Play Singing animation")
+	:hoverColor(color.hover)
+	:toggleColor(color.active)
 	:item("music_disc_blocks")
 	:toggleItem("music_disc_cat")
 	:onToggle(pings.setAnimSing)
@@ -407,7 +408,8 @@ t.singPage = action_wheel:newAction()
 -- Updates action page info
 function events.TICK()
 	
-	t.singPage:toggled(isSing)
+	t.singPage
+		:toggled(isSing)
 	
 end
 

@@ -1,6 +1,7 @@
 -- Required scripts
 local parts     = require("lib.GroupIndex")(models)
 local kattArmor = require("lib.KattArmor")()
+local color     = require("scripts.ColorProperties")
 
 -- Setting the leggings to layer 1
 kattArmor.Armor.Leggings:setLayer(1)
@@ -301,41 +302,41 @@ local t = {}
 
 -- Action wheel pages
 t.allPage = action_wheel:newAction()
-	:title("§9§lToggle All Armor\n\n§bToggles visibility of all armor parts.")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
+	:title(color.primary.."Toggle All Armor\n\n"..color.secondary.."Toggles visibility of all armor parts.")
+	:hoverColor(color.hover)
+	:toggleColor(color.active)
 	:item("armor_stand")
 	:toggleItem("netherite_chestplate")
 	:onToggle(pings.setArmorAll)
 
 t.helmetPage = action_wheel:newAction()
-	:title("§9§lToggle Helmet\n\n§bToggles visibility of helmet parts.")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
+	:title(color.primary.."Toggle Helmet\n\n"..color.secondary.."Toggles visibility of helmet parts.")
+	:hoverColor(color.hover)
+	:toggleColor(color.active)
 	:item("iron_helmet")
 	:toggleItem("diamond_helmet")
 	:onToggle(pings.setArmorHelmet)
 
 t.chestplatePage = action_wheel:newAction()
-	:title("§9§lToggle Chestplate\n\n§bToggles visibility of chestplate parts.")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
+	:title(color.primary.."Toggle Chestplate\n\n"..color.secondary.."Toggles visibility of chestplate parts.")
+	:hoverColor(color.hover)
+	:toggleColor(color.active)
 	:item("iron_chestplate")
 	:toggleItem("diamond_chestplate")
 	:onToggle(pings.setArmorChestplate)
 
 t.leggingsPage = action_wheel:newAction()
-	:title("§9§lToggle Leggings\n\n§bToggles visibility of leggings parts.")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
+	:title(color.primary.."Toggle Leggings\n\n"..color.secondary.."Toggles visibility of leggings parts.")
+	:hoverColor(color.hover)
+	:toggleColor(color.active)
 	:item("iron_leggings")
 	:toggleItem("diamond_leggings")
 	:onToggle(pings.setArmorLeggings)
 
 t.bootsPage = action_wheel:newAction()
-	:title("§9§lToggle Boots\n\n§bToggles visibility of boots.")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
+	:title(color.primary.."Toggle Boots\n\n"..color.secondary.."Toggles visibility of boots.")
+	:hoverColor(color.hover)
+	:toggleColor(color.active)
 	:item("iron_boots")
 	:toggleItem("diamond_boots")
 	:onToggle(pings.setArmorBoots)
@@ -343,11 +344,20 @@ t.bootsPage = action_wheel:newAction()
 -- Update action page info
 function events.TICK()
 	
-	t.allPage       :toggled(helmet and chestplate and leggings and boots)
-	t.helmetPage    :toggled(helmet)
-	t.chestplatePage:toggled(chestplate)
-	t.leggingsPage  :toggled(leggings)
-	t.bootsPage     :toggled(boots)
+	t.allPage
+		:toggled(helmet and chestplate and leggings and boots)
+	
+	t.helmetPage
+		:toggled(helmet)
+	
+	t.chestplatePage
+		:toggled(chestplate)
+	
+	t.leggingsPage
+		:toggled(leggings)
+	
+	t.bootsPage
+		:toggled(boots)
 	
 end
 

@@ -8,6 +8,7 @@ local glow      = require("scripts.GlowingTail")
 local eyes      = require("scripts.GlowingEyes")
 local anims     = require("scripts.Anims")
 local arms      = require("scripts.Arms")
+local color     = require("scripts.ColorProperties")
 
 -- Page setups
 local mainPage      = action_wheel:newPage("MainPage")
@@ -53,29 +54,29 @@ action_wheel:setPage(mainPage)
 mainPage
 	:action( -1,
 		action_wheel:newAction()
-			:title("§9§lAvatar Settings")
-			:hoverColor(vectors.hexToRGB("55FFFF"))
+			:title(color.primary.."Avatar Settings")
+			:hoverColor(color.hover)
 			:item("armor_stand")
 			:onLeftClick(function() descend(avatarPage) end))
 	
 	:action( -1,
 		action_wheel:newAction()
-			:title("§9§lMerling Settings")
-			:hoverColor(vectors.hexToRGB("55FFFF"))
+			:title(color.primary.."Merling Settings")
+			:hoverColor(color.hover)
 			:item("tropical_fish")
 			:onLeftClick(function() descend(tailPage) end))
 	
 	:action( -1,
 		action_wheel:newAction()
-			:title("§9§lGlowing Settings")
-			:hoverColor(vectors.hexToRGB("55FFFF"))
+			:title(color.primary.."Glowing Settings")
+			:hoverColor(color.hover)
 			:item("glow_ink_sac")
 			:onLeftClick(function() descend(glowPage) end))
 	
 	:action( -1,
 		action_wheel:newAction()
-			:title("§9§lAnimations")
-			:hoverColor(vectors.hexToRGB("55FFFF"))
+			:title(color.primary.."Animations")
+			:hoverColor(color.hover)
 			:item("jukebox")
 			:onLeftClick(function() descend(animsPage) end))
 
@@ -85,14 +86,14 @@ avatarPage
 	:action( -1, avatar.modelPage)
 	:action( -1,
 		action_wheel:newAction()
-			:title("§9§lArmor Settings")
-			:hoverColor(vectors.hexToRGB("55FFFF"))
+			:title(color.primary.."Armor Settings")
+			:hoverColor(color.hover)
 			:item("iron_chestplate")
 			:onLeftClick(function() descend(armorPage) end))
 	:action( -1,
 		action_wheel:newAction()
-			:title("§9§lCamera Settings")
-			:hoverColor(vectors.hexToRGB("55FFFF"))
+			:title(color.primary.."Camera Settings")
+			:hoverColor(color.hover)
 			:item("redstone")
 			:onLeftClick(function() descend(cameraPage) end))
 	:action( -1, backPage)
@@ -120,14 +121,14 @@ tailPage
 	:action( -1, tail.earsPage)
 	:action( -1,
 		action_wheel:newAction()
-			:title("§9§lDrying Settings")
-			:hoverColor(vectors.hexToRGB("55FFFF"))
+			:title(color.primary.."Drying Settings")
+			:hoverColor(color.hover)
 			:item("sponge")
 			:onLeftClick(function() descend(dryPage) end))
 	:action( -1,
 		action_wheel:newAction()
-			:title("§9§lWhirlpool Settings")
-			:hoverColor(vectors.hexToRGB("55FFFF"))
+			:title(color.primary.."Whirlpool Settings")
+			:hoverColor(color.hover)
 			:item("magma_block")
 			:onLeftClick(function() descend(whirlpoolPage) end))
 	:action( -1, backPage)
@@ -151,8 +152,8 @@ glowPage
 	:action( -1, glow.waterPage)
 	:action( -1,
 		action_wheel:newAction()
-			:title("§9§lGlowing Eyes Settings")
-			:hoverColor(vectors.hexToRGB("55FFFF"))
+			:title(color.primary.."Glowing Eyes Settings")
+			:hoverColor(color.hover)
 			:item("ender_eye")
 			:onLeftClick(function() descend(eyesPage) end))
 	:action( -1, backPage)

@@ -2,6 +2,7 @@
 local parts   = require("lib.GroupIndex")(models)
 local effects = require("scripts.SyncedVariables")
 local origins = require("lib.OriginsAPI")
+local color   = require("scripts.ColorProperties")
 
 -- Config setup
 config:name("Merling")
@@ -177,36 +178,36 @@ local t = {}
 
 -- Action wheels
 t.togglePage = action_wheel:newAction()
-	:title("§9§lToggle Glowing Eyes\n\n§bToggles the glowing of the eyes.")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
+	:title(color.primary.."Toggle Glowing Eyes\n\n"..color.secondary.."Toggles the glowing of the eyes.")
+	:hoverColor(color.hover)
+	:toggleColor(color.active)
 	:item("ender_pearl")
 	:toggleItem("ender_eye")
 	:onToggle(pings.setEyesToggle)
 	:toggled(toggle)
 
 t.powerPage = action_wheel:newAction()
-	:title("§9§lOrigins Power Toggle\n\n§bToggles the glowing based on Origin's underwater sight power.\nThe eyes will only glow when this power is active.")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
+	:title(color.primary.."Origins Power Toggle\n\n"..color.secondary.."Toggles the glowing based on Origin's underwater sight power.\nThe eyes will only glow when this power is active.")
+	:hoverColor(color.hover)
+	:toggleColor(color.active)
 	:item("cod")
 	:toggleItem("tropical_fish")
 	:onToggle(pings.setEyesPower)
 	:toggled(power)
 
 t.nightVisionPage = action_wheel:newAction()
-	:title("§9§lNight Vision Toggle\n\n§bToggles the glowing based on having the Night Vision effect.\nThis setting will §b§lOVERRIDE §bthe other subsettings.")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
+	:title(color.primary.."Night Vision Toggle\n\n"..color.secondary.."Toggles the glowing based on having the Night Vision effect.\nThis setting will §lOVERRIDE "..color.secondary.."the other subsettings.")
+	:hoverColor(color.hover)
+	:toggleColor(color.active)
 	:item("glass_bottle")
 	:toggleItem("potion{'CustomPotionColor':" .. tostring(0x96C54F) .. "}")
 	:onToggle(pings.setEyesNightVision)
 	:toggled(nightVision)
 
 t.waterPage = action_wheel:newAction()
-	:title("§9§lWater Sensitivity Toggle\n\n§bToggles the glowing sensitivity to water.\nThe eyes will only glow when underwater.")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
+	:title(color.primary.."Water Sensitivity Toggle\n\n"..color.secondary.."Toggles the glowing sensitivity to water.\nThe eyes will only glow when underwater.")
+	:hoverColor(color.hover)
+	:toggleColor(color.active)
 	:item("bucket")
 	:toggleItem("water_bucket")
 	:onToggle(pings.setEyesWater)
@@ -215,7 +216,8 @@ t.waterPage = action_wheel:newAction()
 -- Update action page info
 function events.TICK()
 	
-	t.togglePage:toggled(toggle)
+	t.togglePage
+		:toggled(toggle)
 	
 end
 
