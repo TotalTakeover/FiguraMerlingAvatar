@@ -1,6 +1,7 @@
 -- Required scripts
 local parts      = require("lib.GroupIndex")(models)
 local average    = require("lib.Average")
+local itemCheck  = require("lib.ItemCheck")
 local waterTicks = require("scripts.WaterTicks")
 local effects    = require("scripts.SyncedVariables")
 local color      = require("scripts.ColorProperties")
@@ -132,8 +133,8 @@ t.movePage = action_wheel:newAction()
 	:title(color.primary.."Arm Movement Toggle\n\n"..color.secondary.."Toggles the movement swing movement of the arms.\nActions are not effected.")
 	:hoverColor(color.hover)
 	:toggleColor(color.active)
-	:item("red_dye")
-	:toggleItem("rabbit_foot")
+	:item(itemCheck("red_dye"))
+	:toggleItem(itemCheck("rabbit_foot"))
 	:onToggle(pings.setAvatarArmMove)
 	:toggled(armMove)
 

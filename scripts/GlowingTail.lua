@@ -1,5 +1,6 @@
 -- Required scripts
 local parts      = require("lib.GroupIndex")(models)
+local itemCheck  = require("lib.ItemCheck")
 local waterTicks = require("scripts.WaterTicks")
 local color      = require("scripts.ColorProperties")
 
@@ -180,15 +181,15 @@ t.togglePage = action_wheel:newAction()
 	:title(color.primary.."Toggle Glowing\n\n"..color.secondary.."Toggles glowing for the tail, and misc parts.")
 	:hoverColor(color.hover)
 	:toggleColor(color.active)
-	:item("ink_sac")
-	:toggleItem("glow_ink_sac")
+	:item(itemCheck("ink_sac"))
+	:toggleItem(itemCheck("glow_ink_sac"))
 	:onToggle(pings.setGlowToggle)
 
 t.dynamicPage = action_wheel:newAction()
 	:title(color.primary.."Toggle Dynamic Glowing\n\n"..color.secondary.."Toggles glowing based on lightlevel. The darker the location, the brighter your tail glows.")
 	:hoverColor(color.hover)
 	:toggleColor(color.active)
-	:item("light")
+	:item(itemCheck("light"))
 	:onToggle(pings.setGlowDynamic)
 	:toggled(dynamic)
 
@@ -196,8 +197,8 @@ t.waterPage = action_wheel:newAction()
 	:title(color.primary.."Toggle Water Glowing\n\n"..color.secondary.."Toggles the glowing sensitivity to water.\nAny water will cause your tail to glow.")
 	:hoverColor(color.hover)
 	:toggleColor(color.active)
-	:item("bucket")
-	:toggleItem("water_bucket")
+	:item(itemCheck("bucket"))
+	:toggleItem(itemCheck("water_bucket"))
 	:onToggle(pings.setGlowWater)
 	:toggled(water)
 
@@ -208,7 +209,7 @@ function events.TICK()
 		:toggled(toggle)
 	
 	t.dynamicPage
-		:toggleItem("light{BlockStateTag:{level:"..world.getLightLevel(player:getPos()).."}}")
+		:toggleItem(itemCheck("light{BlockStateTag:{level:"..world.getLightLevel(player:getPos()).."}}"))
 	
 end
 

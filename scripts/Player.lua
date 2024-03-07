@@ -1,6 +1,7 @@
 -- Required scripts
-local parts = require("lib.GroupIndex")(models)
-local color = require("scripts.ColorProperties")
+local parts     = require("lib.GroupIndex")(models)
+local itemCheck = require("lib.ItemCheck")
+local color     = require("scripts.ColorProperties")
 
 -- Config setup
 config:name("Merling")
@@ -206,7 +207,7 @@ t.vanillaSkinPage = action_wheel:newAction()
 	:title(color.primary.."Toggle Vanilla Texture\n\n"..color.secondary.."Toggles the usage of your vanilla skin.")
 	:hoverColor(color.hover)
 	:toggleColor(color.active)
-	:item("player_head{'SkullOwner':'"..avatar:getEntityName().."'}")
+	:item(itemCheck("player_head{'SkullOwner':'"..avatar:getEntityName().."'}"))
 	:onToggle(pings.setAvatarVanillaSkin)
 	:toggled(vanillaSkin)
 
@@ -214,8 +215,8 @@ t.modelPage = action_wheel:newAction()
 	:title(color.primary.."Toggle Model Shape\n\n"..color.secondary.."Adjust the model shape to use Default or Slim Proportions.\nWill be overridden by the vanilla skin toggle.")
 	:hoverColor(color.hover)
 	:toggleColor(color.active)
-	:item("player_head")
-	:toggleItem("player_head{'SkullOwner':'MHF_Alex'}")
+	:item(itemCheck("player_head"))
+	:toggleItem(itemCheck("player_head{'SkullOwner':'MHF_Alex'}"))
 	:onToggle(pings.setAvatarModelType)
 	:toggled(slim)
 

@@ -1,7 +1,8 @@
 -- Required scripts
-local parts = require("lib.GroupIndex")(models)
-local pose  = require("scripts.Posing")
-local color = require("scripts.ColorProperties")
+local parts     = require("lib.GroupIndex")(models)
+local itemCheck = require("lib.ItemCheck")
+local pose      = require("scripts.Posing")
+local color     = require("scripts.ColorProperties")
 
 -- Config setup
 config:name("Merling")
@@ -106,8 +107,8 @@ t.posPage = action_wheel:newAction()
 	:title(color.primary.."Camera Position Toggle\n\n"..color.secondary.."Sets the camera position to where your avatar's head is.")
 	:hoverColor(color.hover)
 	:toggleColor(color.active)
-	:item("skeleton_skull")
-	:toggleItem("player_head{'SkullOwner':'"..avatar:getEntityName().."'}")
+	:item(itemCheck("skeleton_skull"))
+	:toggleItem(itemCheck("player_head{'SkullOwner':'"..avatar:getEntityName().."'}"))
 	:onToggle(pings.setCameraPos)
 	:toggled(camPos)
 	
@@ -115,8 +116,8 @@ t.eyePage = action_wheel:newAction()
 	:title(color.primary.."Eye Position Toggle\n\n"..color.secondary.."Sets the eye position to match the avatar's head.\nRequires camera position toggle.\n\n§4§lWARNING: §cThis feature is dangerous!\nIt can and will be flagged on servers with anticheat!\nFurthermore, \"In Wall\" damage is possible.\nThis setting will §lNOT §cbe saved between sessions for your safety.\n\nPlease use with extreme caution!")
 	:hoverColor(color.hover)
 	:toggleColor(color.active)
-	:item("ender_pearl")
-	:toggleItem("ender_eye")
+	:item(itemCheck("ender_pearl"))
+	:toggleItem(itemCheck("ender_eye"))
 	:onToggle(pings.setCameraEye)
 
 -- Return action wheel pages
