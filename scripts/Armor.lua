@@ -1,8 +1,8 @@
 -- Required scripts
-local parts     = require("lib.GroupIndex")(models)
-local kattArmor = require("lib.KattArmor")()
-local itemCheck = require("lib.ItemCheck")
-local color     = require("scripts.ColorProperties")
+local merlingParts = require("lib.GroupIndex")(models.models.Merling)
+local kattArmor    = require("lib.KattArmor")()
+local itemCheck    = require("lib.ItemCheck")
+local color        = require("scripts.ColorProperties")
 
 -- Setting the leggings to layer 1
 kattArmor.Armor.Leggings:setLayer(1)
@@ -10,36 +10,36 @@ kattArmor.Armor.Leggings:setLayer(1)
 -- Armor parts
 kattArmor.Armor.Leggings
 	:addParts(
-		parts.Tail1ArmorLeggings.Leggings,
-		parts.Tail1ArmorLeggings.BrimLeggings,
-		parts.Tail2ArmorLeggings.Leggings
+		merlingParts.Tail1ArmorLeggings.Leggings,
+		merlingParts.Tail1ArmorLeggings.BrimLeggings,
+		merlingParts.Tail2ArmorLeggings.Leggings
 	)
 	:addTrimParts(
-		parts.Tail1ArmorLeggings.Trim,
-		parts.Tail1ArmorLeggings.BrimTrim,
-		parts.Tail2ArmorLeggings.Trim
+		merlingParts.Tail1ArmorLeggings.Trim,
+		merlingParts.Tail1ArmorLeggings.BrimTrim,
+		merlingParts.Tail2ArmorLeggings.Trim
 	)
 kattArmor.Armor.Boots
 	:addParts(
-		parts.Tail3ArmorBoots.Boots,
-		parts.Tail4ArmorBoots.Boots
+		merlingParts.Tail3ArmorBoots.Boots,
+		merlingParts.Tail4ArmorBoots.Boots
 	)
 	:addTrimParts(
-		parts.Tail3ArmorBoots.Trim,
-		parts.Tail4ArmorBoots.Trim
+		merlingParts.Tail3ArmorBoots.Trim,
+		merlingParts.Tail4ArmorBoots.Trim
 	)
 
 -- Leather armor
 kattArmor.Materials.leather
 	:setTexture(textures["textures.armor.leatherArmor"])
 	:addParts(kattArmor.Armor.Leggings,
-		parts.Tail1ArmorLeggings.Leather,
-		parts.Tail1ArmorLeggings.BrimLeather,
-		parts.Tail2ArmorLeggings.Leather
+		merlingParts.Tail1ArmorLeggings.Leather,
+		merlingParts.Tail1ArmorLeggings.BrimLeather,
+		merlingParts.Tail2ArmorLeggings.Leather
 	)
 	:addParts(kattArmor.Armor.Boots,
-		parts.Tail3ArmorBoots.Leather,
-		parts.Tail4ArmorBoots.Leather
+		merlingParts.Tail3ArmorBoots.Leather,
+		merlingParts.Tail4ArmorBoots.Leather
 	)
 
 -- Chainmail armor
@@ -161,8 +161,8 @@ local leggingsGroups = {
 	
 	vanilla_model.LEGGINGS,
 	
-	parts.Tail1ArmorLeggings,
-	parts.Tail2ArmorLeggings
+	merlingParts.Tail1ArmorLeggings,
+	merlingParts.Tail2ArmorLeggings
 	
 }
 
@@ -171,8 +171,8 @@ local bootsGroups = {
 	
 	vanilla_model.BOOTS,
 	
-	parts.Tail3ArmorBoots,
-	parts.Tail4ArmorBoots
+	merlingParts.Tail3ArmorBoots,
+	merlingParts.Tail4ArmorBoots
 	
 }
 

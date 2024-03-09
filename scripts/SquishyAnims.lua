@@ -1,19 +1,19 @@
 -- Required scripts
-local parts   = require("lib.GroupIndex")(models)
-local squapi  = require("lib.SquAPI")
-local average = require("lib.Average")
+local merlingParts = require("lib.GroupIndex")(models.models.Merling)
+local squapi       = require("lib.SquAPI")
+local average      = require("lib.Average")
 
 -- Ear function
-squapi.ear(parts.LeftEar, parts.RightEar, false, _, 0.35, true, 1, 0.05, 0.05)
+squapi.ear(merlingParts.LeftEar, merlingParts.RightEar, false, _, 0.35, true, 1, 0.05, 0.05)
 
 -- Tails table
 local tail = {
 	
-	parts.Tail1,
-	parts.Tail2,
-	parts.Tail3,
-	parts.Tail4,
-	parts.Fluke
+	merlingParts.Tail1,
+	merlingParts.Tail2,
+	merlingParts.Tail3,
+	merlingParts.Tail4,
+	merlingParts.Fluke
 	
 }
 
@@ -37,7 +37,7 @@ squapi.tails(tail,
 function events.RENDER(delta, context)
 	
 	-- Control the intensity of the tail function based on its scale
-	local scale = (-math.abs(average(parts.Tail1:getScale():unpack()) - 0.5) + 0.5) * 2
+	local scale = (-math.abs(average(merlingParts.Tail1:getScale():unpack()) - 0.5) + 0.5) * 2
 	for _, part in ipairs(tail) do
 		part:offsetRot(part:getOffsetRot() * scale)
 	end

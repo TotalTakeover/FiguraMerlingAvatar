@@ -1,8 +1,8 @@
 -- Required scripts
-local parts      = require("lib.GroupIndex")(models)
-local itemCheck  = require("lib.ItemCheck")
-local waterTicks = require("scripts.WaterTicks")
-local color      = require("scripts.ColorProperties")
+local merlingParts = require("lib.GroupIndex")(models.models.Merling)
+local itemCheck    = require("lib.ItemCheck")
+local waterTicks   = require("scripts.WaterTicks")
+local color        = require("scripts.ColorProperties")
 
 -- Config setup
 config:name("Merling")
@@ -14,19 +14,19 @@ if toggle == nil then toggle = true end
 -- All glowing parts
 local glowingParts = {
 	
-	parts.LeftEar.Ear,
-	parts.RightEar.Ear,
+	merlingParts.LeftEar.Ear,
+	merlingParts.RightEar.Ear,
 	
-	parts.LeftEarSkull.Ear,
-	parts.RightEarSkull.Ear,
+	merlingParts.LeftEarSkull.Ear,
+	merlingParts.RightEarSkull.Ear,
 	
-	parts.Tail1.Segment,
-	parts.Tail2.Segment,
-	parts.Tail2LeftFin.Fin,
-	parts.Tail2RightFin.Fin,
-	parts.Tail3.Segment,
-	parts.Tail4.Segment,
-	parts.Fluke
+	merlingParts.Tail1.Segment,
+	merlingParts.Tail2.Segment,
+	merlingParts.Tail2LeftFin.Fin,
+	merlingParts.Tail2RightFin.Fin,
+	merlingParts.Tail3.Segment,
+	merlingParts.Tail4.Segment,
+	merlingParts.Fluke
 	
 }
 

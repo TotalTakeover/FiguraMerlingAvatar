@@ -1,8 +1,8 @@
 -- Required scripts
-local parts     = require("lib.GroupIndex")(models)
-local itemCheck = require("lib.ItemCheck")
-local pose      = require("scripts.Posing")
-local color     = require("scripts.ColorProperties")
+local merlingParts = require("lib.GroupIndex")(models.models.Merling)
+local itemCheck    = require("lib.ItemCheck")
+local pose         = require("scripts.Posing")
+local color        = require("scripts.ColorProperties")
 
 -- Config setup
 config:name("Merling")
@@ -24,7 +24,7 @@ function events.POST_RENDER(delta, context)
 		
 		-- Pos checking
 		local playerPos = player:getPos(delta)
-		trueHeadPos     = parts.Head:partToWorldMatrix():apply()
+		trueHeadPos     = merlingParts.Head:partToWorldMatrix():apply()
 		
 		-- Pehkui scaling
 		local nbt   = player:getNbt()

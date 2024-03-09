@@ -1,10 +1,10 @@
 -- Required scripts
-local parts      = require("lib.GroupIndex")(models)
-local waterTicks = require("scripts.WaterTicks")
-local ground     = require("lib.GroundCheck")
-local itemCheck  = require("lib.ItemCheck")
-local effects    = require("scripts.SyncedVariables")
-local color      = require("scripts.ColorProperties")
+local merlingParts = require("lib.GroupIndex")(models.models.Merling)
+local waterTicks   = require("scripts.WaterTicks")
+local ground       = require("lib.GroundCheck")
+local itemCheck    = require("lib.ItemCheck")
+local effects      = require("scripts.SyncedVariables")
+local color        = require("scripts.ColorProperties")
 
 -- Config setup
 config:name("Merling")
@@ -113,17 +113,17 @@ function events.RENDER(delta, context)
 	local earScale  = earsScale.currentPos
 	
 	-- Apply tail
-	parts.Tail1:scale(tailScale)
+	merlingParts.Tail1:scale(tailScale)
 	
 	-- Apply legs
-	parts.LeftLeg:scale(legScale)
-	parts.RightLeg:scale(legScale)
+	merlingParts.LeftLeg:scale(legScale)
+	merlingParts.RightLeg:scale(legScale)
 	
 	-- Apply Ears
-	parts.LeftEar:scale(earScale)
-	parts.RightEar:scale(earScale)
-	parts.LeftEarSkull:scale(earScale)
-	parts.RightEarSkull:scale(earScale)
+	merlingParts.LeftEar:scale(earScale)
+	merlingParts.RightEar:scale(earScale)
+	merlingParts.LeftEarSkull:scale(earScale)
+	merlingParts.RightEarSkull:scale(earScale)
 	
 end
 

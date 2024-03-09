@@ -1,7 +1,7 @@
 -- Required scripts
-local parts     = require("lib.GroupIndex")(models)
-local itemCheck = require("lib.ItemCheck")
-local color     = require("scripts.ColorProperties")
+local merlingParts = require("lib.GroupIndex")(models.models.Merling)
+local itemCheck    = require("lib.ItemCheck")
+local color        = require("scripts.ColorProperties")
 
 -- Config setup
 config:name("Merling")
@@ -10,37 +10,37 @@ local slim        = config:load("AvatarSlim") or false
 if vanillaSkin == nil then vanillaSkin = true end
 
 -- Set legs, skull, and portrait groups to visible (incase disabled in blockbench)
-parts.LeftLeg :visible(true)
-parts.RightLeg:visible(true)
-parts.Skull   :visible(true)
-parts.Portrait:visible(true)
+merlingParts.LeftLeg :visible(true)
+merlingParts.RightLeg:visible(true)
+merlingParts.Skull   :visible(true)
+merlingParts.Portrait:visible(true)
 
 -- All vanilla skin parts
 local skin = {
 	
-	parts.Head.Head,
-	parts.Head.Layer,
+	merlingParts.Head.Head,
+	merlingParts.Head.Layer,
 	
-	parts.Body.Body,
-	parts.Body.Layer,
+	merlingParts.Body.Body,
+	merlingParts.Body.Layer,
 	
-	parts.leftArmDefault,
-	parts.leftArmSlim,
+	merlingParts.leftArmDefault,
+	merlingParts.leftArmSlim,
 	
-	parts.rightArmDefault,
-	parts.rightArmSlim,
+	merlingParts.rightArmDefault,
+	merlingParts.rightArmSlim,
 	
-	parts.LeftLeg.Leg,
-	parts.LeftLeg.Layer,
+	merlingParts.LeftLeg.Leg,
+	merlingParts.LeftLeg.Layer,
 	
-	parts.RightLeg.Leg,
-	parts.RightLeg.Layer,
+	merlingParts.RightLeg.Leg,
+	merlingParts.RightLeg.Layer,
 	
-	parts.Portrait.Head,
-	parts.Portrait.Layer,
+	merlingParts.Portrait.Head,
+	merlingParts.Portrait.Layer,
 	
-	parts.Skull.Head,
-	parts.Skull.Layer
+	merlingParts.Skull.Head,
+	merlingParts.Skull.Layer
 	
 }
 
@@ -48,33 +48,33 @@ local skin = {
 local layer = {
 
 	HAT = {
-		parts.Head.Layer
+		merlingParts.Head.Layer
 	},
 	JACKET = {
-		parts.Body.Layer
+		merlingParts.Body.Layer
 	},
 	LEFT_SLEEVE = {
-		parts.leftArmDefault.Layer,
-		parts.leftArmSlim.Layer
+		merlingParts.leftArmDefault.Layer,
+		merlingParts.leftArmSlim.Layer
 	},
 	RIGHT_SLEEVE = {
-		parts.rightArmDefault.Layer,
-		parts.rightArmSlim.Layer
+		merlingParts.rightArmDefault.Layer,
+		merlingParts.rightArmSlim.Layer
 	},
 	LEFT_PANTS_LEG = {
-		parts.LeftLeg.Layer
+		merlingParts.LeftLeg.Layer
 	},
 	RIGHT_PANTS_LEG = {
-		parts.RightLeg.Layer
+		merlingParts.RightLeg.Layer
 	},
 	TAIL = {
-		parts.Tail1.Layer,
-		parts.Tail2.Layer,
-		parts.Tail3.Layer,
-		parts.Tail4.Layer
+		merlingParts.Tail1.Layer,
+		merlingParts.Tail2.Layer,
+		merlingParts.Tail3.Layer,
+		merlingParts.Tail4.Layer
 	},
 	CAPE = {
-		parts.Cape
+		merlingParts.Cape
 	}
 	
 }
@@ -94,15 +94,15 @@ local layer = {
 -- All plane parts
 local planeParts = {
 	
-	parts.LeftEar.Ear,
-	parts.RightEar.Ear,
+	merlingParts.LeftEar.Ear,
+	merlingParts.RightEar.Ear,
 	
-	parts.LeftEarSkull.Ear,
-	parts.RightEarSkull.Ear,
+	merlingParts.LeftEarSkull.Ear,
+	merlingParts.RightEarSkull.Ear,
 	
-	parts.Tail2LeftFin.Fin,
-	parts.Tail2RightFin.Fin,
-	parts.Fluke
+	merlingParts.Tail2LeftFin.Fin,
+	merlingParts.Tail2RightFin.Fin,
+	merlingParts.Fluke
 	
 }
 
@@ -125,11 +125,11 @@ function events.TICK()
 	-- Model shape
 	local slimShape = (vanillaSkin and vanillaAvatarType == "SLIM") or (slim and not vanillaSkin)
 	
-	parts.leftArmDefault:visible(not slimShape)
-	parts.rightArmDefault:visible(not slimShape)
+	merlingParts.leftArmDefault:visible(not slimShape)
+	merlingParts.rightArmDefault:visible(not slimShape)
 	
-	parts.leftArmSlim:visible(slimShape)
-	parts.rightArmSlim:visible(slimShape)
+	merlingParts.leftArmSlim:visible(slimShape)
+	merlingParts.rightArmSlim:visible(slimShape)
 	
 	-- Skin textures
 	local skinType = vanillaSkin and "SKIN" or "PRIMARY"
@@ -138,7 +138,7 @@ function events.TICK()
 	end
 	
 	-- Cape textures
-	parts.Cape:primaryTexture(vanillaSkin and "CAPE" or "PRIMARY")
+	merlingParts.Cape:primaryTexture(vanillaSkin and "CAPE" or "PRIMARY")
 	
 	-- Layer toggling
 	for layerType, parts in pairs(layer) do
