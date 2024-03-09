@@ -145,26 +145,21 @@ if boots      == nil then boots      = true end
 -- All helmet parts
 local helmetGroups = {
 	
-	parts.HelmetPivot,
-	parts.HelmetItemPivot
+	vanilla_model.HELMET
 	
 }
 
 -- All chestplate parts
 local chestplateGroups = {
 	
-	parts.ChestplatePivot,
-	parts.LeftShoulderPivot,
-	parts.RightShoulderPivot
+	vanilla_model.CHESTPLATE
 	
 }
 
 -- All leggings parts
 local leggingsGroups = {
 	
-	parts.LeggingsPivot,
-	parts.LeftLeggingPivot,
-	parts.RightLeggingPivot,
+	vanilla_model.LEGGINGS,
 	
 	parts.Tail1ArmorLeggings,
 	parts.Tail2ArmorLeggings
@@ -174,8 +169,7 @@ local leggingsGroups = {
 -- All boots parts
 local bootsGroups = {
 	
-	parts.LeftBootPivot,
-	parts.RightBootPivot,
+	vanilla_model.BOOTS,
 	
 	parts.Tail3ArmorBoots,
 	parts.Tail4ArmorBoots
