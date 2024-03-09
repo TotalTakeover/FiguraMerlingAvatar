@@ -1,8 +1,10 @@
 -- Required scripts
-local parts      = require("lib.GroupIndex")(models)
-local waterTicks = require("scripts.WaterTicks")
-local ground     = require("lib.GroundCheck")
-local effects    = require("scripts.SyncedVariables")
+local merlingParts = require("lib.GroupIndex")(models.models.Merling)
+local ground       = require("lib.GroundCheck")
+local itemCheck    = require("lib.ItemCheck")
+local waterTicks   = require("scripts.WaterTicks")
+local effects      = require("scripts.SyncedVariables")
+local color        = require("scripts.ColorProperties")
 
 -- Config setup
 config:name("Merling")
@@ -91,7 +93,7 @@ function events.TICK()
 		local volume = math.clamp((vel * dry) / 2, 0, 1)
 		
 		if volume ~= 0 then
-			sounds:playSound("minecraft:entity.puffer_fish.flop", player:getPos(), volume, math.map(volume, 1, 0, 0.45, 0.65))
+			sounds:playSound("entity.puffer_fish.flop", player:getPos(), volume, math.map(volume, 1, 0, 0.45, 0.65))
 		end
 	end
 	wasInAir = not ground()
@@ -111,17 +113,17 @@ function events.RENDER(delta, context)
 	local earScale  = earsScale.currentPos
 	
 	-- Apply tail
-	parts.Tail1:scale(tailScale)
+	merlingParts.Tail1:scale(tailScale)
 	
 	-- Apply legs
-	parts.LeftLeg:scale(legScale)
-	parts.RightLeg:scale(legScale)
+	merlingParts.LeftLeg:scale(legScale)
+	merlingParts.RightLeg:scale(legScale)
 	
 	-- Apply Ears
-	parts.LeftEar:scale(earScale)
-	parts.RightEar:scale(earScale)
-	parts.LeftEarSkull:scale(earScale)
-	parts.RightEarSkull:scale(earScale)
+	merlingParts.LeftEar:scale(earScale)
+	merlingParts.RightEar:scale(earScale)
+	merlingParts.LeftEarSkull:scale(earScale)
+	merlingParts.RightEarSkull:scale(earScale)
 	
 end
 
@@ -140,7 +142,7 @@ local function setWater(i)
 	if water > 4 then water = 1 end
 	if water < 1 then water = 4 end
 	if player:isLoaded() and host:isHost() and i ~= 0 then
-		sounds:playSound("minecraft:ambient.underwater.enter", player:getPos(), 0.35)
+		sounds:playSound("ambient.underwater.enter", player:getPos(), 0.35)
 	end
 	config:save("TailWater", water)
 	
@@ -184,7 +186,7 @@ local function setFallSound(boolean)
 	fallSound = boolean
 	config:save("TailFallSound", fallSound)
 	if host:isHost() and player:isLoaded() and fallSound then
-		sounds:playSound("minecraft:entity.puffer_fish.flop", player:getPos(), 0.35, 0.6)
+		sounds:playSound("entity.puffer_fish.flop", player:getPos(), 0.35, 0.6)
 	end
 	
 end
@@ -267,91 +269,100 @@ setFallSound(fallSound)
 local t = {}
 
 -- Action wheel pages
-t.activePage = action_wheel:newAction("TailActive")
-	:title("§9§lToggle Merling Functionality\n\n§bToggles the ability for Merling attributes to appear.")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
-	:item("minecraft:rabbit_foot")
-	:toggleItem("minecraft:tropical_fish")
+t.activePage = action_wheel:newAction()
+	:title(color.primary.."Toggle Merling Functionality\n\n"..color.secondary.."Toggles the ability for Merling attributes to appear.")
+	:hoverColor(color.hover)
+	:toggleColor(color.active)
+	:item(itemCheck("rabbit_foot"))
+	:toggleItem(itemCheck("tropical_fish"))
 	:onToggle(pings.setTailActive)
 
-t.waterPage = action_wheel:newAction("TailWater")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
+t.waterPage = action_wheel:newAction()
+	:hoverColor(color.hover)
 	:onLeftClick(function() pings.setTailWater(1)end)
 	:onRightClick(function() pings.setTailWater(-1) end)
 
-t.smallPage = action_wheel:newAction("TailSmall")
-	:title("§9§lToggle Small Tail\n\n§bWhen outside water, toggles the appearence of the tail into a smaller tail.")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
-	:item("minecraft:kelp")
-	:toggleItem("minecraft:scute")
+t.smallPage = action_wheel:newAction()
+	:title(color.primary.."Toggle Small Tail\n\n"..color.secondary.."When outside water, toggles the appearence of the tail into a smaller tail.")
+	:hoverColor(color.hover)
+	:toggleColor(color.active)
+	:item(itemCheck("kelp"))
+	:toggleItem(itemCheck("scute"))
 	:onToggle(pings.setTailSmall)
 
-t.earsPage = action_wheel:newAction("TailEars")
-	:title("§9§lToggle Ears\n\n§bToggles the appearence of your ears.")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
-	:item("minecraft:prismarine_crystals")
-	:toggleItem("minecraft:prismarine_shard")
+t.earsPage = action_wheel:newAction()
+	:title(color.primary.."Toggle Ears\n\n"..color.secondary.."Toggles the appearence of your ears.")
+	:hoverColor(color.hover)
+	:toggleColor(color.active)
+	:item(itemCheck("prismarine_crystals"))
+	:toggleItem(itemCheck("prismarine_shard"))
 	:onToggle(pings.setTailEars)
 
-t.dryPage = action_wheel:newAction("TailDrying")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
-	:item("minecraft:water_bucket")
-	:toggleItem("minecraft:leather")
+t.dryPage = action_wheel:newAction()
+	:hoverColor(color.hover)
+	:toggleColor(color.active)
+	:item(itemCheck("water_bucket"))
+	:toggleItem(itemCheck("leather"))
 	:onToggle(pings.setTailDry)
 	:onScroll(setDryTimer)
 	:onRightClick(function() dryTimer = 400 config:save("TailDryTimer", dryTimer) end)
 	:toggled(canDry)
 
-t.soundPage = action_wheel:newAction("TailFallSound")
-	:title("§9§lToggle Flop Sound\n\n§bToggles flopping sound effects when landing on the ground.\nIf tail can dry, volume will gradually decrease over time until dry. (Acts like a timer!)")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
-	:item("minecraft:sponge")
-	:toggleItem("minecraft:wet_sponge")
+t.soundPage = action_wheel:newAction()
+	:title(color.primary.."Toggle Flop Sound\n\n"..color.secondary.."Toggles flopping sound effects when landing on the ground.\nIf tail can dry, volume will gradually decrease over time until dry.")
+	:hoverColor(color.hover)
+	:toggleColor(color.active)
+	:item(itemCheck("sponge"))
+	:toggleItem(itemCheck("wet_sponge"))
 	:onToggle(pings.setTailFallSound)
 	:toggled(fallSound)
 
 -- Water context info table
 local waterInfo = {
 	{
-		title  = "§c§lLow §r| §bReactive to being underwater.",
-		item   = "minecraft:glass_bottle",
+		title  = "§cLow §r| "..color.secondary.."Reactive to being underwater.",
+		item   = "glass_bottle",
 		color  = "FF5555"
 	},
 	{
-		title  = "§e§lMedium §r| §bReactive to being in water.",
-		item   = "minecraft:potion{\"CustomPotionColor\":" .. tostring(0x0094FF) .. "}",
+		title  = "§eMedium §r| "..color.secondary.."Reactive to being in water.",
+		item   = "potion{'CustomPotionColor':" .. tostring(0x0094FF) .. "}",
 		color  = "FFFF55"
 	},
 	{
-		title  = "§a§lHigh §r| §bReactive to any form of water.",
-		item   = "minecraft:splash_potion{\"CustomPotionColor\":" .. tostring(0x0094FF) .. "}",
+		title  = "§aHigh §r| "..color.secondary.."Reactive to any form of water.",
+		item   = "splash_potion{'CustomPotionColor':" .. tostring(0x0094FF) .. "}",
 		color  = "55FF55"
 	},
 	{
-		title  = "§9§lMax §r| §bAlways active.",
-		item   = "minecraft:lingering_potion{\"CustomPotionColor\":" .. tostring(0x0094FF) .. "}",
+		title  = "§9Max §r| "..color.secondary.."Always active.",
+		item   = "lingering_potion{'CustomPotionColor':" .. tostring(0x0094FF) .. "}",
 		color  = "5555FF"
-	},
+	}
 }
 
 -- Updates action page info
 function events.TICK()
 	
-	t.activePage:toggled(active)
-	t.smallPage:toggled(small)
-	t.earsPage:toggled(ears)
+	t.activePage
+		:toggled(active)
+	
+	t.smallPage
+		:toggled(small)
+	
+	t.earsPage
+		:toggled(ears)
+	
 	t.waterPage
-		:title("§9§lWater Sensitivity\n\n§3Current configuration: "..waterInfo[water].title.."\n\n§bDetermines how your tail should form in contact with water.")
-		:item(waterInfo[water].item)
+		:title(color.primary.."Water Sensitivity\n\n"..color.secondary.."Determines how your tail should form in contact with water.\n\n"
+		.."§lCurrent configuration: "..waterInfo[water].title)
+		:item(itemCheck(waterInfo[water].item))
 		:color(vectors.hexToRGB(waterInfo[water].color))
-	t.dryPage:title("§9§lToggle Drying/Timer\n\n§3Current drying timer: "..
-		(canDry and ("§b§l"..(dryTimer / 20).." §3Seconds") or "§bNone")..
-		"\n\n§bToggles the gradual drying of your tail until your legs form again.\n\nScrolling up adds time, Scrolling down subtracts time.\nRight click resets timer to 20 seconds.")
+	
+	t.dryPage
+		:title(color.primary.."Toggle Drying/Timer\n\n"..color.secondary.."Toggles the gradual drying of your tail until your legs form again.\n\n"
+		.."§lCurrent drying timer: §a"..(canDry and ((dryTimer / 20).." Seconds") or "None")
+		..color.secondary.."\n\nScrolling up adds time, Scrolling down subtracts time.\nRight click resets timer to 20 seconds.")
 	
 end
 

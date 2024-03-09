@@ -1,5 +1,19 @@
 # [Merling Avatar](https://github.com/TotalTakeover/FiguraMerlingAvatar)
+### Version: v3.3.3
 This Figura avatar is a template designed around giving the user a customizable merfolk tail.
+
+### Authors:
+- Detrilogue (Original avatar maker)
+- FlossenMonster (Template Designer, Support)
+- Snqwblind (Twirl & Sing Anims)
+- Katt (Updated scripts, APIs)
+- Grandpa Scout (APIs)
+- Jimmy (QA, Animation code)
+- Squishy (APIs)
+- 4P5 (APIs, Better Action Wheel)
+- Dragonearuss (Support)
+- Total (Avatar Maker)
+
 ## Features
 Below is a list of all features this Avatar contains, but you could always watch instead of read: 
 

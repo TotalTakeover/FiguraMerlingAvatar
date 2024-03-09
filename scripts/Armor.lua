@@ -1,6 +1,8 @@
 -- Required scripts
-local parts     = require("lib.GroupIndex")(models)
-local kattArmor = require("lib.KattArmor")()
+local merlingParts = require("lib.GroupIndex")(models.models.Merling)
+local kattArmor    = require("lib.KattArmor")()
+local itemCheck    = require("lib.ItemCheck")
+local color        = require("scripts.ColorProperties")
 
 -- Setting the leggings to layer 1
 kattArmor.Armor.Leggings:setLayer(1)
@@ -8,36 +10,36 @@ kattArmor.Armor.Leggings:setLayer(1)
 -- Armor parts
 kattArmor.Armor.Leggings
 	:addParts(
-		parts.Tail1ArmorLeggings.Leggings,
-		parts.Tail1ArmorLeggings.BrimLeggings,
-		parts.Tail2ArmorLeggings.Leggings
+		merlingParts.Tail1ArmorLeggings.Leggings,
+		merlingParts.Tail1ArmorLeggings.BrimLeggings,
+		merlingParts.Tail2ArmorLeggings.Leggings
 	)
 	:addTrimParts(
-		parts.Tail1ArmorLeggings.Trim,
-		parts.Tail1ArmorLeggings.BrimTrim,
-		parts.Tail2ArmorLeggings.Trim
+		merlingParts.Tail1ArmorLeggings.Trim,
+		merlingParts.Tail1ArmorLeggings.BrimTrim,
+		merlingParts.Tail2ArmorLeggings.Trim
 	)
 kattArmor.Armor.Boots
 	:addParts(
-		parts.Tail3ArmorBoots.Boots,
-		parts.Tail4ArmorBoots.Boots
+		merlingParts.Tail3ArmorBoots.Boots,
+		merlingParts.Tail4ArmorBoots.Boots
 	)
 	:addTrimParts(
-		parts.Tail3ArmorBoots.Trim,
-		parts.Tail4ArmorBoots.Trim
+		merlingParts.Tail3ArmorBoots.Trim,
+		merlingParts.Tail4ArmorBoots.Trim
 	)
 
 -- Leather armor
 kattArmor.Materials.leather
 	:setTexture(textures["textures.armor.leatherArmor"])
 	:addParts(kattArmor.Armor.Leggings,
-		parts.Tail1ArmorLeggings.Leather,
-		parts.Tail1ArmorLeggings.BrimLeather,
-		parts.Tail2ArmorLeggings.Leather
+		merlingParts.Tail1ArmorLeggings.Leather,
+		merlingParts.Tail1ArmorLeggings.BrimLeather,
+		merlingParts.Tail2ArmorLeggings.Leather
 	)
 	:addParts(kattArmor.Armor.Boots,
-		parts.Tail3ArmorBoots.Leather,
-		parts.Tail4ArmorBoots.Leather
+		merlingParts.Tail3ArmorBoots.Leather,
+		merlingParts.Tail4ArmorBoots.Leather
 	)
 
 -- Chainmail armor
@@ -143,40 +145,34 @@ if boots      == nil then boots      = true end
 -- All helmet parts
 local helmetGroups = {
 	
-	parts.HelmetPivot,
-	parts.HelmetItemPivot
+	vanilla_model.HELMET
 	
 }
 
 -- All chestplate parts
 local chestplateGroups = {
 	
-	parts.ChestplatePivot,
-	parts.LeftShoulderPivot,
-	parts.RightShoulderPivot
+	vanilla_model.CHESTPLATE
 	
 }
 
 -- All leggings parts
 local leggingsGroups = {
 	
-	parts.LeggingsPivot,
-	parts.LeftLeggingPivot,
-	parts.RightLeggingPivot,
+	vanilla_model.LEGGINGS,
 	
-	parts.Tail1ArmorLeggings,
-	parts.Tail2ArmorLeggings
+	merlingParts.Tail1ArmorLeggings,
+	merlingParts.Tail2ArmorLeggings
 	
 }
 
 -- All boots parts
 local bootsGroups = {
 	
-	parts.LeftBootPivot,
-	parts.RightBootPivot,
+	vanilla_model.BOOTS,
 	
-	parts.Tail3ArmorBoots,
-	parts.Tail4ArmorBoots
+	merlingParts.Tail3ArmorBoots,
+	merlingParts.Tail4ArmorBoots
 	
 }
 
@@ -212,7 +208,7 @@ local function setAll(boolean)
 	config:save("ArmorLeggings", leggings)
 	config:save("ArmorBoots", boots)
 	if player:isLoaded() then
-		sounds:playSound("minecraft:item.armor.equip_generic", player:getPos(), 0.5)
+		sounds:playSound("item.armor.equip_generic", player:getPos(), 0.5)
 	end
 	
 end
@@ -223,7 +219,7 @@ local function setHelmet(boolean)
 	helmet = boolean
 	config:save("ArmorHelmet", helmet)
 	if player:isLoaded() then
-		sounds:playSound("minecraft:item.armor.equip_generic", player:getPos(), 0.5)
+		sounds:playSound("item.armor.equip_generic", player:getPos(), 0.5)
 	end
 	
 end
@@ -234,7 +230,7 @@ local function setChestplate(boolean)
 	chestplate = boolean
 	config:save("ArmorChestplate", chestplate)
 	if player:isLoaded() then
-		sounds:playSound("minecraft:item.armor.equip_generic", player:getPos(), 0.5)
+		sounds:playSound("item.armor.equip_generic", player:getPos(), 0.5)
 	end
 	
 end
@@ -245,7 +241,7 @@ local function setLeggings(boolean)
 	leggings = boolean
 	config:save("ArmorLeggings", leggings)
 	if player:isLoaded() then
-		sounds:playSound("minecraft:item.armor.equip_generic", player:getPos(), 0.5)
+		sounds:playSound("item.armor.equip_generic", player:getPos(), 0.5)
 	end
 	
 end
@@ -256,7 +252,7 @@ local function setBoots(boolean)
 	boots = boolean
 	config:save("ArmorBoots", boots)
 	if player:isLoaded() then
-		sounds:playSound("minecraft:item.armor.equip_generic", player:getPos(), 0.5)
+		sounds:playSound("item.armor.equip_generic", player:getPos(), 0.5)
 	end
 	
 end
@@ -300,54 +296,63 @@ setBoots(boots)
 local t = {}
 
 -- Action wheel pages
-t.allPage = action_wheel:newAction("AllArmorToggle")
-	:title("§9§lToggle All Armor\n\n§bToggles visibility of all armor parts.")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
-	:item("minecraft:armor_stand")
-	:toggleItem("minecraft:netherite_chestplate")
+t.allPage = action_wheel:newAction()
+	:title(color.primary.."Toggle All Armor\n\n"..color.secondary.."Toggles visibility of all armor parts.")
+	:hoverColor(color.hover)
+	:toggleColor(color.active)
+	:item(itemCheck("armor_stand"))
+	:toggleItem(itemCheck("netherite_chestplate"))
 	:onToggle(pings.setArmorAll)
 
-t.helmetPage = action_wheel:newAction("HelmetArmorToggle")
-	:title("§9§lToggle Helmet\n\n§bToggles visibility of helmet parts.")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
-	:item("minecraft:iron_helmet")
-	:toggleItem("minecraft:diamond_helmet")
+t.helmetPage = action_wheel:newAction()
+	:title(color.primary.."Toggle Helmet\n\n"..color.secondary.."Toggles visibility of helmet parts.")
+	:hoverColor(color.hover)
+	:toggleColor(color.active)
+	:item(itemCheck("iron_helmet"))
+	:toggleItem(itemCheck("diamond_helmet"))
 	:onToggle(pings.setArmorHelmet)
 
-t.chestplatePage = action_wheel:newAction("ChestplateArmorToggle")
-	:title("§9§lToggle Chestplate\n\n§bToggles visibility of chestplate parts.")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
-	:item("minecraft:iron_chestplate")
-	:toggleItem("minecraft:diamond_chestplate")
+t.chestplatePage = action_wheel:newAction()
+	:title(color.primary.."Toggle Chestplate\n\n"..color.secondary.."Toggles visibility of chestplate parts.")
+	:hoverColor(color.hover)
+	:toggleColor(color.active)
+	:item(itemCheck("iron_chestplate"))
+	:toggleItem(itemCheck("diamond_chestplate"))
 	:onToggle(pings.setArmorChestplate)
 
-t.leggingsPage = action_wheel:newAction("LeggingsArmorToggle")
-	:title("§9§lToggle Leggings\n\n§bToggles visibility of leggings parts.")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
-	:item("minecraft:iron_leggings")
-	:toggleItem("minecraft:diamond_leggings")
+t.leggingsPage = action_wheel:newAction()
+	:title(color.primary.."Toggle Leggings\n\n"..color.secondary.."Toggles visibility of leggings parts.")
+	:hoverColor(color.hover)
+	:toggleColor(color.active)
+	:item(itemCheck("iron_leggings"))
+	:toggleItem(itemCheck("diamond_leggings"))
 	:onToggle(pings.setArmorLeggings)
 
-t.bootsPage = action_wheel:newAction("BootsArmorToggle")
-	:title("§9§lToggle Boots\n\n§bToggles visibility of boots.")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
-	:item("minecraft:iron_boots")
-	:toggleItem("minecraft:diamond_boots")
+t.bootsPage = action_wheel:newAction()
+	:title(color.primary.."Toggle Boots\n\n"..color.secondary.."Toggles visibility of boots.")
+	:hoverColor(color.hover)
+	:toggleColor(color.active)
+	:item(itemCheck("iron_boots"))
+	:toggleItem(itemCheck("diamond_boots"))
 	:onToggle(pings.setArmorBoots)
 
 -- Update action page info
 function events.TICK()
 	
-	t.allPage       :toggled(helmet and chestplate and leggings and boots)
-	t.helmetPage    :toggled(helmet)
-	t.chestplatePage:toggled(chestplate)
-	t.leggingsPage  :toggled(leggings)
-	t.bootsPage     :toggled(boots)
+	t.allPage
+		:toggled(helmet and chestplate and leggings and boots)
+	
+	t.helmetPage
+		:toggled(helmet)
+	
+	t.chestplatePage
+		:toggled(chestplate)
+	
+	t.leggingsPage
+		:toggled(leggings)
+	
+	t.bootsPage
+		:toggled(boots)
 	
 end
 

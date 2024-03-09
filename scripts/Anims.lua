@@ -1,10 +1,13 @@
 -- Required scripts
 require("lib.GSAnimBlend")
-local parts      = require("lib.GroupIndex")(models)
-local waterTicks = require("scripts.WaterTicks")
-local pose       = require("scripts.Posing")
-local ground     = require("lib.GroundCheck")
-local effects    = require("scripts.SyncedVariables")
+local merlingParts = require("lib.GroupIndex")(models.models.Merling)
+local ground       = require("lib.GroundCheck")
+local average      = require("lib.Average")
+local itemCheck    = require("lib.ItemCheck")
+local waterTicks   = require("scripts.WaterTicks")
+local pose         = require("scripts.Posing")
+local effects      = require("scripts.SyncedVariables")
+local color        = require("scripts.ColorProperties")
 
 -- Animations setup
 local anims = animations["models.Merling"]
@@ -78,17 +81,6 @@ function events.ENTITY_INIT()
 	
 end
 
--- Get the average of a vector
-local function average(vec)
-	
-	local sum = 0
-	for _, v in ipairs{vec:unpack()} do
-		sum = sum + v
-	end
-	return sum / #vec
-	
-end
-
 -- Spawns notes around a model part
 local function notes(part, blocks)
 	
@@ -118,7 +110,7 @@ function events.TICK()
 	local onGround = ground()
 	
 	-- Animation variables
-	local largeTail  = average(parts.Tail1:getScale()) >= 0.75
+	local largeTail  = average(merlingParts.Tail1:getScale():unpack()) >= 0.75
 	local groundAnim = (onGround or waterTicks.water >= 20) and not (pose.climb or pose.swim or pose.crawl) and not pose.elytra and not pose.sleep and not player:getVehicle() and not effects.cF
 	
 	-- Directional velocity
@@ -222,7 +214,7 @@ function events.TICK()
 	local stand = largeTail and not isCrawl and groundAnim
 	local crawl = largeTail and     isCrawl and groundAnim
 	local small = not largeTail
-	local mount = player:getVehicle()
+	local mount = largeTail and player:getVehicle()
 	local sleep = pose.sleep
 	local ears  = player:isUnderwater()
 	local sing  = isSing and not pose.sleep
@@ -239,7 +231,7 @@ function events.TICK()
 	
 	-- Spawns notes around head while singing
 	if isSing and world.getTime() % 5 == 0 then
-		notes(parts.Head, 1)
+		notes(merlingParts.Head, 1)
 	end
 	
 	-- Determins when to stop twirl animaton
@@ -289,7 +281,7 @@ function events.RENDER(delta, context)
 	
 	local rot = vanilla_model.HEAD:getOriginRot()
 	rot.x = math.clamp(rot.x, -90, 30)
-	parts.Spyglass:rot(rot)
+	merlingParts.Spyglass:rot(rot)
 		:pos(pose.crouch and vec(0, -4, 0) or nil)
 	
 end
@@ -382,42 +374,43 @@ setShark(isShark)
 setCrawl(isCrawl)
 
 -- Action wheel pages
-t.sharkPage = action_wheel:newAction("TailShark")
-	:title("§9§lToggle Shark Animations\n\n§bToggles the movement of the tail to be more shark based.")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
-	:item("minecraft:dolphin_spawn_egg")
-	:toggleItem("minecraft:guardian_spawn_egg")
+t.sharkPage = action_wheel:newAction()
+	:title(color.primary.."Toggle Shark Animations\n\n"..color.secondary.."Toggles the movement of the tail to be more shark based.")
+	:hoverColor(color.hover)
+	:toggleColor(color.active)
+	:item(itemCheck("dolphin_spawn_egg"))
+	:toggleItem(itemCheck("guardian_spawn_egg"))
 	:onToggle(pings.setTailShark)
 	:toggled(isShark)
 
-t.crawlPage = action_wheel:newAction("TailCrawl")
-	:title("§9§lToggle Crawl Animation\n\n§bToggles crawling over standing when you are touching the ground.\n\n§5§lNote: §5Heavily recommend using a crawling mod instead.\nThey are much cooler, and will play nicely :D")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
-	:item("minecraft:armor_stand")
-	:toggleItem("minecraft:oak_boat")
+t.crawlPage = action_wheel:newAction()
+	:title(color.primary.."Toggle Crawl Animation\n\n"..color.secondary.."Toggles crawling over standing when you are touching the ground.")
+	:hoverColor(color.hover)
+	:toggleColor(color.active)
+	:item(itemCheck("armor_stand"))
+	:toggleItem(itemCheck("oak_boat"))
 	:onToggle(pings.setTailCrawl)
 	:toggled(isCrawl)
 
-t.twirlPage = action_wheel:newAction("AnimTwirl")
-	:title("§9§lPlay Twirl animation")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-    :item("minecraft:cod")
-    :onLeftClick(pings.animPlayTwirl)
+t.twirlPage = action_wheel:newAction()
+	:title(color.primary.."Play Twirl animation")
+	:hoverColor(color.hover)
+	:item(itemCheck("cod"))
+	:onLeftClick(pings.animPlayTwirl)
 
-t.singPage = action_wheel:newAction("AnimSing")
-	:title("§9§lPlay Singing animation")
-	:hoverColor(vectors.hexToRGB("55FFFF"))
-	:toggleColor(vectors.hexToRGB("5555FF"))
-	:item("minecraft:music_disc_blocks")
-    :toggleItem("minecraft:music_disc_cat")
-    :onToggle(pings.setAnimSing)
+t.singPage = action_wheel:newAction()
+	:title(color.primary.."Play Singing animation")
+	:hoverColor(color.hover)
+	:toggleColor(color.active)
+	:item(itemCheck("music_disc_blocks"))
+	:toggleItem(itemCheck("music_disc_cat"))
+	:onToggle(pings.setAnimSing)
 
 -- Updates action page info
 function events.TICK()
 	
-	t.singPage:toggled(isSing)
+	t.singPage
+		:toggled(isSing)
 	
 end
 
