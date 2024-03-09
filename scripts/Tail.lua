@@ -1,8 +1,8 @@
 -- Required scripts
 local merlingParts = require("lib.GroupIndex")(models.models.Merling)
-local waterTicks   = require("scripts.WaterTicks")
 local ground       = require("lib.GroundCheck")
 local itemCheck    = require("lib.ItemCheck")
+local waterTicks   = require("scripts.WaterTicks")
 local effects      = require("scripts.SyncedVariables")
 local color        = require("scripts.ColorProperties")
 
