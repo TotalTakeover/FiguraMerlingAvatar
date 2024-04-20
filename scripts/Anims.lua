@@ -262,14 +262,14 @@ end
 
 -- GS Blending Setup
 local blendAnims = {
-	{ anim = anims.swim,  ticks = { 7, 7 } },
-	{ anim = anims.stand, ticks = { 7, 7 } },
-	{ anim = anims.crawl, ticks = { 7, 7 } },
-	{ anim = anims.small, ticks = { 7, 7 } },
-	{ anim = anims.mount, ticks = { 7, 7 } },
-	{ anim = anims.sleep, ticks = { 7, 7 } },
-	{ anim = anims.ears,  ticks = { 7, 7 } },
-	{ anim = anims.sing,  ticks = { 3, 3 } }
+	{ anim = anims.swim,  ticks = {7,7} },
+	{ anim = anims.stand, ticks = {7,7} },
+	{ anim = anims.crawl, ticks = {7,7} },
+	{ anim = anims.small, ticks = {7,7} },
+	{ anim = anims.mount, ticks = {7,7} },
+	{ anim = anims.sleep, ticks = {7,7} },
+	{ anim = anims.ears,  ticks = {7,7} },
+	{ anim = anims.sing,  ticks = {3,3} }
 }
 	
 for _, blend in ipairs(blendAnims) do
