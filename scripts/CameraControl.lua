@@ -26,7 +26,7 @@ function events.ENTITY_INIT()
 	
 end
 
-function events.RENDER(delta, context)
+function events.POST_RENDER(delta, context)
 	if context == "FIRST_PERSON" or context == "RENDER" or (not client.isHudEnabled() and context ~= "MINECRAFT_GUI") then
 		
 		-- Pos checking
