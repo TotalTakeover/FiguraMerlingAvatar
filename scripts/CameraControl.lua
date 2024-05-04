@@ -9,7 +9,9 @@ config:name("Merling")
 local camPos = config:load("CameraPos") or false
 
 -- Variable setup
-local eyePos = false
+local head    = merlingParts.Head
+local eyePos  = false
+local headPos = 0
 
 -- Box check
 local function inBox(pos, box_min, box_max)
@@ -18,11 +20,52 @@ local function inBox(pos, box_min, box_max)
 		   pos.z >= box_min.z and pos.z <= box_max.z
 end
 
+local crouchOffset = {
+	prev = 0,
+	next = 0,
+	curr = 0
+}
+
+local eyeHeight = {
+	prev = 0,
+	next = 0,
+	curr = 0
+}
+
 -- Set starting head pos on init
-local headPos = 0
 function events.ENTITY_INIT()
 	
 	headPos = player:getPos()
+	
+	local height = toggle and 1 or 0
+	for k, v in pairs(eyeHeight) do
+		eyeHeight[k] = height
+	end
+	
+end
+
+local wasCrouch = false
+function events.TICK()
+	
+	if player:getPose() == "CROUCHING" and not wasCrouch then
+		
+		crouchOffset.next = 0.35
+		wasCrouch = true
+		
+	elseif player:getPose() ~= "CROUCHING" and wasCrouch then
+		
+		crouchOffset.next = -0.35
+		wasCrouch = false
+		
+	else
+	
+		crouchOffset.prev = crouchOffset.next
+		crouchOffset.next = math.lerp(crouchOffset.prev, 0, 0.5)
+	
+	end
+	
+	eyeHeight.prev = eyeHeight.next
+	eyeHeight.next = math.lerp(eyeHeight.next, player:getEyeHeight(), 0.5)
 	
 end
 
@@ -31,10 +74,10 @@ function events.POST_RENDER(delta, context)
 		
 		-- Pos checking
 		local basePos = player:getPos(delta)
-		headPos       = merlingParts.Head:partToWorldMatrix():apply()
+		headMatrix    = head:partToWorldMatrix():apply()
 		
 		-- Camera offset
-		local posOffset = headPos - basePos
+		local posOffset = headMatrix - basePos
 		
 		if context == "FIRST_PERSON" then
 			
@@ -67,12 +110,16 @@ function events.POST_RENDER(delta, context)
 			
 		end
 		
+		-- Lerp eye height
+		crouchOffset.curr = math.lerp(crouchOffset.prev, crouchOffset.next, delta)
+		eyeHeight.curr = math.lerp(eyeHeight.prev, eyeHeight.next, delta)
+		
 		-- Add eye height and slight offset
-		posOffset.y = posOffset.y - player:getEyeHeight() + 0.2
+		posOffset.y = posOffset.y + 0.2 + crouchOffset.curr - eyeHeight.curr
 		
 		-- Check for block obstruction
 		local obstructed = false
-		local cameraPos = headPos + vec(0, 0.2, 0) + client:getCameraDir() * 0.1
+		local cameraPos = headMatrix + vec(0, 0.2, 0) + client:getCameraDir() * 0.1
 		local blockPos = cameraPos:copy():floor()
 		local block = world.getBlockState(blockPos)
 		local boxes = block:getCollisionShape()
@@ -88,11 +135,12 @@ function events.POST_RENDER(delta, context)
 		
 		-- Renders offset
 		local posOffsetApply = not player:riptideSpinning()
-		renderer:offsetCameraPivot(camPos and posOffsetApply and not obstructed and posOffset or 0)
+		renderer
+			:offsetCameraPivot(camPos and posOffsetApply and not obstructed and posOffset or 0)
 			:eyeOffset(eyePos and camPos and posOffsetApply and not obstructed and posOffset or 0)
 		
 		-- Nameplate Placement
-		nameplate.ENTITY:pivot(posOffset + vec(0, player:getBoundingBox().y + 0.5, 0))
+		nameplate.ENTITY:pivot(posOffset + vec(0, 0.7 - crouchOffset.curr + eyeHeight.curr, 0))
 		
 	end
 end
@@ -144,21 +192,30 @@ local t = {}
 
 -- Action wheel pages
 t.posPage = action_wheel:newAction()
-	:title(color.primary.."Camera Position Toggle\n\n"..color.secondary.."Sets the camera position to where your avatar's head is.\n\n§cTo prevent x-ray, the camera will reset to its default position if inside a block.")
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
 	:item(itemCheck("skeleton_skull"))
 	:toggleItem(itemCheck("player_head{'SkullOwner':'"..avatar:getEntityName().."'}"))
 	:onToggle(pings.setCameraPos)
 	:toggled(camPos)
-	
+
 t.eyePage = action_wheel:newAction()
-	:title(color.primary.."Eye Position Toggle\n\n"..color.secondary.."Sets the eye position to match the avatar's head.\nRequires camera position toggle.\n\n§4§lWARNING: §cThis feature is dangerous!\nIt can and will be flagged on servers with anticheat!\nFurthermore, \"In Wall\" damage is possible. (The x-ray prevention will try to avoid this)\nThis setting will §lNOT §cbe saved between sessions for your safety.\n\nPlease use with extreme caution!")
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
 	:item(itemCheck("ender_pearl"))
 	:toggleItem(itemCheck("ender_eye"))
 	:onToggle(pings.setCameraEye)
+
+-- Update action page info
+function events.TICK()
+	
+	t.posPage
+		:title(color.primary.."Camera Position Toggle\n\n"..color.secondary.."Sets the camera position to where your avatar's head is.\n\n§cTo prevent x-ray, the camera will reset to its default position if inside a block.")
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
+	
+	t.eyePage
+		:title(color.primary.."Eye Position Toggle\n\n"..color.secondary.."Sets the eye position to match the avatar's head.\nRequires camera position toggle.\n\n§4§lWARNING: §cThis feature is dangerous!\nIt can and will be flagged on servers with anticheat!\nFurthermore, \"In Wall\" damage is possible. (The x-ray prevention will try to avoid this)\nThis setting will §lNOT §cbe saved between sessions for your safety.\n\nPlease use with extreme caution!")
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
+	
+end
 
 -- Return action wheel pages
 return t
