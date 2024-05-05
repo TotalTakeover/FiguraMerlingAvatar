@@ -178,25 +178,16 @@ local t = {}
 
 -- Action wheel pages
 t.togglePage = action_wheel:newAction()
-	:title(color.primary.."Toggle Glowing\n\n"..color.secondary.."Toggles glowing for the tail, and misc parts.")
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
 	:item(itemCheck("ink_sac"))
 	:toggleItem(itemCheck("glow_ink_sac"))
 	:onToggle(pings.setGlowToggle)
 
 t.dynamicPage = action_wheel:newAction()
-	:title(color.primary.."Toggle Dynamic Glowing\n\n"..color.secondary.."Toggles glowing based on lightlevel. The darker the location, the brighter your tail glows.")
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
 	:item(itemCheck("light"))
 	:onToggle(pings.setGlowDynamic)
 	:toggled(dynamic)
 
 t.waterPage = action_wheel:newAction()
-	:title(color.primary.."Toggle Water Glowing\n\n"..color.secondary.."Toggles the glowing sensitivity to water.\nAny water will cause your tail to glow.")
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
 	:item(itemCheck("bucket"))
 	:toggleItem(itemCheck("water_bucket"))
 	:onToggle(pings.setGlowWater)
@@ -206,10 +197,33 @@ t.waterPage = action_wheel:newAction()
 function events.TICK()
 	
 	t.togglePage
+		:title(toJson
+			{"",
+			{text = "Toggle Glowing\n\n", bold = true, color = color.primary},
+			{text = "Toggles glowing for the tail, and misc parts.", color = color.secondary}}
+		)
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
 		:toggled(toggle)
 	
 	t.dynamicPage
+		:title(toJson
+			{"",
+			{text = "Toggle Dynamic Glowing\n\n", bold = true, color = color.primary},
+			{text = "Toggles glowing based on lightlevel.\nThe darker the location, the brighter your tail glows.", color = color.secondary}}
+		)
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
 		:toggleItem(itemCheck("light{BlockStateTag:{level:"..world.getLightLevel(player:getPos()).."}}"))
+	
+	t.waterPage
+		:title(toJson
+			{"",
+			{text = "Toggle Water Glowing\n\n", bold = true, color = color.primary},
+			{text = "Toggles the glowing sensitivity to water.\nAny water will cause your tail to glow.", color = color.secondary}}
+		)
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
 	
 end
 

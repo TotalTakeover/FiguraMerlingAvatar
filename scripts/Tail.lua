@@ -270,37 +270,25 @@ local t = {}
 
 -- Action wheel pages
 t.activePage = action_wheel:newAction()
-	:title(color.primary.."Toggle Merling Functionality\n\n"..color.secondary.."Toggles the ability for Merling attributes to appear.")
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
 	:item(itemCheck("rabbit_foot"))
 	:toggleItem(itemCheck("tropical_fish"))
 	:onToggle(pings.setTailActive)
 
 t.waterPage = action_wheel:newAction()
-	:hoverColor(color.hover)
 	:onLeftClick(function() pings.setTailWater(1)end)
 	:onRightClick(function() pings.setTailWater(-1) end)
 
-t.smallPage = action_wheel:newAction()
-	:title(color.primary.."Toggle Small Tail\n\n"..color.secondary.."When outside water, toggles the appearence of the tail into a smaller tail.")
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
-	:item(itemCheck("kelp"))
-	:toggleItem(itemCheck("scute"))
-	:onToggle(pings.setTailSmall)
-
 t.earsPage = action_wheel:newAction()
-	:title(color.primary.."Toggle Ears\n\n"..color.secondary.."Toggles the appearence of your ears.")
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
 	:item(itemCheck("prismarine_crystals"))
 	:toggleItem(itemCheck("prismarine_shard"))
 	:onToggle(pings.setTailEars)
 
+t.smallPage = action_wheel:newAction()
+	:item(itemCheck("kelp"))
+	:toggleItem(itemCheck("scute"))
+	:onToggle(pings.setTailSmall)
+
 t.dryPage = action_wheel:newAction()
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
 	:item(itemCheck("water_bucket"))
 	:toggleItem(itemCheck("leather"))
 	:onToggle(pings.setTailDry)
@@ -309,9 +297,6 @@ t.dryPage = action_wheel:newAction()
 	:toggled(canDry)
 
 t.soundPage = action_wheel:newAction()
-	:title(color.primary.."Toggle Flop Sound\n\n"..color.secondary.."Toggles flopping sound effects when landing on the ground.\nIf tail can dry, volume will gradually decrease over time until dry.")
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
 	:item(itemCheck("sponge"))
 	:toggleItem(itemCheck("wet_sponge"))
 	:onToggle(pings.setTailFallSound)
@@ -320,49 +305,95 @@ t.soundPage = action_wheel:newAction()
 -- Water context info table
 local waterInfo = {
 	{
-		title  = "§cLow §r| "..color.secondary.."Reactive to being underwater.",
-		item   = "glass_bottle",
-		color  = "FF5555"
+		title = {label = {text = "Low", color = "red"}, text = "Reactive to being underwater."},
+		item  = "glass_bottle",
+		color = "FF5555"
 	},
 	{
-		title  = "§eMedium §r| "..color.secondary.."Reactive to being in water.",
-		item   = "potion{'CustomPotionColor':" .. tostring(0x0094FF) .. "}",
-		color  = "FFFF55"
+		title = {label = {text = "Medium", color = "yellow"}, text = "Reactive to being in water."},
+		item  = "potion",
+		color = "FFFF55"
 	},
 	{
-		title  = "§aHigh §r| "..color.secondary.."Reactive to any form of water.",
-		item   = "splash_potion{'CustomPotionColor':" .. tostring(0x0094FF) .. "}",
-		color  = "55FF55"
+		title = {label = {text = "High", color = "green"}, text = "Reactive to any form of water."},
+		item  = "splash_potion",
+		color = "55FF55"
 	},
 	{
-		title  = "§9Max §r| "..color.secondary.."Always active.",
-		item   = "lingering_potion{'CustomPotionColor':" .. tostring(0x0094FF) .. "}",
-		color  = "5555FF"
+		title = {label = {text = "Max", color = "blue"}, text = "Always active."},
+		item  = "lingering_potion",
+		color = "5555FF"
 	}
 }
 
--- Updates action page info
+-- Update action page info
 function events.TICK()
 	
 	t.activePage
+		:title(toJson
+			{"",
+			{text = "Toggle Merling Functionality\n\n", bold = true, color = color.primary},
+			{text = "Toggles the ability for Merling attributes to appear.", color = color.secondary}}
+		)
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
 		:toggled(active)
 	
-	t.smallPage
-		:toggled(small)
+	t.waterPage
+		:title(toJson
+			{"",
+			{text = "Water Sensitivity\n\n", bold = true, color = color.primary},
+			{text = "Determines how your tail should form in contact with water.\n\n", color = color.secondary},
+			{text = "Current configuration: ", bold = true, color = color.secondary},
+			{text = waterInfo[water].title.label.text, color = waterInfo[water].title.label.color},
+			{text = " | "},
+			{text = waterInfo[water].title.text, color = color.secondary}}
+		)
+		
+		:color(vectors.hexToRGB(waterInfo[water].color))
+		:hoverColor(color.hover)
+		:item(itemCheck(waterInfo[water].item.."{'CustomPotionColor':" .. tostring(0x0094FF) .. "}"))
 	
 	t.earsPage
+		:title(toJson
+			{"",
+			{text = "Toggle Ears\n\n", bold = true, color = color.primary},
+			{text = "Toggles the appearence of your ears.", color = color.secondary}}
+		)
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
 		:toggled(ears)
 	
-	t.waterPage
-		:title(color.primary.."Water Sensitivity\n\n"..color.secondary.."Determines how your tail should form in contact with water.\n\n"
-		.."§lCurrent configuration: "..waterInfo[water].title)
-		:item(itemCheck(waterInfo[water].item))
-		:color(vectors.hexToRGB(waterInfo[water].color))
+	t.smallPage
+		:title(toJson
+			{"",
+			{text = "Toggle Small Tail\n\n", bold = true, color = color.primary},
+			{text = "When outside water, toggles the appearence of the tail into a smaller tail.", color = color.secondary}}
+		)
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
+		:toggled(small)
 	
 	t.dryPage
-		:title(color.primary.."Toggle Drying/Timer\n\n"..color.secondary.."Toggles the gradual drying of your tail until your legs form again.\n\n"
-		.."§lCurrent drying timer: §a"..(canDry and ((dryTimer / 20).." Seconds") or "None")
-		..color.secondary.."\n\nScrolling up adds time, Scrolling down subtracts time.\nRight click resets timer to 20 seconds.")
+		:title(toJson
+			{"",
+			{text = "Toggle Drying/Timer\n\n", bold = true, color = color.primary},
+			{text = "Toggles the gradual drying of your tail until your legs form again.\n\n", color = color.secondary},
+			{text = "Current drying timer: ", bold = true, color = color.secondary},
+			{text = (canDry and ((dryTimer / 20).." Seconds") or "None").."\n\n"},
+			{text = "Scrolling up adds time, Scrolling down subtracts time.\nRight click resets timer to 20 seconds.", color = color.secondary}}
+		)
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
+	
+	t.soundPage
+		:title(toJson
+			{"",
+			{text = "Toggle Flop Sound\n\n", bold = true, color = color.primary},
+			{text = "Toggles flopping sound effects when landing on the ground.\nIf tail can dry, volume will gradually decrease over time until dry.", color = color.secondary}}
+		)
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
 	
 end
 

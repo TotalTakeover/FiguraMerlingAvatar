@@ -179,36 +179,23 @@ local t = {}
 
 -- Action wheels
 t.togglePage = action_wheel:newAction()
-	:title(color.primary.."Toggle Glowing Eyes\n\n"..color.secondary.."Toggles the glowing of the eyes.")
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
 	:item(itemCheck("ender_pearl"))
 	:toggleItem(itemCheck("ender_eye"))
 	:onToggle(pings.setEyesToggle)
-	:toggled(toggle)
 
 t.powerPage = action_wheel:newAction()
-	:title(color.primary.."Origins Power Toggle\n\n"..color.secondary.."Toggles the glowing based on Origin's underwater sight power.\nThe eyes will only glow when this power is active.")
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
 	:item(itemCheck("cod"))
 	:toggleItem(itemCheck("tropical_fish"))
 	:onToggle(pings.setEyesPower)
 	:toggled(power)
 
 t.nightVisionPage = action_wheel:newAction()
-	:title(color.primary.."Night Vision Toggle\n\n"..color.secondary.."Toggles the glowing based on having the Night Vision effect.\nThis setting will §lOVERRIDE "..color.secondary.."the other subsettings.")
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
 	:item(itemCheck("glass_bottle"))
 	:toggleItem(itemCheck("potion{'CustomPotionColor':" .. tostring(0x96C54F) .. "}"))
 	:onToggle(pings.setEyesNightVision)
 	:toggled(nightVision)
 
 t.waterPage = action_wheel:newAction()
-	:title(color.primary.."Water Sensitivity Toggle\n\n"..color.secondary.."Toggles the glowing sensitivity to water.\nThe eyes will only glow when underwater.")
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
 	:item(itemCheck("bucket"))
 	:toggleItem(itemCheck("water_bucket"))
 	:onToggle(pings.setEyesWater)
@@ -218,7 +205,43 @@ t.waterPage = action_wheel:newAction()
 function events.TICK()
 	
 	t.togglePage
+		:title(toJson
+			{"",
+			{text = "Toggle Glowing Eyes\n\n", bold = true, color = color.primary},
+			{text = "Toggles the glowing of the eyes.", color = color.secondary}}
+		)
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
 		:toggled(toggle)
+	
+	t.powerPage
+		:title(toJson
+			{"",
+			{text = "Origins Power Toggle\n\n", bold = true, color = color.primary},
+			{text = "Toggles the glowing based on Origin's underwater sight power.\nThe eyes will only glow when this power is active.", color = color.secondary}}
+		)
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
+	
+	t.nightVisionPage
+		:title(toJson
+			{"",
+			{text = "Night Vision Toggle\n\n", bold = true, color = color.primary},
+			{text = "Toggles the glowing based on having the Night Vision effect.\nThis setting will ", color = color.secondary},
+			{text = "OVERRIDE ", bold = true, color = color.secondary},
+			{text = "the other subsettings.", color = color.secondary}}
+		)
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
+	
+	t.waterPage
+		:title(toJson
+			{"",
+			{text = "Water Sensitivity Toggle\n\n", bold = true, color = color.primary},
+			{text = "Toggles the glowing sensitivity to water.\nThe eyes will only glow when underwater.", color = color.secondary}}
+		)
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
 	
 end
 
