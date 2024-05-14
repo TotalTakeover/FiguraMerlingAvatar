@@ -109,6 +109,9 @@ function events.RENDER(delta, context)
 			:pivot(nameOffset)
 		
 	end
+	
+	head:visible(context ~= "OTHER")
+	
 end
 
 -- Camera pos toggle
