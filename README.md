@@ -1,5 +1,5 @@
 # [Merling Avatar](https://github.com/TotalTakeover/FiguraMerlingAvatar)
-### Version: v3.3.5
+### Version: v3.3.6
 This Figura avatar is a template designed around giving the user a customizable merfolk tail.
 
 ### Authors:
