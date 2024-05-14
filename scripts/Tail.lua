@@ -381,7 +381,7 @@ function events.TICK()
 			{text = "Toggles the gradual drying of your tail until your legs form again.\n\n", color = color.secondary},
 			{text = "Current drying timer: ", bold = true, color = color.secondary},
 			{text = (canDry and ((dryTimer / 20).." Seconds") or "None").."\n\n"},
-			{text = "Scrolling up adds time, Scrolling down subtracts time.\nRight click resets timer to 20 seconds.", color = color.secondary}}
+			{text = "Scroll to adjust the timer.\nRight click resets timer to 20 seconds.", color = color.secondary}}
 		)
 		:hoverColor(color.hover)
 		:toggleColor(color.active)
