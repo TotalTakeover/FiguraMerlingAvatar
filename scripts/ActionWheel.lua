@@ -49,64 +49,107 @@ local pages = {
 local pageActions = {
 	
 	avatar = action_wheel:newAction()
-		:title(color.primary.."Avatar Settings")
-		:hoverColor(color.hover)
 		:item(itemCheck("armor_stand"))
 		:onLeftClick(function() descend(pages.avatar) end),
 	
 	tail = action_wheel:newAction()
-		:title(color.primary.."Merling Settings")
-		:hoverColor(color.hover)
 		:item(itemCheck("tropical_fish"))
 		:onLeftClick(function() descend(pages.tail) end),
 	
 	glow = action_wheel:newAction()
-		:title(color.primary.."Glowing Settings")
-		:hoverColor(color.hover)
 		:item(itemCheck("glow_ink_sac"))
 		:onLeftClick(function() descend(pages.glow) end),
 	
 	anims = action_wheel:newAction()
-		:title(color.primary.."Animations")
-		:hoverColor(color.hover)
 		:item(itemCheck("jukebox"))
 		:onLeftClick(function() descend(pages.anims) end),
 	
 	armor = action_wheel:newAction()
-		:title(color.primary.."Armor Settings")
-		:hoverColor(color.hover)
 		:item(itemCheck("iron_chestplate"))
 		:onLeftClick(function() descend(pages.armor) end),
 	
 	camera = action_wheel:newAction()
-		:title(color.primary.."Camera Settings")
-		:hoverColor(color.hover)
 		:item(itemCheck("redstone"))
 		:onLeftClick(function() descend(pages.camera) end),
 	
 	dry = action_wheel:newAction()
-		:title(color.primary.."Drying Settings")
-		:hoverColor(color.hover)
 		:item(itemCheck("sponge"))
 		:onLeftClick(function() descend(pages.dry) end),
 	
 	whirlpool = action_wheel:newAction()
-		:title(color.primary.."Whirlpool Settings")
-		:hoverColor(color.hover)
 		:item(itemCheck("magma_block"))
 		:onLeftClick(function() descend(pages.whirlpool) end),
 	
 	eyes = action_wheel:newAction()
-		:title(color.primary.."Glowing Eyes Settings")
-		:hoverColor(color.hover)
 		:item(itemCheck("ender_eye"))
 		:onLeftClick(function() descend(pages.eyes) end)
 	
 }
 
+-- Update action page info
+function events.TICK()
+	
+	pageActions.avatar
+		:title(toJson
+			{text = "Avatar Settings", bold = true, color = color.primary}
+		)
+		:hoverColor(color.hover)
+	
+	pageActions.tail
+		:title(toJson
+			{text = "Merling Settings", bold = true, color = color.primary}
+		)
+		:hoverColor(color.hover)
+	
+	pageActions.glow
+		:title(toJson
+			{text = "Glowing Settings", bold = true, color = color.primary}
+		)
+		:hoverColor(color.hover)
+	
+	pageActions.anims
+		:title(toJson
+			{text = "Animations", bold = true, color = color.primary}
+		)
+		:hoverColor(color.hover)
+	
+	pageActions.armor
+		:title(toJson
+			{text = "Armor Settings", bold = true, color = color.primary}
+		)
+		:hoverColor(color.hover)
+	
+	pageActions.camera
+		:title(toJson
+			{text = "Camera Settings", bold = true, color = color.primary}
+		)
+		:hoverColor(color.hover)
+	
+	pageActions.dry
+		:title(toJson
+			{text = "Drying Settings", bold = true, color = color.primary}
+		)
+		:hoverColor(color.hover)
+	
+	pageActions.whirlpool
+		:title(toJson
+			{text = "Whirlpool Settings", bold = true, color = color.primary}
+		)
+		:hoverColor(color.hover)
+	
+	pageActions.eyes
+		:title(toJson
+			{text = "Glowing Eyes Settings", bold = true, color = color.primary}
+		)
+		:hoverColor(color.hover)
+	
+end
+
 -- Action back to previous page
 local backAction = action_wheel:newAction()
-	:title("§c§lGo Back?")
+	:title(toJson
+		{text = "Go Back?", bold = true, color = "red"}
+	)
 	:hoverColor(vectors.hexToRGB("FF5555"))
 	:item(itemCheck("barrier"))
 	:onLeftClick(function() ascend() end)

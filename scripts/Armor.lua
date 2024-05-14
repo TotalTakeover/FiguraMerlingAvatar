@@ -297,41 +297,26 @@ local t = {}
 
 -- Action wheel pages
 t.allPage = action_wheel:newAction()
-	:title(color.primary.."Toggle All Armor\n\n"..color.secondary.."Toggles visibility of all armor parts.")
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
 	:item(itemCheck("armor_stand"))
 	:toggleItem(itemCheck("netherite_chestplate"))
 	:onToggle(pings.setArmorAll)
 
 t.helmetPage = action_wheel:newAction()
-	:title(color.primary.."Toggle Helmet\n\n"..color.secondary.."Toggles visibility of helmet parts.")
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
 	:item(itemCheck("iron_helmet"))
 	:toggleItem(itemCheck("diamond_helmet"))
 	:onToggle(pings.setArmorHelmet)
 
 t.chestplatePage = action_wheel:newAction()
-	:title(color.primary.."Toggle Chestplate\n\n"..color.secondary.."Toggles visibility of chestplate parts.")
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
 	:item(itemCheck("iron_chestplate"))
 	:toggleItem(itemCheck("diamond_chestplate"))
 	:onToggle(pings.setArmorChestplate)
 
 t.leggingsPage = action_wheel:newAction()
-	:title(color.primary.."Toggle Leggings\n\n"..color.secondary.."Toggles visibility of leggings parts.")
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
 	:item(itemCheck("iron_leggings"))
 	:toggleItem(itemCheck("diamond_leggings"))
 	:onToggle(pings.setArmorLeggings)
 
 t.bootsPage = action_wheel:newAction()
-	:title(color.primary.."Toggle Boots\n\n"..color.secondary.."Toggles visibility of boots.")
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
 	:item(itemCheck("iron_boots"))
 	:toggleItem(itemCheck("diamond_boots"))
 	:onToggle(pings.setArmorBoots)
@@ -340,18 +325,53 @@ t.bootsPage = action_wheel:newAction()
 function events.TICK()
 	
 	t.allPage
+		:title(toJson
+			{"",
+			{text = "Toggle All Armor\n\n", bold = true, color = color.primary},
+			{text = "Toggles visibility of all armor parts.", color = color.secondary}}
+		)
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
 		:toggled(helmet and chestplate and leggings and boots)
 	
 	t.helmetPage
+		:title(toJson
+			{"",
+			{text = "Toggle Helmet\n\n", bold = true, color = color.primary},
+			{text = "Toggles visibility of helmet parts.", color = color.secondary}}
+		)
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
 		:toggled(helmet)
 	
 	t.chestplatePage
+		:title(toJson
+			{"",
+			{text = "Toggle Chestplate\n\n", bold = true, color = color.primary},
+			{text = "Toggles visibility of chestplate parts.", color = color.secondary}}
+		)
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
 		:toggled(chestplate)
 	
 	t.leggingsPage
+		:title(toJson
+			{"",
+			{text = "Toggle Leggings\n\n", bold = true, color = color.primary},
+			{text = "Toggles visibility of leggings parts.", color = color.secondary}}
+		)
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
 		:toggled(leggings)
 	
 	t.bootsPage
+		:title(toJson
+			{"",
+			{text = "Toggle Boots\n\n", bold = true, color = color.primary},
+			{text = "Toggles visibility of boots.", color = color.secondary}}
+		)
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
 		:toggled(boots)
 	
 end

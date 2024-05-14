@@ -81,22 +81,39 @@ local t = {}
 
 -- Action wheel pages
 t.bubblePage = action_wheel:newAction()
-	:title(color.primary.."Whirlpool Effect Toggle\n\n"..color.secondary.."Toggles the whirlpool created while swimming.")
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
 	:item(itemCheck("soul_sand"))
 	:toggleItem(itemCheck("magma_block"))
 	:onToggle(pings.setWhirlpoolBubbles)
 	:toggled(bubbles)
 
 t.dolphinsGracePage = action_wheel:newAction()
-	:title(color.primary.."Dolphin's Grace Toggle\n\n"..color.secondary.."Toggles the whirlpool based on having the Dolphin's Grace Effect.")
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
 	:item(itemCheck("egg"))
 	:toggleItem(itemCheck("dolphin_spawn_egg"))
 	:onToggle(pings.setWhirlpoolDolphinsGrace)
 	:toggled(dolphinsGrace)
+
+-- Update action page info
+function events.TICK()
+	
+	t.bubblePage
+		:title(toJson
+			{"",
+			{text = "Whirlpool Effect Toggle\n\n", bold = true, color = color.primary},
+			{text = "Toggles the whirlpool created while swimming.", color = color.secondary}}
+		)
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
+	
+	t.dolphinsGracePage
+		:title(toJson
+			{"",
+			{text = "Dolphin's Grace Toggle\n\n", bold = true, color = color.primary},
+			{text = "Toggles the whirlpool based on having the Dolphin's Grace Effect.", color = color.secondary}}
+		)
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
+	
+end
 
 -- Return action wheel pages
 return t

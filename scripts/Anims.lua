@@ -262,18 +262,18 @@ end
 
 -- GS Blending Setup
 local blendAnims = {
-	{ anim = anims.swim,  ticks = 7 },
-	{ anim = anims.stand, ticks = 7 },
-	{ anim = anims.crawl, ticks = 7 },
-	{ anim = anims.small, ticks = 7 },
-	{ anim = anims.mount, ticks = 7 },
-	{ anim = anims.sleep, ticks = 7 },
-	{ anim = anims.ears,  ticks = 7 },
-	{ anim = anims.sing,  ticks = 3 }
+	{ anim = anims.swim,  ticks = {7,7} },
+	{ anim = anims.stand, ticks = {7,7} },
+	{ anim = anims.crawl, ticks = {7,7} },
+	{ anim = anims.small, ticks = {7,7} },
+	{ anim = anims.mount, ticks = {7,7} },
+	{ anim = anims.sleep, ticks = {7,7} },
+	{ anim = anims.ears,  ticks = {7,7} },
+	{ anim = anims.sing,  ticks = {3,3} }
 }
 	
 for _, blend in ipairs(blendAnims) do
-	blend.anim:blendTime(blend.ticks):onBlend("easeOutQuad")
+	blend.anim:blendTime(table.unpack(blend.ticks)):onBlend("easeOutQuad")
 end
 
 -- Fixing spyglass jank
@@ -375,41 +375,59 @@ setCrawl(isCrawl)
 
 -- Action wheel pages
 t.sharkPage = action_wheel:newAction()
-	:title(color.primary.."Toggle Shark Animations\n\n"..color.secondary.."Toggles the movement of the tail to be more shark based.")
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
 	:item(itemCheck("dolphin_spawn_egg"))
 	:toggleItem(itemCheck("guardian_spawn_egg"))
 	:onToggle(pings.setTailShark)
 	:toggled(isShark)
 
 t.crawlPage = action_wheel:newAction()
-	:title(color.primary.."Toggle Crawl Animation\n\n"..color.secondary.."Toggles crawling over standing when you are touching the ground.")
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
 	:item(itemCheck("armor_stand"))
 	:toggleItem(itemCheck("oak_boat"))
 	:onToggle(pings.setTailCrawl)
 	:toggled(isCrawl)
 
 t.twirlPage = action_wheel:newAction()
-	:title(color.primary.."Play Twirl animation")
-	:hoverColor(color.hover)
 	:item(itemCheck("cod"))
 	:onLeftClick(pings.animPlayTwirl)
 
 t.singPage = action_wheel:newAction()
-	:title(color.primary.."Play Singing animation")
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
 	:item(itemCheck("music_disc_blocks"))
 	:toggleItem(itemCheck("music_disc_cat"))
 	:onToggle(pings.setAnimSing)
 
--- Updates action page info
+-- Update action page info
 function events.TICK()
 	
+	t.sharkPage
+		:title(toJson
+			{"",
+			{text = "Toggle Shark Animations\n\n", bold = true, color = color.primary},
+			{text = "Toggles the movement of the tail to be more shark based.", color = color.secondary}}
+		)
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
+	
+	t.crawlPage
+		:title(toJson
+			{"",
+			{text = "Toggle Crawl Animation\n\n", bold = true, color = color.primary},
+			{text = "Toggles crawling over standing when you are touching the ground.", color = color.secondary}}
+		)
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
+	
+	t.twirlPage
+		:title(toJson
+			{text = "Play Twirl animation", bold = true, color = color.primary}
+		)
+		:hoverColor(color.hover)
+	
 	t.singPage
+		:title(toJson
+			{text = "Play Singing animation", bold = true, color = color.primary}
+		)
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
 		:toggled(isSing)
 	
 end

@@ -9,7 +9,11 @@ config:name("Merling")
 local camPos = config:load("CameraPos") or false
 
 -- Variable setup
-local eyePos = false
+local head = merlingParts.Head
+
+local function calcMatrix(p)
+	return p and (calcMatrix(p:getParent()) * p:getPositionMatrix()) or matrices.mat4()
+end
 
 -- Box check
 local function inBox(pos, box_min, box_max)
@@ -18,61 +22,70 @@ local function inBox(pos, box_min, box_max)
 		   pos.z >= box_min.z and pos.z <= box_max.z
 end
 
--- Set starting head pos on init
-local headPos = 0
-function events.ENTITY_INIT()
-	
-	headPos = player:getPos()
-	
-end
-
 function events.RENDER(delta, context)
 	if context == "FIRST_PERSON" or context == "RENDER" or (not client.isHudEnabled() and context ~= "MINECRAFT_GUI") then
 		
-		-- Pos checking
-		local basePos = player:getPos(delta)
-		headPos       = merlingParts.Head:partToWorldMatrix():apply()
+		-- Variables
+		local yaw = player:getBodyYaw(delta)
+		
+		-- Pehkui scaling
+		local nbt   = player:getNbt()
+		local types = nbt["pehkui:scale_data_types"]
+		local playerScale = (
+			types and
+			types["pehkui:base"] and
+			types["pehkui:base"]["scale"] or 1)
+		local width = (
+			types and
+			types["pehkui:width"] and
+			types["pehkui:width"]["scale"] or 1)
+		local modelWidth = (
+			types and
+			types["pehkui:model_width"] and
+			types["pehkui:model_width"]["scale"] or 1)
+		local height = (
+			types and
+			types["pehkui:height"] and
+			types["pehkui:height"]["scale"] or 1)
+		local modelHeight = (
+			types and
+			types["pehkui:model_height"] and
+			types["pehkui:model_height"]["scale"] or 1)
+		local modelEyeHeight = (
+			types and
+			types["pehkui:eye_height"] and
+			types["pehkui:eye_height"]["scale"] or 1)
+		local offsetScale = vec(width * modelWidth, height * modelHeight, width * modelWidth) * playerScale
 		
 		-- Camera offset
-		local posOffset = headPos - basePos
+		local posOffset  = calcMatrix(head):apply(head:getPivot()) / 16
+		local nameOffset = posOffset + vec(0, 0.85, 0)
 		
-		if context == "FIRST_PERSON" then
+		if not (pose.swim or pose.elytra or pose.crawl or pose.spin) then
 			
-			-- Pehkui scaling
-			local nbt   = player:getNbt()
-			local types = nbt["pehkui:scale_data_types"]
-			local playerScale = (
-				types and
-				types["pehkui:base"] and
-				types["pehkui:base"]["scale"] or 1)
-			local width = (
-				types and
-				types["pehkui:width"] and
-				types["pehkui:width"]["scale"] or 1)
-			local modelWidth = (
-				types and
-				types["pehkui:model_width"] and
-				types["pehkui:model_width"]["scale"] or 1)
-			local height = (
-				types and
-				types["pehkui:height"] and
-				types["pehkui:height"]["scale"] or 1)
-			local modelHeight = (
-				types and
-				types["pehkui:model_height"] and
-				types["pehkui:model_height"]["scale"] or 1)
-			local offsetScale = vec(width * modelWidth, height * modelHeight, width * modelWidth) * playerScale
+			-- If standing, lower camera offset
+			posOffset = posOffset - vec(0, 24 * modelEyeHeight, 0) / 16
 			
-			posOffset = posOffset * offsetScale
+		else
+			
+			-- else, slightly lower camera offset
+			posOffset = posOffset - vec(0, 24 * modelEyeHeight, 0) / 16
+			
+			-- If swimming, rotate camera offset on x axis
+			posOffset  = vectors.rotateAroundAxis(-player:getRot().x, posOffset,  vec(1, 0, 0))
+			nameOffset = vectors.rotateAroundAxis(-player:getRot().x, nameOffset, vec(1, 0, 0))
 			
 		end
 		
-		-- Add eye height and slight offset
-		posOffset.y = posOffset.y - player:getEyeHeight() + 0.2
+		-- Rotate camera offset on y axis
+		posOffset  = vectors.rotateAroundAxis(-yaw + 180, posOffset,  vec(0, 1, 0))
+		nameOffset = vectors.rotateAroundAxis(-yaw + 180, nameOffset, vec(0, 1, 0))
+		
+		posOffset = posOffset * offsetScale
 		
 		-- Check for block obstruction
 		local obstructed = false
-		local cameraPos = headPos + vec(0, 0.2, 0) + client:getCameraDir() * 0.1
+		local cameraPos = merlingParts.Body:partToWorldMatrix():apply() + vec(0, 0.2, 0) + client:getCameraDir() * 0.1
 		local blockPos = cameraPos:copy():floor()
 		local block = world.getBlockState(blockPos)
 		local boxes = block:getCollisionShape()
@@ -87,14 +100,18 @@ function events.RENDER(delta, context)
 		end
 		
 		-- Renders offset
-		local posOffsetApply = not player:riptideSpinning()
-		renderer:offsetCameraPivot(camPos and posOffsetApply and not obstructed and posOffset or 0)
-			:eyeOffset(eyePos and camPos and posOffsetApply and not obstructed and posOffset or 0)
+		renderer
+			:offsetCameraPivot(camPos and not obstructed and posOffset or 0)
+			:eyeOffset(eyePos and camPos and not obstructed and posOffset or 0)
 		
 		-- Nameplate Placement
-		nameplate.ENTITY:pivot(posOffset + vec(0, player:getBoundingBox().y + 0.5, 0))
+		nameplate.ENTITY
+			:pivot(nameOffset)
 		
 	end
+	
+	head:visible(context ~= "OTHER")
+	
 end
 
 -- Camera pos toggle
@@ -144,21 +161,43 @@ local t = {}
 
 -- Action wheel pages
 t.posPage = action_wheel:newAction()
-	:title(color.primary.."Camera Position Toggle\n\n"..color.secondary.."Sets the camera position to where your avatar's head is.\n\n§cTo prevent x-ray, the camera will reset to its default position if inside a block.")
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
 	:item(itemCheck("skeleton_skull"))
 	:toggleItem(itemCheck("player_head{'SkullOwner':'"..avatar:getEntityName().."'}"))
 	:onToggle(pings.setCameraPos)
 	:toggled(camPos)
-	
+
 t.eyePage = action_wheel:newAction()
-	:title(color.primary.."Eye Position Toggle\n\n"..color.secondary.."Sets the eye position to match the avatar's head.\nRequires camera position toggle.\n\n§4§lWARNING: §cThis feature is dangerous!\nIt can and will be flagged on servers with anticheat!\nFurthermore, \"In Wall\" damage is possible. (The x-ray prevention will try to avoid this)\nThis setting will §lNOT §cbe saved between sessions for your safety.\n\nPlease use with extreme caution!")
-	:hoverColor(color.hover)
-	:toggleColor(color.active)
 	:item(itemCheck("ender_pearl"))
 	:toggleItem(itemCheck("ender_eye"))
 	:onToggle(pings.setCameraEye)
+
+-- Update action page info
+function events.TICK()
+	
+	t.posPage
+		:title(toJson
+			{"",
+			{text = "Camera Position Toggle\n\n", bold = true, color = color.primary},
+			{text = "Sets the camera position to where your avatar's head is.\n\n", color = color.secondary},
+			{text = "To prevent x-ray, the camera will reset to its default position if inside a block.", color = "red"}}
+		)
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
+	
+	t.eyePage
+		:title(toJson
+			{"",
+			{text = "Eye Position Toggle\n\n", bold = true, color = color.primary},
+			{text = "Sets the eye position to match the avatar's head.\nRequires camera position toggle.\n\n", color = color.secondary},
+			{text = "WARNING: ", bold = true, color = "dark_red"},
+			{text = "This feature is dangerous!\nIt can and will be flagged on servers with anticheat!\nFurthermore, \"In Wall\" damage is possible. (The x-ray prevention will try to avoid this)\nThis setting will ", color = "red"},
+			{text = "NOT ", bold = true, color = "red"},
+			{text = "be saved between sessions for your safety.\n\nPlease use with extreme caution!", color = "red"}}
+		)
+		:hoverColor(color.hover)
+		:toggleColor(color.active)
+	
+end
 
 -- Return action wheel pages
 return t
