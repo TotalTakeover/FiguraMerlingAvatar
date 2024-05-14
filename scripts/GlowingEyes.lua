@@ -208,7 +208,9 @@ function events.TICK()
 		:title(toJson
 			{"",
 			{text = "Toggle Glowing Eyes\n\n", bold = true, color = color.primary},
-			{text = "Toggles the glowing of the eyes.", color = color.secondary}}
+			{text = "Toggles the glowing of the eyes.\n\n", color = color.secondary},
+			{text = "WARNING: ", bold = true, color = "dark_red"},
+			{text = "This feature has a tendency to not work correctly.\nDue to the rendering properties of emissives, the eyes may not glow.\nIf it does not work, please reload the avatar. Rinse and Repeat.\nThis is the only fix, I have tried everything.\n\n- Total", color = "red"}}
 		)
 		:hoverColor(color.hover)
 		:toggleColor(color.active)
