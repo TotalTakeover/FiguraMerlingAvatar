@@ -11,6 +11,7 @@ This Figura avatar is a template designed around giving the user a customizable 
 - Jimmy (QA, Animation code)
 - Squishy (APIs)
 - 4P5 (APIs, Better Action Wheel)
+- PoolloverNathan (JSONs)
 - Dragonearuss (Support)
 - Total (Avatar Maker)
 
