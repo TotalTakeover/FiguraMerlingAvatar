@@ -9,9 +9,11 @@ config:name("Merling")
 local camPos = config:load("CameraPos") or false
 
 -- Variable setup
-local head    = merlingParts.Head
-local eyePos  = false
-local headPos = 0
+local head = merlingParts.Head
+
+local function calcMatrix(p)
+	return p and (calcMatrix(p:getParent()) * p:getPositionMatrix()) or matrices.mat4()
+end
 
 -- Box check
 local function inBox(pos, box_min, box_max)
@@ -20,106 +22,70 @@ local function inBox(pos, box_min, box_max)
 		   pos.z >= box_min.z and pos.z <= box_max.z
 end
 
-local crouchOffset = {
-	prev = 0,
-	next = 0,
-	curr = 0
-}
-
-local eyeHeight = {
-	prev = 0,
-	next = 0,
-	curr = 0
-}
-
--- Set starting head pos on init
-function events.ENTITY_INIT()
-	
-	headPos = player:getPos()
-	
-	local height = toggle and 1 or 0
-	for k, v in pairs(eyeHeight) do
-		eyeHeight[k] = height
-	end
-	
-end
-
-local wasCrouch = false
-function events.TICK()
-	
-	if player:getPose() == "CROUCHING" and not wasCrouch then
-		
-		crouchOffset.next = 0.35
-		wasCrouch = true
-		
-	elseif player:getPose() ~= "CROUCHING" and wasCrouch then
-		
-		crouchOffset.next = -0.35
-		wasCrouch = false
-		
-	else
-	
-		crouchOffset.prev = crouchOffset.next
-		crouchOffset.next = math.lerp(crouchOffset.prev, 0, 0.5)
-	
-	end
-	
-	eyeHeight.prev = eyeHeight.next
-	eyeHeight.next = math.lerp(eyeHeight.next, player:getEyeHeight(), 0.5)
-	
-end
-
-function events.POST_RENDER(delta, context)
+function events.RENDER(delta, context)
 	if context == "FIRST_PERSON" or context == "RENDER" or (not client.isHudEnabled() and context ~= "MINECRAFT_GUI") then
 		
-		-- Pos checking
-		local basePos = player:getPos(delta)
-		headMatrix    = head:partToWorldMatrix():apply()
+		-- Variables
+		local yaw = player:getBodyYaw(delta)
+		
+		-- Pehkui scaling
+		local nbt   = player:getNbt()
+		local types = nbt["pehkui:scale_data_types"]
+		local playerScale = (
+			types and
+			types["pehkui:base"] and
+			types["pehkui:base"]["scale"] or 1)
+		local width = (
+			types and
+			types["pehkui:width"] and
+			types["pehkui:width"]["scale"] or 1)
+		local modelWidth = (
+			types and
+			types["pehkui:model_width"] and
+			types["pehkui:model_width"]["scale"] or 1)
+		local height = (
+			types and
+			types["pehkui:height"] and
+			types["pehkui:height"]["scale"] or 1)
+		local modelHeight = (
+			types and
+			types["pehkui:model_height"] and
+			types["pehkui:model_height"]["scale"] or 1)
+		local modelEyeHeight = (
+			types and
+			types["pehkui:eye_height"] and
+			types["pehkui:eye_height"]["scale"] or 1)
+		local offsetScale = vec(width * modelWidth, height * modelHeight, width * modelWidth) * playerScale
 		
 		-- Camera offset
-		local posOffset = headMatrix - basePos
+		local posOffset  = calcMatrix(head):apply(head:getPivot()) / 16
+		local nameOffset = posOffset + vec(0, 0.85, 0)
 		
-		if context == "FIRST_PERSON" then
+		if not (pose.swim or pose.elytra or pose.crawl or pose.spin) then
 			
-			-- Pehkui scaling
-			local nbt   = player:getNbt()
-			local types = nbt["pehkui:scale_data_types"]
-			local playerScale = (
-				types and
-				types["pehkui:base"] and
-				types["pehkui:base"]["scale"] or 1)
-			local width = (
-				types and
-				types["pehkui:width"] and
-				types["pehkui:width"]["scale"] or 1)
-			local modelWidth = (
-				types and
-				types["pehkui:model_width"] and
-				types["pehkui:model_width"]["scale"] or 1)
-			local height = (
-				types and
-				types["pehkui:height"] and
-				types["pehkui:height"]["scale"] or 1)
-			local modelHeight = (
-				types and
-				types["pehkui:model_height"] and
-				types["pehkui:model_height"]["scale"] or 1)
-			local offsetScale = vec(width * modelWidth, height * modelHeight, width * modelWidth) * playerScale
+			-- If standing, lower camera offset
+			posOffset = posOffset - vec(0, 24 * modelEyeHeight, 0) / 16
 			
-			posOffset = posOffset * offsetScale
+		else
+			
+			-- else, slightly lower camera offset
+			posOffset = posOffset - vec(0, 24 * modelEyeHeight, 0) / 16
+			
+			-- If swimming, rotate camera offset on x axis
+			posOffset  = vectors.rotateAroundAxis(-player:getRot().x, posOffset,  vec(1, 0, 0))
+			nameOffset = vectors.rotateAroundAxis(-player:getRot().x, nameOffset, vec(1, 0, 0))
 			
 		end
 		
-		-- Lerp eye height
-		crouchOffset.curr = math.lerp(crouchOffset.prev, crouchOffset.next, delta)
-		eyeHeight.curr = math.lerp(eyeHeight.prev, eyeHeight.next, delta)
+		-- Rotate camera offset on y axis
+		posOffset  = vectors.rotateAroundAxis(-yaw + 180, posOffset,  vec(0, 1, 0))
+		nameOffset = vectors.rotateAroundAxis(-yaw + 180, nameOffset, vec(0, 1, 0))
 		
-		-- Add eye height and slight offset
-		posOffset.y = posOffset.y + 0.2 + crouchOffset.curr - eyeHeight.curr
+		posOffset = posOffset * offsetScale
 		
 		-- Check for block obstruction
 		local obstructed = false
-		local cameraPos = headMatrix + vec(0, 0.2, 0) + client:getCameraDir() * 0.1
+		local cameraPos = merlingParts.Body:partToWorldMatrix():apply() + vec(0, 0.2, 0) + client:getCameraDir() * 0.1
 		local blockPos = cameraPos:copy():floor()
 		local block = world.getBlockState(blockPos)
 		local boxes = block:getCollisionShape()
@@ -134,13 +100,13 @@ function events.POST_RENDER(delta, context)
 		end
 		
 		-- Renders offset
-		local posOffsetApply = not player:riptideSpinning()
 		renderer
-			:offsetCameraPivot(camPos and posOffsetApply and not obstructed and posOffset or 0)
-			:eyeOffset(eyePos and camPos and posOffsetApply and not obstructed and posOffset or 0)
+			:offsetCameraPivot(camPos and not obstructed and posOffset or 0)
+			:eyeOffset(eyePos and camPos and not obstructed and posOffset or 0)
 		
 		-- Nameplate Placement
-		nameplate.ENTITY:pivot(posOffset + vec(0, 0.7 - crouchOffset.curr + eyeHeight.curr, 0))
+		nameplate.ENTITY
+			:pivot(nameOffset)
 		
 	end
 end
