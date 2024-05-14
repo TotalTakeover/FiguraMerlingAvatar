@@ -11,8 +11,16 @@ local camPos = config:load("CameraPos") or false
 -- Variable setup
 local head = merlingParts.Head
 
+-- Sleep rotations
+local dirRot = {
+	north = 0,
+	east  = 270,
+	south = 180,
+	west  = 90
+}
+
 local function calcMatrix(p)
-	return p and (calcMatrix(p:getParent()) * p:getPositionMatrix()) or matrices.mat4()
+	return p and p ~= models and (calcMatrix(p:getParent()) * p:getPositionMatrix()) or matrices.mat4()
 end
 
 -- Box check
@@ -61,7 +69,7 @@ function events.RENDER(delta, context)
 		local posOffset  = calcMatrix(head):apply(head:getPivot()) / 16
 		local nameOffset = posOffset + vec(0, 0.85, 0)
 		
-		if not (pose.swim or pose.elytra or pose.crawl or pose.spin) then
+		if pose.stand or pose.crouch then
 			
 			-- If standing, lower camera offset
 			posOffset = posOffset - vec(0, 24 * modelEyeHeight, 0) / 16
@@ -69,17 +77,31 @@ function events.RENDER(delta, context)
 		else
 			
 			-- else, slightly lower camera offset
-			posOffset = posOffset - vec(0, 24 * modelEyeHeight, 0) / 16
+			posOffset  = posOffset - vec(0, (pose.sleep and 24 or pose.elytra and 0 or 16), 0) / 16
+			nameOffset = posOffset - vec(0, (pose.sleep and 4 or -4) * modelEyeHeight, -20) / 16
 			
-			-- If swimming, rotate camera offset on x axis
-			posOffset  = vectors.rotateAroundAxis(-player:getRot().x, posOffset,  vec(1, 0, 0))
-			nameOffset = vectors.rotateAroundAxis(-player:getRot().x, nameOffset, vec(1, 0, 0))
+			-- else, rotate camera offset on x axis
+			posOffset  = vectors.rotateAroundAxis(-player:getRot().x - 90, posOffset,  vec(1, 0, 0))
+			nameOffset = vectors.rotateAroundAxis(-player:getRot().x - 90, nameOffset, vec(1, 0, 0))
 			
 		end
 		
 		-- Rotate camera offset on y axis
-		posOffset  = vectors.rotateAroundAxis(-yaw + 180, posOffset,  vec(0, 1, 0))
-		nameOffset = vectors.rotateAroundAxis(-yaw + 180, nameOffset, vec(0, 1, 0))
+		if pose.sleep then
+			
+			-- Find block
+			local block = world.getBlockState(player:getPos())
+			local sleepRot = dirRot[block.properties["facing"]]
+			
+			posOffset  = vectors.rotateAroundAxis(sleepRot, posOffset,  vec(0, 1, 0))
+			nameOffset = vectors.rotateAroundAxis(sleepRot, nameOffset, vec(0, 1, 0))
+			
+		else
+			
+			posOffset  = vectors.rotateAroundAxis(-yaw + 180, posOffset,  vec(0, 1, 0))
+			nameOffset = vectors.rotateAroundAxis(-yaw + 180, nameOffset, vec(0, 1, 0))
+			
+		end
 		
 		posOffset = posOffset * offsetScale
 		
