@@ -462,7 +462,7 @@ function events.TICK()
 			:title(toJson
 				{"",
 				{text = "Set Mount Positioning\n\n", bold = true, color = color.primary},
-				{text = "Left and Right clock to set the orientation of your tail while mounted/sitting.\n\n", color = color.secondary},
+				{text = "Left and Right click to set the orientation of your tail while mounted/sitting.\n\n", color = color.secondary},
 				{text = "Current direction: ", bold = true, color = color.secondary},
 				{text = mountDir and "Up" or "Down"},
 				{text = " & "},
