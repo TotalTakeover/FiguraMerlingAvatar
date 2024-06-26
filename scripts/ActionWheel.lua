@@ -32,16 +32,16 @@ end
 -- Page setups
 local pages = {
 	
-	main      = action_wheel:newPage(),
-	avatar    = action_wheel:newPage(),
-	armor     = action_wheel:newPage(),
-	camera    = action_wheel:newPage(),
-	tail      = action_wheel:newPage(),
-	dry       = action_wheel:newPage(),
-	whirlpool = action_wheel:newPage(),
-	glow      = action_wheel:newPage(),
-	eyes      = action_wheel:newPage(),
-	anims     = action_wheel:newPage()
+	main      = action_wheel:newPage("Main"),
+	avatar    = action_wheel:newPage("Avatar"),
+	armor     = action_wheel:newPage("Armor"),
+	camera    = action_wheel:newPage("Camera"),
+	tail      = action_wheel:newPage("Tail"),
+	dry       = action_wheel:newPage("Dry"),
+	whirlpool = action_wheel:newPage("Whirlpool"),
+	glow      = action_wheel:newPage("Glow"),
+	eyes      = action_wheel:newPage("Eyes"),
+	anims     = action_wheel:newPage("Anims")
 	
 }
 
