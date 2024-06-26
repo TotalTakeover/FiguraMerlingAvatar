@@ -14,7 +14,6 @@ local ears      = config:load("TailEars")
 local canDry    = config:load("TailDry")
 local dryTimer  = config:load("TailDryTimer") or 400
 local fallSound = config:load("TailFallSound")
-if active    == nil then active = true end
 if small     == nil then small = true end
 if ears      == nil then ears = true end
 if canDry    == nil then canDry = true end
