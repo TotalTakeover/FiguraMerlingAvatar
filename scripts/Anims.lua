@@ -14,10 +14,12 @@ local anims = animations["models.Merling"]
 
 -- Config setup
 config:name("Merling")
-local isShark  = config:load("AnimShark") or false
-local isCrawl  = config:load("AnimCrawl") or false
-local mountDir = config:load("AnimMountDir") or false
-local mountRot = config:load("AnimMountRot") or 1
+local isShark   = config:load("AnimShark") or false
+local isCrawl   = config:load("AnimCrawl") or false
+local mountDir  = config:load("AnimMountDir")
+local mountFlip = config:load("AnimMountFlip")
+if mountDir  == nil then mountDir  = true end
+if mountFlip == nil then mountFlip = true end
 
 -- Table setup
 local a = {}
@@ -73,11 +75,11 @@ local shark = {
 	target   = 0
 }
 
-local mountRotLerp = {
-	current    = mountRot,
-	nextTick   = mountRot,
-	target     = mountRot,
-	currentPos = mountRot
+local mountFlipLerp = {
+	current    = 1,
+	nextTick   = 1,
+	target     = 1,
+	currentPos = 1
 }
 
 -- Set lerp start on init
@@ -86,6 +88,10 @@ function events.ENTITY_INIT()
 	local apply = isShark and 1 or 0
 	for k, v in pairs(shark) do
 		shark[k] = apply
+	end
+	local apply = mountFlip and 1 or 0
+	for k, v in pairs(mountFlipLerp) do
+		mountFlipLerp[k] = apply
 	end
 	
 end
@@ -219,11 +225,11 @@ function events.TICK()
 	roll.nextTick  = math.lerp(roll.nextTick,  roll.target,  0.1)
 	
 	-- Mount rot target
-	mountRotLerp.target = mountRot
+	mountFlipLerp.target = mountFlip and 1 or -1
 	
 	-- Tick lerp
-	mountRotLerp.current  = mountRotLerp.nextTick
-	mountRotLerp.nextTick = math.lerp(mountRotLerp.nextTick, mountRotLerp.target, 0.2)
+	mountFlipLerp.current  = mountFlipLerp.nextTick
+	mountFlipLerp.nextTick = math.lerp(mountFlipLerp.nextTick, mountFlipLerp.target, 0.2)
 	
 	-- Animation states
 	local swim      = largeTail and ((not onGround and waterTicks.water < 20) or (pose.climb or pose.swim or pose.crawl or pose.elytra or player:getVehicle()) or effects.cF) and not pose.sleep
@@ -273,14 +279,14 @@ function events.RENDER(delta, context)
 	a.shark  = math.lerp(shark.current, shark.nextTick, delta)
 	a.normal = math.map(a.shark, 0, 1, 1 ,0)
 	
-	mountRotLerp.currentPos = math.lerp(mountRotLerp.current, mountRotLerp.nextTick, delta)
+	mountFlipLerp.currentPos = math.lerp(mountFlipLerp.current, mountFlipLerp.nextTick, delta)
 	
 	-- Head Y rot calc (for sleep offset)
 	a.headY = (vanilla_model.HEAD:getOriginRot().y + 180) % 360 - 180
 	
 	-- Animation blending
-	anims.mountUp:blend(mountRotLerp.currentPos)
-	anims.mountDown:blend(mountRotLerp.currentPos)
+	anims.mountUp:blend(mountFlipLerp.currentPos)
+	anims.mountDown:blend(mountFlipLerp.currentPos)
 	
 end
 
@@ -336,10 +342,10 @@ function pings.setAnimMountDir()
 end
 
 -- Set mount rotation
-local function setMountRot(x)
+function pings.setAnimMountFlip()
 	
-	mountRot = math.clamp(mountRot + x * (5/90), -1, 1)
-	config:save("AnimMountRot", mountRot)
+	mountFlip = not mountFlip
+	config:save("AnimMountFlip", mountFlip)
 	
 end
 
@@ -362,11 +368,11 @@ end
 -- Sync variables
 function pings.syncAnims(a, b, c, d, e)
 	
-	isShark  = a
-	isCrawl  = b
-	mountDir = c
-	mountRot = d
-	isSing   = e
+	isShark   = a
+	isCrawl   = b
+	mountDir  = c
+	mountFlip = d
+	isSing    = e
 	
 end
 
@@ -401,7 +407,7 @@ end
 function events.TICK()
 	
 	if world.getTime() % 200 == 0 then
-		pings.syncAnims(isShark, isCrawl, mountDir, mountRot, isSing)
+		pings.syncAnims(isShark, isCrawl, mountDir, mountFlip, isSing)
 	end
 	
 end
@@ -424,9 +430,8 @@ t.crawlPage = action_wheel:newAction()
 
 t.mountPage = action_wheel:newAction()
 	:item(itemCheck("saddle"))
-	:onScroll(setMountRot)
 	:onLeftClick(pings.setAnimMountDir)
-	:onRightClick(function() mountRot = 1 config:save("AnimMountRot", mountRot) end)
+	:onRightClick(pings.setAnimMountFlip)
 
 t.twirlPage = action_wheel:newAction()
 	:item(itemCheck("cod"))
@@ -458,13 +463,12 @@ function events.TICK()
 		t.mountPage
 			:title(toJson
 				{"",
-				{text = "Set Mount Rotation\n\n", bold = true, color = color.primary},
-				{text = "Scroll to set the rotation of your tail while mounted/sitting.\n\n", color = color.secondary},
+				{text = "Set Mount Positioning\n\n", bold = true, color = color.primary},
+				{text = "Left and Right clock to set the orientation of your tail while mounted/sitting.\n\n", color = color.secondary},
 				{text = "Current direction: ", bold = true, color = color.secondary},
-				{text = (mountDir and "Up" or "Down").."\n"},
-				{text = "Current rotation: ", bold = true, color = color.secondary},
-				{text = math.round(mountRot * 90).."\n\n"},
-				{text = "Left click to reset back to default rotation.", color = color.secondary}}
+				{text = mountDir and "Up" or "Down"},
+				{text = " & "},
+				{text = mountFlip and "Front" or "Back"}}
 			)
 		
 		t.twirlPage
