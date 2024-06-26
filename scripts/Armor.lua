@@ -60,10 +60,6 @@ kattArmor.Materials.diamond
 
 -- Netherite armor
 kattArmor.Materials.netherite
-
--- Turtle helmet
-kattArmor.Materials.turtle
-	:setTexture(textures["textures.armor.turtleHelmet"])
 	:setTexture(textures["models.Merling.netheriteArmor"])
 
 -- Trims
