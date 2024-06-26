@@ -14,8 +14,8 @@ local anims = animations["models.Merling"]
 
 -- Config setup
 config:name("Merling")
-local isShark = config:load("TailShark") or false
-local isCrawl = config:load("TailCrawl") or false
+local isShark  = config:load("AnimShark") or false
+local isCrawl  = config:load("AnimCrawl") or false
 local mountDir = config:load("AnimMountDir") or false
 local mountRot = config:load("AnimMountRot") or 1
 
@@ -315,7 +315,7 @@ end
 function pings.setAnimShark(boolean)
 	
 	isShark = boolean
-	config:save("TailShark", isShark)
+	config:save("AnimShark", isShark)
 	
 end
 
@@ -323,7 +323,7 @@ end
 function pings.setAnimCrawl(boolean)
 	
 	isCrawl = boolean
-	config:save("TailCrawl", isCrawl)
+	config:save("AnimCrawl", isCrawl)
 	
 end
 
