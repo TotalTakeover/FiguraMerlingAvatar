@@ -82,7 +82,7 @@ function events.RENDER(delta, context)
 end
 
 -- Glowing eyes toggler
-local function setToggle(boolean)
+function pings.setEyesToggle(boolean)
 	
 	toggle = boolean
 	config:save("EyesToggle", toggle)
@@ -93,7 +93,7 @@ local function setToggle(boolean)
 end
 
 -- Glowing eyes power toggler
-local function setPower(boolean)
+function pings.setEyesPower(boolean)
 	
 	power = boolean
 	config:save("EyesPower", power)
@@ -104,7 +104,7 @@ local function setPower(boolean)
 end
 
 -- Glowing eyes night vision toggler
-local function setNightVision(boolean)
+function pings.setEyesNightVision(boolean)
 	
 	nightVision = boolean
 	config:save("EyesNightVision", nightVision)
@@ -115,7 +115,7 @@ local function setNightVision(boolean)
 end
 
 -- Glowing eyes water toggler
-local function setWater(boolean)
+function pings.setEyesWater(boolean)
 	
 	water = boolean
 	config:save("EyesWater", water)
@@ -126,7 +126,7 @@ local function setWater(boolean)
 end
 
 -- Sync variables
-local function syncEyes(a, b, c, d)
+function pings.syncEyes(a, b, c, d)
 	
 	toggle      = a
 	power       = b
@@ -135,12 +135,8 @@ local function syncEyes(a, b, c, d)
 	
 end
 
--- Pings setup
-pings.setEyesToggle      = setToggle
-pings.setEyesPower       = setPower
-pings.setEyesNightVision = setNightVision
-pings.setEyesWater       = setWater
-pings.syncEyes           = syncEyes
+-- Host only instructions
+if not host:isHost() then return end
 
 -- Keybind
 local toggleBind   = config:load("EyesToggleKeybind") or "key.keyboard.keypad.5"
@@ -158,21 +154,13 @@ function events.TICK()
 end
 
 -- Sync on tick
-if host:isHost() then
-	function events.TICK()
-		
-		if world.getTime() % 200 == 0 then
-			pings.syncEyes(toggle, power, nightVision, water)
-		end
-		
+function events.TICK()
+	
+	if world.getTime() % 200 == 0 then
+		pings.syncEyes(toggle, power, nightVision, water)
 	end
+	
 end
-
--- Activate actions
-setToggle(toggle)
-setPower(power)
-setNightVision(nightVision)
-setWater(water)
 
 -- Table setup
 local t = {}
@@ -204,46 +192,45 @@ t.waterPage = action_wheel:newAction()
 -- Update action page info
 function events.TICK()
 	
-	t.togglePage
-		:title(toJson
-			{"",
-			{text = "Toggle Glowing Eyes\n\n", bold = true, color = color.primary},
-			{text = "Toggles the glowing of the eyes.\n\n", color = color.secondary},
-			{text = "WARNING: ", bold = true, color = "dark_red"},
-			{text = "This feature has a tendency to not work correctly.\nDue to the rendering properties of emissives, the eyes may not glow.\nIf it does not work, please reload the avatar. Rinse and Repeat.\nThis is the only fix, I have tried everything.\n\n- Total", color = "red"}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-		:toggled(toggle)
-	
-	t.powerPage
-		:title(toJson
-			{"",
-			{text = "Origins Power Toggle\n\n", bold = true, color = color.primary},
-			{text = "Toggles the glowing based on Origin's underwater sight power.\nThe eyes will only glow when this power is active.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-	
-	t.nightVisionPage
-		:title(toJson
-			{"",
-			{text = "Night Vision Toggle\n\n", bold = true, color = color.primary},
-			{text = "Toggles the glowing based on having the Night Vision effect.\nThis setting will ", color = color.secondary},
-			{text = "OVERRIDE ", bold = true, color = color.secondary},
-			{text = "the other subsettings.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-	
-	t.waterPage
-		:title(toJson
-			{"",
-			{text = "Water Sensitivity Toggle\n\n", bold = true, color = color.primary},
-			{text = "Toggles the glowing sensitivity to water.\nThe eyes will only glow when underwater.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
+	if action_wheel:isEnabled() then
+		t.togglePage
+			:title(toJson
+				{"",
+				{text = "Toggle Glowing Eyes\n\n", bold = true, color = color.primary},
+				{text = "Toggles the glowing of the eyes.\n\n", color = color.secondary},
+				{text = "WARNING: ", bold = true, color = "dark_red"},
+				{text = "This feature has a tendency to not work correctly.\nDue to the rendering properties of emissives, the eyes may not glow.\nIf it does not work, please reload the avatar. Rinse and Repeat.\nThis is the only fix, I have tried everything.\n\n- Total", color = "red"}}
+			)
+			:toggled(toggle)
+		
+		t.powerPage
+			:title(toJson
+				{"",
+				{text = "Origins Power Toggle\n\n", bold = true, color = color.primary},
+				{text = "Toggles the glowing based on Origin's underwater sight power.\nThe eyes will only glow when this power is active.", color = color.secondary}}
+			)
+		
+		t.nightVisionPage
+			:title(toJson
+				{"",
+				{text = "Night Vision Toggle\n\n", bold = true, color = color.primary},
+				{text = "Toggles the glowing based on having the Night Vision effect.\nThis setting will ", color = color.secondary},
+				{text = "OVERRIDE ", bold = true, color = color.secondary},
+				{text = "the other subsettings.", color = color.secondary}}
+			)
+		
+		t.waterPage
+			:title(toJson
+				{"",
+				{text = "Water Sensitivity Toggle\n\n", bold = true, color = color.primary},
+				{text = "Toggles the glowing sensitivity to water.\nThe eyes will only glow when underwater.", color = color.secondary}}
+			)
+		
+		for _, page in pairs(t) do
+			page:hoverColor(color.hover):toggleColor(color.active)
+		end
+		
+	end
 	
 end
 

@@ -31,7 +31,7 @@ kattArmor.Armor.Boots
 
 -- Leather armor
 kattArmor.Materials.leather
-	:setTexture(textures["textures.armor.leatherArmor"])
+	:setTexture(textures["models.Merling.leatherArmor"])
 	:addParts(kattArmor.Armor.Leggings,
 		merlingParts.Tail1ArmorLeggings.Leather,
 		merlingParts.Tail1ArmorLeggings.BrimLeather,
@@ -44,92 +44,88 @@ kattArmor.Materials.leather
 
 -- Chainmail armor
 kattArmor.Materials.chainmail
-	:setTexture(textures["textures.armor.chainmailArmor"])
+	:setTexture(textures["models.Merling.chainmailArmor"])
 
 -- Iron armor
 kattArmor.Materials.iron
-	:setTexture(textures["textures.armor.ironArmor"])
+	:setTexture(textures["models.Merling.ironArmor"])
 
 -- Golden armor
 kattArmor.Materials.golden
-	:setTexture(textures["textures.armor.goldenArmor"])
+	:setTexture(textures["models.Merling.goldenArmor"])
 
 -- Diamond armor
 kattArmor.Materials.diamond
-	:setTexture(textures["textures.armor.diamondArmor"])
+	:setTexture(textures["models.Merling.diamondArmor"])
 
 -- Netherite armor
 kattArmor.Materials.netherite
-	:setTexture(textures["textures.armor.netheriteArmor"])
-
--- Turtle helmet
-kattArmor.Materials.turtle
-	:setTexture(textures["textures.armor.turtleHelmet"])
+	:setTexture(textures["models.Merling.netheriteArmor"])
 
 -- Trims
 -- Coast
 kattArmor.TrimPatterns.coast
-	:setTexture(textures["textures.armor.trims.coastTrim"])
+	:setTexture(textures["models.Merling.coastTrim"])
 
 -- Dune
 kattArmor.TrimPatterns.dune
-	:setTexture(textures["textures.armor.trims.duneTrim"])
+	:setTexture(textures["models.Merling.duneTrim"])
 
 -- Eye
 kattArmor.TrimPatterns.eye
-	:setTexture(textures["textures.armor.trims.eyeTrim"])
+	:setTexture(textures["models.Merling.eyeTrim"])
 
 -- Host
 kattArmor.TrimPatterns.host
-	:setTexture(textures["textures.armor.trims.hostTrim"])
+	:setTexture(textures["models.Merling.hostTrim"])
 
 -- Raiser
 kattArmor.TrimPatterns.raiser
-	:setTexture(textures["textures.armor.trims.raiserTrim"])
+	:setTexture(textures["models.Merling.raiserTrim"])
 
 -- Rib
 kattArmor.TrimPatterns.rib
-	:setTexture(textures["textures.armor.trims.ribTrim"])
+	:setTexture(textures["models.Merling.ribTrim"])
 
 -- Sentry
 kattArmor.TrimPatterns.sentry
-	:setTexture(textures["textures.armor.trims.sentryTrim"])
+	:setTexture(textures["models.Merling.sentryTrim"])
 
 -- Shaper
 kattArmor.TrimPatterns.shaper
-	:setTexture(textures["textures.armor.trims.shaperTrim"])
+	:setTexture(textures["models.Merling.shaperTrim"])
 
 -- Silence
 kattArmor.TrimPatterns.silence
-	:setTexture(textures["textures.armor.trims.silenceTrim"])
+	:setTexture(textures["models.Merling.silenceTrim"])
 
 -- Snout
 kattArmor.TrimPatterns.snout
-	:setTexture(textures["textures.armor.trims.snoutTrim"])
+	:setTexture(textures["models.Merling.snoutTrim"])
 
 -- Spire
 kattArmor.TrimPatterns.spire
-	:setTexture(textures["textures.armor.trims.spireTrim"])
+	:setTexture(textures["models.Merling.spireTrim"])
 
 -- Tide
 kattArmor.TrimPatterns.tide
-	:setTexture(textures["textures.armor.trims.tideTrim"])
+	:setTexture(textures["models.Merling.tideTrim"])
 
 -- Vex
 kattArmor.TrimPatterns.vex
-	:setTexture(textures["textures.armor.trims.vexTrim"])
+	:setTexture(textures["models.Merling.vexTrim"])
 
 -- Ward
 kattArmor.TrimPatterns.ward
-	:setTexture(textures["textures.armor.trims.wardTrim"])
+	:setTexture(textures["models.Merling.wardTrim"])
 
 -- Wayfinder
 kattArmor.TrimPatterns.wayfinder
-	:setTexture(textures["textures.armor.trims.wayfinderTrim"])
+	:setTexture(textures["models.Merling.wayfinderTrim"])
 
 -- Wild
 kattArmor.TrimPatterns.wild
-	:setTexture(textures["textures.armor.trims.wildTrim"])
+	:setTexture(textures["models.Merling.wildTrim"])
 
 -- Config setup
 config:name("Merling")
@@ -197,7 +193,7 @@ function events.TICK()
 end
 
 -- Armor all toggle
-local function setAll(boolean)
+function pings.setArmorAll(boolean)
 	
 	helmet     = boolean
 	chestplate = boolean
@@ -214,7 +210,7 @@ local function setAll(boolean)
 end
 
 -- Armor helmet toggle
-local function setHelmet(boolean)
+function pings.setArmorHelmet(boolean)
 	
 	helmet = boolean
 	config:save("ArmorHelmet", helmet)
@@ -225,7 +221,7 @@ local function setHelmet(boolean)
 end
 
 -- Armor chestplate toggle
-local function setChestplate(boolean)
+function pings.setArmorChestplate(boolean)
 	
 	chestplate = boolean
 	config:save("ArmorChestplate", chestplate)
@@ -236,7 +232,7 @@ local function setChestplate(boolean)
 end
 
 -- Armor leggings toggle
-local function setLeggings(boolean)
+function pings.setArmorLeggings(boolean)
 	
 	leggings = boolean
 	config:save("ArmorLeggings", leggings)
@@ -247,7 +243,7 @@ local function setLeggings(boolean)
 end
 
 -- Armor boots toggle
-local function setBoots(boolean)
+function pings.setArmorBoots(boolean)
 	
 	boots = boolean
 	config:save("ArmorBoots", boots)
@@ -258,7 +254,7 @@ local function setBoots(boolean)
 end
 
 -- Sync variables
-local function syncArmor(a, b, c, d)
+function pings.syncArmor(a, b, c, d)
 	
 	helmet     = a
 	chestplate = b
@@ -267,30 +263,17 @@ local function syncArmor(a, b, c, d)
 	
 end
 
--- Pings setup
-pings.setArmorAll        = setAll
-pings.setArmorHelmet     = setHelmet
-pings.setArmorChestplate = setChestplate
-pings.setArmorLeggings   = setLeggings
-pings.setArmorBoots      = setBoots
-pings.syncArmor          = syncArmor
+-- Host only instructions
+if not host:isHost() then return end
 
 -- Sync on tick
-if host:isHost() then
-	function events.TICK()
-		
-		if world.getTime() % 200 == 0 then
-			pings.syncArmor(helmet, chestplate, leggings, boots)
-		end
-		
+function events.TICK()
+	
+	if world.getTime() % 200 == 0 then
+		pings.syncArmor(helmet, chestplate, leggings, boots)
 	end
+	
 end
-
--- Activate actions
-setHelmet(helmet)
-setChestplate(chestplate)
-setLeggings(leggings)
-setBoots(boots)
 
 -- Setup table
 local t = {}
@@ -324,55 +307,52 @@ t.bootsPage = action_wheel:newAction()
 -- Update action page info
 function events.TICK()
 	
-	t.allPage
-		:title(toJson
-			{"",
-			{text = "Toggle All Armor\n\n", bold = true, color = color.primary},
-			{text = "Toggles visibility of all armor parts.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-		:toggled(helmet and chestplate and leggings and boots)
-	
-	t.helmetPage
-		:title(toJson
-			{"",
-			{text = "Toggle Helmet\n\n", bold = true, color = color.primary},
-			{text = "Toggles visibility of helmet parts.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-		:toggled(helmet)
-	
-	t.chestplatePage
-		:title(toJson
-			{"",
-			{text = "Toggle Chestplate\n\n", bold = true, color = color.primary},
-			{text = "Toggles visibility of chestplate parts.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-		:toggled(chestplate)
-	
-	t.leggingsPage
-		:title(toJson
-			{"",
-			{text = "Toggle Leggings\n\n", bold = true, color = color.primary},
-			{text = "Toggles visibility of leggings parts.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-		:toggled(leggings)
-	
-	t.bootsPage
-		:title(toJson
-			{"",
-			{text = "Toggle Boots\n\n", bold = true, color = color.primary},
-			{text = "Toggles visibility of boots.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-		:toggled(boots)
+	if action_wheel:isEnabled() then
+		t.allPage
+			:title(toJson
+				{"",
+				{text = "Toggle All Armor\n\n", bold = true, color = color.primary},
+				{text = "Toggles visibility of all armor parts.", color = color.secondary}}
+			)
+			:toggled(helmet and chestplate and leggings and boots)
+		
+		t.helmetPage
+			:title(toJson
+				{"",
+				{text = "Toggle Helmet\n\n", bold = true, color = color.primary},
+				{text = "Toggles visibility of helmet parts.", color = color.secondary}}
+			)
+			:toggled(helmet)
+		
+		t.chestplatePage
+			:title(toJson
+				{"",
+				{text = "Toggle Chestplate\n\n", bold = true, color = color.primary},
+				{text = "Toggles visibility of chestplate parts.", color = color.secondary}}
+			)
+			:toggled(chestplate)
+		
+		t.leggingsPage
+			:title(toJson
+				{"",
+				{text = "Toggle Leggings\n\n", bold = true, color = color.primary},
+				{text = "Toggles visibility of leggings parts.", color = color.secondary}}
+			)
+			:toggled(leggings)
+		
+		t.bootsPage
+			:title(toJson
+				{"",
+				{text = "Toggle Boots\n\n", bold = true, color = color.primary},
+				{text = "Toggles visibility of boots.", color = color.secondary}}
+			)
+			:toggled(boots)
+		
+		for _, page in pairs(t) do
+			page:hoverColor(color.hover):toggleColor(color.active)
+		end
+		
+	end
 	
 end
 

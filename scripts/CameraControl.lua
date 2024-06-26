@@ -6,7 +6,16 @@ local color        = require("scripts.ColorProperties")
 
 -- Config setup
 config:name("Merling")
-local camPos = config:load("CameraPos") or false
+local camPos       = config:load("CameraPos") or false
+local savedServers = config:load("CameraServers") or {}
+
+-- Get server id
+local serverData = client:getServerData()
+local serverId   = serverData.ip and serverData.ip or serverData.name
+
+-- Establish server, and set eyePos to server
+savedServers[serverId] = savedServers[serverId] or false
+local eyePos = savedServers[serverId]
 
 -- Variable setup
 local head = merlingParts.Head
@@ -137,7 +146,7 @@ function events.RENDER(delta, context)
 end
 
 -- Camera pos toggle
-local function setPos(boolean)
+function pings.setCameraPos(boolean)
 	
 	camPos = boolean
 	config:save("CameraPos", camPos)
@@ -145,38 +154,33 @@ local function setPos(boolean)
 end
 
 -- Eye pos toggle
-local function setEye(boolean)
+function pings.setCameraEye(boolean)
 	
 	eyePos = boolean
+	savedServers[serverId] = boolean
+	config:save("CameraServers", savedServers)
 	
 end
 
 -- Sync variables
-local function syncCamera(a, b)
+function pings.syncCamera(a, b)
 	
 	camPos = a
 	eyePos = b
 	
 end
 
--- Setup pings
-pings.setCameraPos = setPos
-pings.setCameraEye = setEye
-pings.syncCamera   = syncCamera
+-- Host only instructions
+if not host:isHost() then return end
 
 -- Sync on tick
-if host:isHost() then
-	function events.TICK()
-		
-		if world.getTime() % 200 == 0 then
-			pings.syncCamera(camPos, eyePos)
-		end
-		
+function events.TICK()
+	
+	if world.getTime() % 200 == 0 then
+		pings.syncCamera(camPos, eyePos)
 	end
+	
 end
-
--- Activate actions
-setPos(camPos)
 
 -- Table setup
 local t = {}
@@ -192,32 +196,34 @@ t.eyePage = action_wheel:newAction()
 	:item(itemCheck("ender_pearl"))
 	:toggleItem(itemCheck("ender_eye"))
 	:onToggle(pings.setCameraEye)
+	:toggled(eyePos)
 
 -- Update action page info
 function events.TICK()
 	
-	t.posPage
-		:title(toJson
-			{"",
-			{text = "Camera Position Toggle\n\n", bold = true, color = color.primary},
-			{text = "Sets the camera position to where your avatar's head is.\n\n", color = color.secondary},
-			{text = "To prevent x-ray, the camera will reset to its default position if inside a block.", color = "red"}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-	
-	t.eyePage
-		:title(toJson
-			{"",
-			{text = "Eye Position Toggle\n\n", bold = true, color = color.primary},
-			{text = "Sets the eye position to match the avatar's head.\nRequires camera position toggle.\n\n", color = color.secondary},
-			{text = "WARNING: ", bold = true, color = "dark_red"},
-			{text = "This feature is dangerous!\nIt can and will be flagged on servers with anticheat!\nFurthermore, \"In Wall\" damage is possible. (The x-ray prevention will try to avoid this)\nThis setting will ", color = "red"},
-			{text = "NOT ", bold = true, color = "red"},
-			{text = "be saved between sessions for your safety.\n\nPlease use with extreme caution!", color = "red"}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
+	if action_wheel:isEnabled() then
+		t.posPage
+			:title(toJson
+				{"",
+				{text = "Camera Position Toggle\n\n", bold = true, color = color.primary},
+				{text = "Sets the camera position to where your avatar's head is.\n\n", color = color.secondary},
+				{text = "To prevent x-ray, the camera will reset to its default position if inside a block.", color = "red"}}
+			)
+		
+		t.eyePage
+			:title(toJson
+				{"",
+				{text = "Eye Position Toggle\n\n", bold = true, color = color.primary},
+				{text = "Sets the eye position to match the avatar's head.\nRequires camera position toggle.\n\n", color = color.secondary},
+				{text = "WARNING: ", bold = true, color = "dark_red"},
+				{text = "This feature is dangerous!\nIt can and will be flagged on servers with anticheat!\nFurthermore, \"In Wall\" damage is possible. (The x-ray prevention will try to avoid this)\nThis setting will only be saved on a \"Per-Server\" basis.\n\nPlease use with extreme caution!", color = "red"}}
+			)
+		
+		for _, page in pairs(t) do
+			page:hoverColor(color.hover):toggleColor(color.active)
+		end
+		
+	end
 	
 end
 

@@ -14,25 +14,27 @@ local anims = animations["models.Merling"]
 
 -- Config setup
 config:name("Merling")
-local isShark = config:load("TailShark") or false
-local isCrawl = config:load("TailCrawl") or false
+local isShark   = config:load("AnimShark") or false
+local isCrawl   = config:load("AnimCrawl") or false
+local mountDir  = config:load("AnimMountDir") or false
+local mountFlip = config:load("AnimMountFlip") or false
 
 -- Table setup
-local t = {}
+local a = {}
 
 -- Animation variables
-t.time     = 0
-t.strength = 1
+a.time     = 0
+a.strength = 1
 
 -- Axis variables
-t.pitch    = 0
-t.yaw      = 0
-t.roll     = 0
-t.headY    = 0
+a.pitch    = 0
+a.yaw      = 0
+a.roll     = 0
+a.headY    = 0
 
 -- Animation types
-t.normal = isShark and 0 or 1
-t.shark  = isShark and 1 or 0
+a.normal = isShark and 0 or 1
+a.shark  = isShark and 1 or 0
 
 local canTwirl = false
 local isSing   = false
@@ -71,12 +73,23 @@ local shark = {
 	target   = 0
 }
 
+local mountFlipLerp = {
+	current    = 1,
+	nextTick   = 1,
+	target     = 1,
+	currentPos = 1
+}
+
 -- Set lerp start on init
 function events.ENTITY_INIT()
 	
 	local apply = isShark and 1 or 0
 	for k, v in pairs(shark) do
 		shark[k] = apply
+	end
+	local apply = mountFlip and 1 or 0
+	for k, v in pairs(mountFlipLerp) do
+		mountFlipLerp[k] = apply
 	end
 	
 end
@@ -209,22 +222,31 @@ function events.TICK()
 	yaw.nextTick   = math.lerp(yaw.nextTick,   yaw.target,   1)
 	roll.nextTick  = math.lerp(roll.nextTick,  roll.target,  0.1)
 	
+	-- Mount rot target
+	mountFlipLerp.target = mountFlip and 1 or -1
+	
+	-- Tick lerp
+	mountFlipLerp.current  = mountFlipLerp.nextTick
+	mountFlipLerp.nextTick = math.lerp(mountFlipLerp.nextTick, mountFlipLerp.target, 0.2)
+	
 	-- Animation states
-	local swim  = largeTail and ((not onGround and waterTicks.water < 20) or (pose.climb or pose.swim or pose.crawl or pose.elytra) or effects.cF) and not pose.sleep and not player:getVehicle()
-	local stand = largeTail and not isCrawl and groundAnim
-	local crawl = largeTail and     isCrawl and groundAnim
-	local small = not largeTail
-	local mount = largeTail and player:getVehicle()
-	local sleep = pose.sleep
-	local ears  = player:isUnderwater()
-	local sing  = isSing and not pose.sleep
+	local swim      = largeTail and ((not onGround and waterTicks.water < 20) or (pose.climb or pose.swim or pose.crawl or pose.elytra or player:getVehicle()) or effects.cF) and not pose.sleep
+	local stand     = largeTail and not isCrawl and groundAnim
+	local crawl     = largeTail and     isCrawl and groundAnim
+	local small     = not largeTail
+	local mountUp   = largeTail and player:getVehicle() and mountDir
+	local mountDown = largeTail and player:getVehicle() and not mountDir
+	local sleep     = pose.sleep
+	local ears      = player:isUnderwater()
+	local sing      = isSing and not pose.sleep
 	
 	-- Animations
 	anims.swim:playing(swim)
 	anims.stand:playing(stand)
 	anims.crawl:playing(crawl)
 	anims.small:playing(small)
-	anims.mount:playing(mount)
+	anims.mountUp:playing(mountUp)
+	anims.mountDown:playing(mountDown)
 	anims.sleep:playing(sleep)
 	anims.ears:playing(ears)
 	anims.sing:playing(sing)
@@ -245,31 +267,38 @@ end
 function events.RENDER(delta, context)
 	
 	-- Render lerps
-	t.time     = math.lerp(time.prev, time.next, delta)
-	t.strength = math.lerp(strength.prev, strength.next, delta)
+	a.time     = math.lerp(time.prev, time.next, delta)
+	a.strength = math.lerp(strength.prev, strength.next, delta)
 	
-	t.pitch = math.lerp(pitch.current, pitch.nextTick, delta)
-	t.yaw   = math.lerp(yaw.current, yaw.nextTick, delta)
-	t.roll  = math.lerp(roll.current, roll.nextTick, delta)
+	a.pitch = math.lerp(pitch.current, pitch.nextTick, delta)
+	a.yaw   = math.lerp(yaw.current, yaw.nextTick, delta)
+	a.roll  = math.lerp(roll.current, roll.nextTick, delta)
 	
-	t.shark  = math.lerp(shark.current, shark.nextTick, delta)
-	t.normal = math.map(t.shark, 0, 1, 1 ,0)
+	a.shark  = math.lerp(shark.current, shark.nextTick, delta)
+	a.normal = math.map(a.shark, 0, 1, 1 ,0)
+	
+	mountFlipLerp.currentPos = math.lerp(mountFlipLerp.current, mountFlipLerp.nextTick, delta)
 	
 	-- Head Y rot calc (for sleep offset)
-	t.headY = (vanilla_model.HEAD:getOriginRot().y + 180) % 360 - 180
+	a.headY = (vanilla_model.HEAD:getOriginRot().y + 180) % 360 - 180
+	
+	-- Animation blending
+	anims.mountUp:blend(mountFlipLerp.currentPos)
+	anims.mountDown:blend(mountFlipLerp.currentPos)
 	
 end
 
 -- GS Blending Setup
 local blendAnims = {
-	{ anim = anims.swim,  ticks = {7,7} },
-	{ anim = anims.stand, ticks = {7,7} },
-	{ anim = anims.crawl, ticks = {7,7} },
-	{ anim = anims.small, ticks = {7,7} },
-	{ anim = anims.mount, ticks = {7,7} },
-	{ anim = anims.sleep, ticks = {7,7} },
-	{ anim = anims.ears,  ticks = {7,7} },
-	{ anim = anims.sing,  ticks = {3,3} }
+	{ anim = anims.swim,      ticks = {7,7} },
+	{ anim = anims.stand,     ticks = {7,7} },
+	{ anim = anims.crawl,     ticks = {7,7} },
+	{ anim = anims.small,     ticks = {7,7} },
+	{ anim = anims.mountUp,   ticks = {7,7} },
+	{ anim = anims.mountDown, ticks = {7,7} },
+	{ anim = anims.sleep,     ticks = {7,7} },
+	{ anim = anims.ears,      ticks = {7,7} },
+	{ anim = anims.sing,      ticks = {3,3} }
 }
 	
 for _, blend in ipairs(blendAnims) do
@@ -287,23 +316,39 @@ function events.RENDER(delta, context)
 end
 
 -- Shark anim toggle
-local function setShark(boolean)
+function pings.setAnimShark(boolean)
 	
 	isShark = boolean
-	config:save("TailShark", isShark)
+	config:save("AnimShark", isShark)
 	
 end
 
 -- Crawl anim toggle
-local function setCrawl(boolean)
+function pings.setAnimCrawl(boolean)
 	
 	isCrawl = boolean
-	config:save("TailCrawl", isCrawl)
+	config:save("AnimCrawl", isCrawl)
+	
+end
+
+-- Mount direction anim toggle
+function pings.setAnimMountDir()
+	
+	mountDir = not mountDir
+	config:save("AnimMountDir", mountDir)
+	
+end
+
+-- Set mount rotation
+function pings.setAnimMountFlip()
+	
+	mountFlip = not mountFlip
+	config:save("AnimMountFlip", mountFlip)
 	
 end
 
 -- Play twirl anim
-local function playTwirl()
+function pings.animPlayTwirl()
 	
 	if canTwirl then
 		anims.twirl:play()
@@ -312,27 +357,25 @@ local function playTwirl()
 end
 
 -- Singing anim toggle
-local function setSing(boolean)
+function pings.setAnimSing(boolean)
 	
 	isSing = boolean
 	
 end
 
 -- Sync variables
-local function syncAnims(a, b, c)
+function pings.syncAnims(a, b, c, d, e)
 	
-	isShark = a
-	isCrawl = b
-	isSing  = c
+	isShark   = a
+	isCrawl   = b
+	mountDir  = c
+	mountFlip = d
+	isSing    = e
 	
 end
 
--- Pings setup
-pings.setTailShark  = setShark
-pings.setTailCrawl  = setCrawl
-pings.animPlayTwirl = playTwirl
-pings.setAnimSing   = setSing
-pings.syncAnims     = syncAnims
+-- Host only instructions
+if not host:isHost() then return a end
 
 -- Twirl keybind
 local twirlBind   = config:load("AnimTwirlKeybind") or "key.keyboard.keypad.6"
@@ -359,32 +402,34 @@ function events.TICK()
 end
 
 -- Sync on tick
-if host:isHost() then
-	function events.TICK()
-		
-		if world.getTime() % 200 == 0 then
-			pings.syncAnims(isShark, isCrawl, isSing)
-		end
-		
+function events.TICK()
+	
+	if world.getTime() % 200 == 0 then
+		pings.syncAnims(isShark, isCrawl, mountDir, mountFlip, isSing)
 	end
+	
 end
 
--- Activate actions
-setShark(isShark)
-setCrawl(isCrawl)
+-- Table setup
+local t = {}
 
 -- Action wheel pages
 t.sharkPage = action_wheel:newAction()
 	:item(itemCheck("dolphin_spawn_egg"))
 	:toggleItem(itemCheck("guardian_spawn_egg"))
-	:onToggle(pings.setTailShark)
+	:onToggle(pings.setAnimShark)
 	:toggled(isShark)
 
 t.crawlPage = action_wheel:newAction()
 	:item(itemCheck("armor_stand"))
 	:toggleItem(itemCheck("oak_boat"))
-	:onToggle(pings.setTailCrawl)
+	:onToggle(pings.setAnimCrawl)
 	:toggled(isCrawl)
+
+t.mountPage = action_wheel:newAction()
+	:item(itemCheck("saddle"))
+	:onLeftClick(pings.setAnimMountDir)
+	:onRightClick(pings.setAnimMountFlip)
 
 t.twirlPage = action_wheel:newAction()
 	:item(itemCheck("cod"))
@@ -398,39 +443,50 @@ t.singPage = action_wheel:newAction()
 -- Update action page info
 function events.TICK()
 	
-	t.sharkPage
-		:title(toJson
-			{"",
-			{text = "Toggle Shark Animations\n\n", bold = true, color = color.primary},
-			{text = "Toggles the movement of the tail to be more shark based.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-	
-	t.crawlPage
-		:title(toJson
-			{"",
-			{text = "Toggle Crawl Animation\n\n", bold = true, color = color.primary},
-			{text = "Toggles crawling over standing when you are touching the ground.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-	
-	t.twirlPage
-		:title(toJson
-			{text = "Play Twirl animation", bold = true, color = color.primary}
-		)
-		:hoverColor(color.hover)
-	
-	t.singPage
-		:title(toJson
-			{text = "Play Singing animation", bold = true, color = color.primary}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-		:toggled(isSing)
+	if action_wheel:isEnabled() then
+		t.sharkPage
+			:title(toJson
+				{"",
+				{text = "Toggle Shark Animations\n\n", bold = true, color = color.primary},
+				{text = "Toggles the movement of the tail to be more shark based.", color = color.secondary}}
+			)
+		
+		t.crawlPage
+			:title(toJson
+				{"",
+				{text = "Toggle Crawl Animation\n\n", bold = true, color = color.primary},
+				{text = "Toggles crawling over standing when you are touching the ground.", color = color.secondary}}
+			)
+		
+		t.mountPage
+			:title(toJson
+				{"",
+				{text = "Set Mount Positioning\n\n", bold = true, color = color.primary},
+				{text = "Left and Right click to set the orientation of your tail while mounted/sitting.\n\n", color = color.secondary},
+				{text = "Current direction: ", bold = true, color = color.secondary},
+				{text = mountDir and "Up" or "Down"},
+				{text = " & "},
+				{text = mountFlip and "Front" or "Back"}}
+			)
+		
+		t.twirlPage
+			:title(toJson
+				{text = "Play Twirl animation", bold = true, color = color.primary}
+			)
+		
+		t.singPage
+			:title(toJson
+				{text = "Play Singing animation", bold = true, color = color.primary}
+			)
+			:toggled(isSing)
+		
+		for _, page in pairs(t) do
+			page:hoverColor(color.hover):toggleColor(color.active)
+		end
+		
+	end
 	
 end
 
 -- Returns animation variables/action wheel pages
-return t
+return a, t

@@ -1,3 +1,6 @@
+-- Disables code if not avatar host
+if not host:isHost() then return end
+
 -- Required scripts
 local itemCheck = require("lib.ItemCheck")
 local avatar    = require("scripts.Player")
@@ -7,7 +10,7 @@ local tail      = require("scripts.Tail")
 local whirlpool = require("scripts.WhirlpoolEffect")
 local glow      = require("scripts.GlowingTail")
 local eyes      = require("scripts.GlowingEyes")
-local anims     = require("scripts.Anims")
+local _, anims  = require("scripts.Anims")
 local arms      = require("scripts.Arms")
 local color     = require("scripts.ColorProperties")
 
@@ -32,16 +35,16 @@ end
 -- Page setups
 local pages = {
 	
-	main      = action_wheel:newPage(),
-	avatar    = action_wheel:newPage(),
-	armor     = action_wheel:newPage(),
-	camera    = action_wheel:newPage(),
-	tail      = action_wheel:newPage(),
-	dry       = action_wheel:newPage(),
-	whirlpool = action_wheel:newPage(),
-	glow      = action_wheel:newPage(),
-	eyes      = action_wheel:newPage(),
-	anims     = action_wheel:newPage()
+	main      = action_wheel:newPage("Main"),
+	avatar    = action_wheel:newPage("Avatar"),
+	armor     = action_wheel:newPage("Armor"),
+	camera    = action_wheel:newPage("Camera"),
+	tail      = action_wheel:newPage("Tail"),
+	dry       = action_wheel:newPage("Dry"),
+	whirlpool = action_wheel:newPage("Whirlpool"),
+	glow      = action_wheel:newPage("Glow"),
+	eyes      = action_wheel:newPage("Eyes"),
+	anims     = action_wheel:newPage("Anims")
 	
 }
 
@@ -89,59 +92,57 @@ local pageActions = {
 -- Update action page info
 function events.TICK()
 	
-	pageActions.avatar
-		:title(toJson
-			{text = "Avatar Settings", bold = true, color = color.primary}
-		)
-		:hoverColor(color.hover)
-	
-	pageActions.tail
-		:title(toJson
-			{text = "Merling Settings", bold = true, color = color.primary}
-		)
-		:hoverColor(color.hover)
-	
-	pageActions.glow
-		:title(toJson
-			{text = "Glowing Settings", bold = true, color = color.primary}
-		)
-		:hoverColor(color.hover)
-	
-	pageActions.anims
-		:title(toJson
-			{text = "Animations", bold = true, color = color.primary}
-		)
-		:hoverColor(color.hover)
-	
-	pageActions.armor
-		:title(toJson
-			{text = "Armor Settings", bold = true, color = color.primary}
-		)
-		:hoverColor(color.hover)
-	
-	pageActions.camera
-		:title(toJson
-			{text = "Camera Settings", bold = true, color = color.primary}
-		)
-		:hoverColor(color.hover)
-	
-	pageActions.dry
-		:title(toJson
-			{text = "Drying Settings", bold = true, color = color.primary}
-		)
-		:hoverColor(color.hover)
-	
-	pageActions.whirlpool
-		:title(toJson
-			{text = "Whirlpool Settings", bold = true, color = color.primary}
-		)
-		:hoverColor(color.hover)
-	
-	pageActions.eyes
-		:title(toJson
-			{text = "Glowing Eyes Settings", bold = true, color = color.primary}
-		)
-		:hoverColor(color.hover)
+	if action_wheel:isEnabled() then
+		pageActions.avatar
+			:title(toJson
+				{text = "Avatar Settings", bold = true, color = color.primary}
+			)
+		
+		pageActions.tail
+			:title(toJson
+				{text = "Merling Settings", bold = true, color = color.primary}
+			)
+		
+		pageActions.glow
+			:title(toJson
+				{text = "Glowing Settings", bold = true, color = color.primary}
+			)
+		
+		pageActions.anims
+			:title(toJson
+				{text = "Animations", bold = true, color = color.primary}
+			)
+		
+		pageActions.armor
+			:title(toJson
+				{text = "Armor Settings", bold = true, color = color.primary}
+			)
+		
+		pageActions.camera
+			:title(toJson
+				{text = "Camera Settings", bold = true, color = color.primary}
+			)
+		
+		pageActions.dry
+			:title(toJson
+				{text = "Drying Settings", bold = true, color = color.primary}
+			)
+		
+		pageActions.whirlpool
+			:title(toJson
+				{text = "Whirlpool Settings", bold = true, color = color.primary}
+			)
+		
+		pageActions.eyes
+			:title(toJson
+				{text = "Glowing Eyes Settings", bold = true, color = color.primary}
+			)
+		
+		for _, page in pairs(pageActions) do
+			page:hoverColor(color.hover)
+		end
+		
+	end
 	
 end
 
@@ -189,7 +190,6 @@ pages.camera
 
 -- Tail actions
 pages.tail
-	:action( -1, tail.activePage)
 	:action( -1, tail.waterPage)
 	:action( -1, tail.smallPage)
 	:action( -1, tail.earsPage)
@@ -229,6 +229,7 @@ pages.eyes
 pages.anims
 	:action( -1, anims.sharkPage)
 	:action( -1, anims.crawlPage)
+	:action( -1, anims.mountPage)
 	:action( -1, arms.movePage)
 	:action( -1, anims.twirlPage)
 	:action( -1, anims.singPage)

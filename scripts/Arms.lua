@@ -54,6 +54,7 @@ function events.TICK()
 	local using       = player:isUsingItem()
 	local usingL      = activeness == leftActive and leftItem:getUseAction() or "NONE"
 	local usingR      = activeness == rightActive and rightItem:getUseAction() or "NONE"
+	local bow         = using and (usingL == "BOW" or usingR == "BOW")
 	local crossL      = leftItem.tag and leftItem.tag["Charged"] == 1
 	local crossR      = rightItem.tag and rightItem.tag["Charged"] == 1
 	
@@ -61,8 +62,8 @@ function events.TICK()
 	local shouldMove = (waterTicks.under >= 20 and not effects.cF) or average(merlingParts.Tail1:getScale():unpack()) <= 0.6 or animations["models.Merling"].crawl:isPlaying()
 	
 	-- Targets
-	leftArm.target  = (armMove or shouldMove or leftSwing or ((crossL or crossR) or (using and usingL ~= "NONE"))) and 0 or 1
-	rightArm.target = (armMove or shouldMove or rightSwing or ((crossL or crossR) or (using and usingR ~= "NONE"))) and 0 or 1
+	leftArm.target  = (armMove or shouldMove or leftSwing  or bow or ((crossL or crossR) or (using and usingL ~= "NONE"))) and 0 or 1
+	rightArm.target = (armMove or shouldMove or rightSwing or bow or ((crossL or crossR) or (using and usingR ~= "NONE"))) and 0 or 1
 	
 	-- Tick lerps
 	leftArm.current   = leftArm.nextTick
@@ -87,13 +88,20 @@ function events.RENDER(delta, context)
 	local firstPerson = context == "FIRST_PERSON"
 	
 	-- Apply
-	merlingParts.LeftArm:rot( firstPerson and 0 or (-((vanilla_model.LEFT_ARM:getOriginRot()  + 180) % 360 - 180) + -idleRot + bodyOffset) * leftArm.currentPos)
-	merlingParts.RightArm:rot(firstPerson and 0 or (-((vanilla_model.RIGHT_ARM:getOriginRot() + 180) % 360 - 180) + idleRot + bodyOffset) * rightArm.currentPos)
+	merlingParts.LeftArm:rot((-((vanilla_model.LEFT_ARM:getOriginRot() + 180) % 360 - 180) + -idleRot + bodyOffset) * leftArm.currentPos)
+		:visible(not firstPerson)
+	
+	merlingParts.LeftArmFP:visible(firstPerson)
+	
+	merlingParts.RightArm:rot((-((vanilla_model.RIGHT_ARM:getOriginRot() + 180) % 360 - 180) + idleRot + bodyOffset) * rightArm.currentPos)
+		:visible(not firstPerson)
+	
+	merlingParts.RightArmFP:visible(firstPerson)
 	
 end
 
 -- Arm movement toggle
-local function setArmMove(boolean)
+function pings.setAvatarArmMove(boolean)
 	
 	armMove = boolean
 	config:save("AvatarArmMove", armMove)
@@ -101,29 +109,23 @@ local function setArmMove(boolean)
 end
 
 -- Sync variable
-local function syncArms(a)
+function pings.syncArms(a)
 	
 	armMove = a
 	
 end
 
--- Ping setup
-pings.setAvatarArmMove = setArmMove
-pings.syncArms         = syncArms
+-- Host only instructions
+if not host:isHost() then return end
 
 -- Sync on tick
-if host:isHost() then
-	function events.TICK()
-		
-		if world.getTime() % 200 == 0 then
-			pings.syncArms(armMove)
-		end
-		
+function events.TICK()
+	
+	if world.getTime() % 200 == 0 then
+		pings.syncArms(armMove)
 	end
+	
 end
-
--- Activate action
-setArmMove(armMove)
 
 -- Table setup
 local t = {}
@@ -138,14 +140,19 @@ t.movePage = action_wheel:newAction()
 -- Update action page info
 function events.TICK()
 	
-	t.movePage
-		:title(toJson
-			{"",
-			{text = "Arm Movement Toggle\n\n", bold = true, color = color.primary},
-			{text = "Toggles the movement swing movement of the arms.\nActions are not effected.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
+	if action_wheel:isEnabled() then
+		t.movePage
+			:title(toJson
+				{"",
+				{text = "Arm Movement Toggle\n\n", bold = true, color = color.primary},
+				{text = "Toggles the movement swing movement of the arms.\nActions are not effected.", color = color.secondary}}
+			)
+		
+		for _, page in pairs(t) do
+			page:hoverColor(color.hover):toggleColor(color.active)
+		end
+		
+	end
 	
 end
 

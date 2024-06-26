@@ -26,9 +26,13 @@ local skin = {
 	
 	merlingParts.leftArmDefault,
 	merlingParts.leftArmSlim,
+	merlingParts.leftArmDefaultFP,
+	merlingParts.leftArmSlimFP,
 	
 	merlingParts.rightArmDefault,
 	merlingParts.rightArmSlim,
+	merlingParts.rightArmDefaultFP,
+	merlingParts.rightArmSlimFP,
 	
 	merlingParts.LeftLeg.Leg,
 	merlingParts.LeftLeg.Layer,
@@ -55,11 +59,15 @@ local layer = {
 	},
 	LEFT_SLEEVE = {
 		merlingParts.leftArmDefault.Layer,
-		merlingParts.leftArmSlim.Layer
+		merlingParts.leftArmSlim.Layer,
+		merlingParts.leftArmDefaultFP.Layer,
+		merlingParts.leftArmSlimFP.Layer
 	},
 	RIGHT_SLEEVE = {
 		merlingParts.rightArmDefault.Layer,
-		merlingParts.rightArmSlim.Layer
+		merlingParts.rightArmSlim.Layer,
+		merlingParts.rightArmDefaultFP.Layer,
+		merlingParts.rightArmSlimFP.Layer
 	},
 	LEFT_PANTS_LEG = {
 		merlingParts.LeftLeg.Layer
@@ -127,9 +135,13 @@ function events.TICK()
 	
 	merlingParts.leftArmDefault:visible(not slimShape)
 	merlingParts.rightArmDefault:visible(not slimShape)
+	merlingParts.leftArmDefaultFP:visible(not slimShape)
+	merlingParts.rightArmDefaultFP:visible(not slimShape)
 	
 	merlingParts.leftArmSlim:visible(slimShape)
 	merlingParts.rightArmSlim:visible(slimShape)
+	merlingParts.leftArmSlimFP:visible(slimShape)
+	merlingParts.rightArmSlimFP:visible(slimShape)
 	
 	-- Skin textures
 	local skinType = vanillaSkin and "SKIN" or "PRIMARY"
@@ -156,7 +168,7 @@ function events.TICK()
 end
 
 -- Vanilla skin toggle
-local function setVanillaSkin(boolean)
+function pings.setAvatarVanillaSkin(boolean)
 	
 	vanillaSkin = boolean
 	config:save("AvatarVanillaSkin", vanillaSkin)
@@ -164,7 +176,7 @@ local function setVanillaSkin(boolean)
 end
 
 -- Model type toggle
-local function setModelType(boolean)
+function pings.setAvatarModelType(boolean)
 	
 	slim = boolean
 	config:save("AvatarSlim", slim)
@@ -172,32 +184,24 @@ local function setModelType(boolean)
 end
 
 -- Sync variables
-local function syncPlayer(a, b)
+function pings.syncPlayer(a, b)
 	
 	vanillaSkin = a
 	slim = b
 	
 end
 
--- Pings setup
-pings.setAvatarVanillaSkin = setVanillaSkin
-pings.setAvatarModelType   = setModelType
-pings.syncPlayer           = syncPlayer
+-- Host only instructions
+if not host:isHost() then return end
 
 -- Sync on tick
-if host:isHost() then
-	function events.TICK()
-		
-		if world.getTime() % 200 == 0 then
-			pings.syncPlayer(vanillaSkin, slim)
-		end
-		
+function events.TICK()
+	
+	if world.getTime() % 200 == 0 then
+		pings.syncPlayer(vanillaSkin, slim)
 	end
+	
 end
-
--- Activate actions
-setVanillaSkin(vanillaSkin)
-setModelType(slim)
 
 -- Setup table
 local t = {}
@@ -217,23 +221,26 @@ t.modelPage = action_wheel:newAction()
 -- Update action page info
 function events.TICK()
 	
-	t.vanillaSkinPage
-		:title(toJson
-			{"",
-			{text = "Toggle Vanilla Texture\n\n", bold = true, color = color.primary},
-			{text = "Toggles the usage of your vanilla skin.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-	
-	t.modelPage
-		:title(toJson
-			{"",
-			{text = "Toggle Model Shape\n\n", bold = true, color = color.primary},
-			{text = "Adjust the model shape to use Default or Slim Proportions.\nWill be overridden by the vanilla skin toggle.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
+	if action_wheel:isEnabled() then
+		t.vanillaSkinPage
+			:title(toJson
+				{"",
+				{text = "Toggle Vanilla Texture\n\n", bold = true, color = color.primary},
+				{text = "Toggles the usage of your vanilla skin.", color = color.secondary}}
+			)
+		
+		t.modelPage
+			:title(toJson
+				{"",
+				{text = "Toggle Model Shape\n\n", bold = true, color = color.primary},
+				{text = "Adjust the model shape to use Default or Slim Proportions.\nWill be overridden by the vanilla skin toggle.", color = color.secondary}}
+			)
+		
+		for _, page in pairs(t) do
+			page:hoverColor(color.hover):toggleColor(color.active)
+		end
+		
+	end
 	
 end
 

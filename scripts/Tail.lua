@@ -8,14 +8,12 @@ local color        = require("scripts.ColorProperties")
 
 -- Config setup
 config:name("Merling")
-local active    = config:load("TailActive")
-local water     = config:load("TailWater") or 3
+local water     = config:load("TailWater") or 4
 local small     = config:load("TailSmall")
 local ears      = config:load("TailEars")
 local canDry    = config:load("TailDry")
 local dryTimer  = config:load("TailDryTimer") or 400
 local fallSound = config:load("TailFallSound")
-if active    == nil then active = true end
 if small     == nil then small = true end
 if ears      == nil then ears = true end
 if canDry    == nil then canDry = true end
@@ -67,6 +65,7 @@ function events.TICK()
 	
 	-- Water state table
 	local waterState = {
+		dryTimer + 1,
 		waterTicks.under,
 		waterTicks.water,
 		waterTicks.wet,
@@ -74,9 +73,9 @@ function events.TICK()
 	}
 	
 	-- Target
-	scale.target      = active and waterState[water] <= (canDry and dryTimer or 20) and 1 or 0
-	smallScale.target = active and small and 1 or 0
-	earsScale.target  = active and ears and 1 or 0
+	scale.target      = waterState[water] <= (canDry and dryTimer or 20) and 1 or 0
+	smallScale.target = small and 1 or 0
+	earsScale.target  = ears and 1 or 0
 	
 	-- Tick lerp
 	scale.current       = scale.nextTick
@@ -127,20 +126,12 @@ function events.RENDER(delta, context)
 	
 end
 
--- Active toggle
-local function setActive(boolean)
-	
-	active = boolean
-	config:save("TailActive", active)
-	
-end
-
 -- Water sensitivity
-local function setWater(i)
+function pings.setTailWater(i)
 	
 	water = water + i
-	if water > 4 then water = 1 end
-	if water < 1 then water = 4 end
+	if water > 5 then water = 1 end
+	if water < 1 then water = 5 end
 	if player:isLoaded() and host:isHost() and i ~= 0 then
 		sounds:playSound("ambient.underwater.enter", player:getPos(), 0.35)
 	end
@@ -149,7 +140,7 @@ local function setWater(i)
 end
 
 -- Small toggle
-local function setSmall(boolean)
+function pings.setTailSmall(boolean)
 	
 	small = boolean
 	config:save("TailSmall", small)
@@ -157,7 +148,7 @@ local function setSmall(boolean)
 end
 
 -- Ears toggle
-local function setEars(boolean)
+function pings.setTailEars(boolean)
 	
 	ears = boolean
 	config:save("TailEars", ears)
@@ -165,7 +156,7 @@ local function setEars(boolean)
 end
 
 -- Dry toggle
-local function setDry(boolean)
+function pings.setTailDry(boolean)
 	
 	canDry = boolean
 	config:save("TailDry", canDry)
@@ -181,7 +172,7 @@ local function setDryTimer(x)
 end
 
 -- Sound toggle
-local function setFallSound(boolean)
+function pings.setTailFallSound(boolean)
 
 	fallSound = boolean
 	config:save("TailFallSound", fallSound)
@@ -192,30 +183,23 @@ local function setFallSound(boolean)
 end
 
 -- Sync variables
-local function syncTail(a, b, c, d, e, x, f)
+function pings.syncTail(a, b, c, d, e, f)
 	
-	active    = a
-	water     = b
-	small     = c
-	ears      = d
-	canDry    = e
-	dryTimer  = x
+	water     = a
+	small     = b
+	ears      = c
+	canDry    = d
+	dryTimer  = e
 	fallSound = f
 	
 end
 
--- Pings setup
-pings.setTailActive    = setActive
-pings.setTailWater     = setWater
-pings.setTailSmall     = setSmall
-pings.setTailEars      = setEars
-pings.setTailDry       = setDry
-pings.setTailFallSound = setFallSound
-pings.syncTail         = syncTail
+-- Host only instructions
+if not host:isHost() then return end
 
 -- Tail Keybind
-local tailBind   = config:load("TailActiveKeybind") or "key.keyboard.keypad.1"
-local setTailKey = keybinds:newKeybind("Merling Toggle"):onPress(function() pings.setTailActive(not active) end):key(tailBind)
+local waterBind   = config:load("TailWaterKeybind") or "key.keyboard.keypad.1"
+local setWaterKey = keybinds:newKeybind("Merling Water Type"):onPress(function() pings.setTailWater(1) end):key(waterBind)
 
 -- Small Tail keybind
 local smallBind   = config:load("TailSmallKeybind") or "key.keyboard.keypad.2"
@@ -228,12 +212,12 @@ local setEarsKey = keybinds:newKeybind("Ears Toggle"):onPress(function() pings.s
 -- Keybind updaters
 function events.TICK()
 	
-	local tailKey  = setTailKey:getKey()
+	local waterKey = setWaterKey:getKey()
 	local smallKey = setSmallKey:getKey()
 	local earsKey  = setEarsKey:getKey()
-	if tailKey ~= tailBind then
-		tailBind = tailKey
-		config:save("TailActiveKeybind", tailKey)
+	if waterKey ~= waterBind then
+		waterBind = waterKey
+		config:save("TailWaterKeybind", waterKey)
 	end
 	if smallKey ~= smallBind then
 		smallBind = smallKey
@@ -247,33 +231,18 @@ function events.TICK()
 end
 
 -- Sync on tick
-if host:isHost() then
-	function events.TICK()
-		
-		if world.getTime() % 200 == 0 then
-			pings.syncTail(active, water, small, ears, canDry, dryTimer, fallSound)
-		end
-		
+function events.TICK()
+	
+	if world.getTime() % 200 == 0 then
+		pings.syncTail(water, small, ears, canDry, dryTimer, fallSound)
 	end
+	
 end
-
--- Activate actions
-setActive(active)
-setWater(0)
-setSmall(small)
-setEars(ears)
-setDry(canDry)
-setFallSound(fallSound)
 
 -- Table setup
 local t = {}
 
 -- Action wheel pages
-t.activePage = action_wheel:newAction()
-	:item(itemCheck("rabbit_foot"))
-	:toggleItem(itemCheck("tropical_fish"))
-	:onToggle(pings.setTailActive)
-
 t.waterPage = action_wheel:newAction()
 	:onLeftClick(function() pings.setTailWater(1)end)
 	:onRightClick(function() pings.setTailWater(-1) end)
@@ -305,23 +274,28 @@ t.soundPage = action_wheel:newAction()
 -- Water context info table
 local waterInfo = {
 	{
-		title = {label = {text = "Low", color = "red"}, text = "Reactive to being underwater."},
+		title = {label = {text = "None", color = "red"}, text = "Tail cannot form."},
 		item  = "glass_bottle",
 		color = "FF5555"
 	},
 	{
-		title = {label = {text = "Medium", color = "yellow"}, text = "Reactive to being in water."},
+		title = {label = {text = "Low", color = "yellow"}, text = "Reactive to being underwater."},
 		item  = "potion",
 		color = "FFFF55"
 	},
 	{
-		title = {label = {text = "High", color = "green"}, text = "Reactive to any form of water."},
+		title = {label = {text = "Medium", color = "green"}, text = "Reactive to being in water."},
 		item  = "splash_potion",
 		color = "55FF55"
 	},
 	{
-		title = {label = {text = "Max", color = "blue"}, text = "Always active."},
+		title = {label = {text = "High", color = "aqua"}, text = "Reactive to any form of water."},
 		item  = "lingering_potion",
+		color = "55FFFF"
+	},
+	{
+		title = {label = {text = "Max", color = "blue"}, text = "Tail is always active."},
+		item  = "dragon_breath",
 		color = "5555FF"
 	}
 }
@@ -329,71 +303,58 @@ local waterInfo = {
 -- Update action page info
 function events.TICK()
 	
-	t.activePage
-		:title(toJson
-			{"",
-			{text = "Toggle Merling Functionality\n\n", bold = true, color = color.primary},
-			{text = "Toggles the ability for Merling attributes to appear.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-		:toggled(active)
-	
-	t.waterPage
-		:title(toJson
-			{"",
-			{text = "Water Sensitivity\n\n", bold = true, color = color.primary},
-			{text = "Determines how your tail should form in contact with water.\n\n", color = color.secondary},
-			{text = "Current configuration: ", bold = true, color = color.secondary},
-			{text = waterInfo[water].title.label.text, color = waterInfo[water].title.label.color},
-			{text = " | "},
-			{text = waterInfo[water].title.text, color = color.secondary}}
-		)
+	if action_wheel:isEnabled() then
+		t.waterPage
+			:title(toJson
+				{"",
+				{text = "Water Sensitivity\n\n", bold = true, color = color.primary},
+				{text = "Determines how your tail should form in contact with water.\n\n", color = color.secondary},
+				{text = "Current configuration: ", bold = true, color = color.secondary},
+				{text = waterInfo[water].title.label.text, color = waterInfo[water].title.label.color},
+				{text = " | "},
+				{text = waterInfo[water].title.text, color = color.secondary}}
+			)
+			:color(vectors.hexToRGB(waterInfo[water].color))
+			:item(itemCheck(waterInfo[water].item.."{'CustomPotionColor':" .. tostring(0x0094FF) .. "}"))
 		
-		:color(vectors.hexToRGB(waterInfo[water].color))
-		:hoverColor(color.hover)
-		:item(itemCheck(waterInfo[water].item.."{'CustomPotionColor':" .. tostring(0x0094FF) .. "}"))
-	
-	t.earsPage
-		:title(toJson
-			{"",
-			{text = "Toggle Ears\n\n", bold = true, color = color.primary},
-			{text = "Toggles the appearence of your ears.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-		:toggled(ears)
-	
-	t.smallPage
-		:title(toJson
-			{"",
-			{text = "Toggle Small Tail\n\n", bold = true, color = color.primary},
-			{text = "When outside water, toggles the appearence of the tail into a smaller tail.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-		:toggled(small)
-	
-	t.dryPage
-		:title(toJson
-			{"",
-			{text = "Toggle Drying/Timer\n\n", bold = true, color = color.primary},
-			{text = "Toggles the gradual drying of your tail until your legs form again.\n\n", color = color.secondary},
-			{text = "Current drying timer: ", bold = true, color = color.secondary},
-			{text = (canDry and ((dryTimer / 20).." Seconds") or "None").."\n\n"},
-			{text = "Scroll to adjust the timer.\nRight click resets timer to 20 seconds.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-	
-	t.soundPage
-		:title(toJson
-			{"",
-			{text = "Toggle Flop Sound\n\n", bold = true, color = color.primary},
-			{text = "Toggles flopping sound effects when landing on the ground.\nIf tail can dry, volume will gradually decrease over time until dry.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
+		t.earsPage
+			:title(toJson
+				{"",
+				{text = "Toggle Ears\n\n", bold = true, color = color.primary},
+				{text = "Toggles the appearence of your ears.", color = color.secondary}}
+			)
+			:toggled(ears)
+		
+		t.smallPage
+			:title(toJson
+				{"",
+				{text = "Toggle Small Tail\n\n", bold = true, color = color.primary},
+				{text = "Toggles the appearence of the tail into a smaller tail, only if the tail cannot form.", color = color.secondary}}
+			)
+			:toggled(small)
+		
+		t.dryPage
+			:title(toJson
+				{"",
+				{text = "Toggle Drying/Timer\n\n", bold = true, color = color.primary},
+				{text = "Toggles the gradual drying of your tail until your legs form again.\n\n", color = color.secondary},
+				{text = "Current drying timer: ", bold = true, color = color.secondary},
+				{text = (canDry and ((dryTimer / 20).." Seconds") or "None").."\n\n"},
+				{text = "Scroll to adjust the timer.\nRight click resets timer to 20 seconds.", color = color.secondary}}
+			)
+		
+		t.soundPage
+			:title(toJson
+				{"",
+				{text = "Toggle Flop Sound\n\n", bold = true, color = color.primary},
+				{text = "Toggles flopping sound effects when landing on the ground.\nIf tail can dry, volume will gradually decrease over time until dry.", color = color.secondary}}
+			)
+		
+		for _, page in pairs(t) do
+			page:hoverColor(color.hover):toggleColor(color.active)
+		end
+		
+	end
 	
 end
 

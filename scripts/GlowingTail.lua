@@ -95,7 +95,7 @@ function events.RENDER(delta, context)
 end
 
 -- Glow toggle
-local function setToggle(boolean)
+function pings.setGlowToggle(boolean)
 	
 	toggle = boolean
 	config:save("GlowToggle", toggle)
@@ -106,7 +106,7 @@ local function setToggle(boolean)
 end
 
 -- Dynamic toggle
-local function setDynamic(boolean)
+function pings.setGlowDynamic(boolean)
 	
 	dynamic = boolean
 	config:save("GlowDynamic", dynamic)
@@ -117,7 +117,7 @@ local function setDynamic(boolean)
 end
 
 -- Water toggle
-local function setWater(boolean)
+function pings.setGlowWater(boolean)
 	
 	water = boolean
 	config:save("GlowWater", water)
@@ -128,7 +128,7 @@ local function setWater(boolean)
 end
 
 -- Sync variables
-local function syncGlow(a, b, c)
+function pings.syncGlow(a, b, c)
 	
 	toggle  = a
 	dynamic = b
@@ -136,11 +136,8 @@ local function syncGlow(a, b, c)
 	
 end
 
--- Pings setup
-pings.setGlowToggle  = setToggle
-pings.setGlowDynamic = setDynamic
-pings.setGlowWater   = setWater
-pings.syncGlow       = syncGlow
+-- Host only instructions
+if not host:isHost() then return end
 
 -- Keybind
 local toggleBind   = config:load("GlowToggleKeybind") or "key.keyboard.keypad.4"
@@ -158,20 +155,13 @@ function events.TICK()
 end
 
 -- Sync on tick
-if host:isHost() then
-	function events.TICK()
-		
-		if world.getTime() % 200 == 0 then
-			pings.syncGlow(toggle, dynamic, water)
-		end
-		
+function events.TICK()
+	
+	if world.getTime() % 200 == 0 then
+		pings.syncGlow(toggle, dynamic, water)
 	end
+	
 end
-
--- Activate actions
-setToggle(toggle)
-setDynamic(dynamic)
-setWater(water)
 
 -- Setup table
 local t = {}
@@ -196,36 +186,37 @@ t.waterPage = action_wheel:newAction()
 -- Update action page info
 function events.TICK()
 	
-	t.togglePage
-		:title(toJson
-			{"",
-			{text = "Toggle Glowing\n\n", bold = true, color = color.primary},
-			{text = "Toggles glowing for the tail, and misc parts.\n\n", color = color.secondary},
-			{text = "WARNING: ", bold = true, color = "dark_red"},
-			{text = "This feature has a tendency to not work correctly.\nDue to the rendering properties of emissives, the eyes may not glow.\nIf it does not work, please reload the avatar. Rinse and Repeat.\nThis is the only fix, I have tried everything.\n\n- Total", color = "red"}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-		:toggled(toggle)
-	
-	t.dynamicPage
-		:title(toJson
-			{"",
-			{text = "Toggle Dynamic Glowing\n\n", bold = true, color = color.primary},
-			{text = "Toggles glowing based on lightlevel.\nThe darker the location, the brighter your tail glows.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-		:toggleItem(itemCheck("light{BlockStateTag:{level:"..world.getLightLevel(player:getPos()).."}}"))
-	
-	t.waterPage
-		:title(toJson
-			{"",
-			{text = "Toggle Water Glowing\n\n", bold = true, color = color.primary},
-			{text = "Toggles the glowing sensitivity to water.\nAny water will cause your tail to glow.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
+	if action_wheel:isEnabled() then
+		t.togglePage
+			:title(toJson
+				{"",
+				{text = "Toggle Glowing\n\n", bold = true, color = color.primary},
+				{text = "Toggles glowing for the tail, and misc parts.\n\n", color = color.secondary},
+				{text = "WARNING: ", bold = true, color = "dark_red"},
+				{text = "This feature has a tendency to not work correctly.\nDue to the rendering properties of emissives, the tail may not glow.\nIf it does not work, please reload the avatar. Rinse and Repeat.\nThis is the only fix, I have tried everything.\n\n- Total", color = "red"}}
+			)
+			:toggled(toggle)
+		
+		t.dynamicPage
+			:title(toJson
+				{"",
+				{text = "Toggle Dynamic Glowing\n\n", bold = true, color = color.primary},
+				{text = "Toggles glowing based on lightlevel.\nThe darker the location, the brighter your tail glows.", color = color.secondary}}
+			)
+			:toggleItem(itemCheck("light{BlockStateTag:{level:"..world.getLightLevel(player:getPos()).."}}"))
+		
+		t.waterPage
+			:title(toJson
+				{"",
+				{text = "Toggle Water Glowing\n\n", bold = true, color = color.primary},
+				{text = "Toggles the glowing sensitivity to water.\nAny water will cause your tail to glow.", color = color.secondary}}
+			)
+		
+		for _, page in pairs(t) do
+			page:hoverColor(color.hover):toggleColor(color.active)
+		end
+		
+	end
 	
 end
 
