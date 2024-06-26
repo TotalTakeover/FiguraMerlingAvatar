@@ -284,19 +284,19 @@ local waterInfo = {
 		color = "FFFF55"
 	},
 	{
-		title = {label = {text = "Medium", color = "aqua"}, text = "Reactive to being in water."},
+		title = {label = {text = "Medium", color = "green"}, text = "Reactive to being in water."},
 		item  = "splash_potion",
+		color = "55FF55"
+	},
+	{
+		title = {label = {text = "High", color = "aqua"}, text = "Reactive to any form of water."},
+		item  = "lingering_potion",
 		color = "55FFFF"
 	},
 	{
-		title = {label = {text = "High", color = "blue"}, text = "Reactive to any form of water."},
-		item  = "lingering_potion",
-		color = "5555FF"
-	},
-	{
-		title = {label = {text = "Max", color = "dark_blue"}, text = "Tail is always active."},
+		title = {label = {text = "Max", color = "blue"}, text = "Tail is always active."},
 		item  = "dragon_breath",
-		color = "0000AA"
+		color = "5555FF"
 	}
 }
 
