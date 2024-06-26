@@ -6,7 +6,16 @@ local color        = require("scripts.ColorProperties")
 
 -- Config setup
 config:name("Merling")
-local camPos = config:load("CameraPos") or false
+local camPos       = config:load("CameraPos") or false
+local savedServers = config:load("CameraServers") or {}
+
+-- Get server id
+local serverData = client:getServerData()
+local serverId   = serverData.ip and serverData.ip or serverData.name
+
+-- Establish server, and set eyePos to server
+savedServers[serverId] = savedServers[serverId] or false
+local eyePos = savedServers[serverId]
 
 -- Variable setup
 local head = merlingParts.Head
@@ -148,6 +157,8 @@ end
 function pings.setCameraEye(boolean)
 	
 	eyePos = boolean
+	savedServers[serverId] = boolean
+	config:save("CameraServers", savedServers)
 	
 end
 
@@ -185,6 +196,7 @@ t.eyePage = action_wheel:newAction()
 	:item(itemCheck("ender_pearl"))
 	:toggleItem(itemCheck("ender_eye"))
 	:onToggle(pings.setCameraEye)
+	:toggled(eyePos)
 
 -- Update action page info
 function events.TICK()
