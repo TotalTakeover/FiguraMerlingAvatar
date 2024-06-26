@@ -8,8 +8,7 @@ local color        = require("scripts.ColorProperties")
 
 -- Config setup
 config:name("Merling")
-local active    = config:load("TailActive")
-local water     = config:load("TailWater") or 3
+local water     = config:load("TailWater") or 4
 local small     = config:load("TailSmall")
 local ears      = config:load("TailEars")
 local canDry    = config:load("TailDry")
@@ -67,6 +66,7 @@ function events.TICK()
 	
 	-- Water state table
 	local waterState = {
+		dryTimer + 1,
 		waterTicks.under,
 		waterTicks.water,
 		waterTicks.wet,
@@ -74,9 +74,9 @@ function events.TICK()
 	}
 	
 	-- Target
-	scale.target      = active and waterState[water] <= (canDry and dryTimer or 20) and 1 or 0
-	smallScale.target = active and small and 1 or 0
-	earsScale.target  = active and ears and 1 or 0
+	scale.target      = waterState[water] <= (canDry and dryTimer or 20) and 1 or 0
+	smallScale.target = small and 1 or 0
+	earsScale.target  = ears and 1 or 0
 	
 	-- Tick lerp
 	scale.current       = scale.nextTick
@@ -127,20 +127,12 @@ function events.RENDER(delta, context)
 	
 end
 
--- Active toggle
-local function setActive(boolean)
-	
-	active = boolean
-	config:save("TailActive", active)
-	
-end
-
 -- Water sensitivity
 local function setWater(i)
 	
 	water = water + i
-	if water > 4 then water = 1 end
-	if water < 1 then water = 4 end
+	if water > 5 then water = 1 end
+	if water < 1 then water = 5 end
 	if player:isLoaded() and host:isHost() and i ~= 0 then
 		sounds:playSound("ambient.underwater.enter", player:getPos(), 0.35)
 	end
@@ -192,20 +184,18 @@ local function setFallSound(boolean)
 end
 
 -- Sync variables
-local function syncTail(a, b, c, d, e, x, f)
+function pings.syncTail(a, b, c, d, e, f)
 	
-	active    = a
-	water     = b
-	small     = c
-	ears      = d
-	canDry    = e
-	dryTimer  = x
+	water     = a
+	small     = b
+	ears      = c
+	canDry    = d
+	dryTimer  = e
 	fallSound = f
 	
 end
 
 -- Pings setup
-pings.setTailActive    = setActive
 pings.setTailWater     = setWater
 pings.setTailSmall     = setSmall
 pings.setTailEars      = setEars
@@ -214,8 +204,8 @@ pings.setTailFallSound = setFallSound
 pings.syncTail         = syncTail
 
 -- Tail Keybind
-local tailBind   = config:load("TailActiveKeybind") or "key.keyboard.keypad.1"
-local setTailKey = keybinds:newKeybind("Merling Toggle"):onPress(function() pings.setTailActive(not active) end):key(tailBind)
+local waterBind   = config:load("TailWaterKeybind") or "key.keyboard.keypad.1"
+local setWaterKey = keybinds:newKeybind("Merling Water Type"):onPress(function() pings.setTailWater(1) end):key(waterBind)
 
 -- Small Tail keybind
 local smallBind   = config:load("TailSmallKeybind") or "key.keyboard.keypad.2"
@@ -228,12 +218,12 @@ local setEarsKey = keybinds:newKeybind("Ears Toggle"):onPress(function() pings.s
 -- Keybind updaters
 function events.TICK()
 	
-	local tailKey  = setTailKey:getKey()
+	local waterKey = setWaterKey:getKey()
 	local smallKey = setSmallKey:getKey()
 	local earsKey  = setEarsKey:getKey()
-	if tailKey ~= tailBind then
-		tailBind = tailKey
-		config:save("TailActiveKeybind", tailKey)
+	if waterKey ~= waterBind then
+		waterBind = waterKey
+		config:save("TailWaterKeybind", waterKey)
 	end
 	if smallKey ~= smallBind then
 		smallBind = smallKey
@@ -251,14 +241,13 @@ if host:isHost() then
 	function events.TICK()
 		
 		if world.getTime() % 200 == 0 then
-			pings.syncTail(active, water, small, ears, canDry, dryTimer, fallSound)
 		end
 		
+		pings.syncTail(water, small, ears, canDry, dryTimer, fallSound)
 	end
 end
 
 -- Activate actions
-setActive(active)
 setWater(0)
 setSmall(small)
 setEars(ears)
@@ -269,11 +258,6 @@ setFallSound(fallSound)
 local t = {}
 
 -- Action wheel pages
-t.activePage = action_wheel:newAction()
-	:item(itemCheck("rabbit_foot"))
-	:toggleItem(itemCheck("tropical_fish"))
-	:onToggle(pings.setTailActive)
-
 t.waterPage = action_wheel:newAction()
 	:onLeftClick(function() pings.setTailWater(1)end)
 	:onRightClick(function() pings.setTailWater(-1) end)
@@ -305,39 +289,34 @@ t.soundPage = action_wheel:newAction()
 -- Water context info table
 local waterInfo = {
 	{
-		title = {label = {text = "Low", color = "red"}, text = "Reactive to being underwater."},
+		title = {label = {text = "None", color = "red"}, text = "Tail cannot form."},
 		item  = "glass_bottle",
 		color = "FF5555"
 	},
 	{
-		title = {label = {text = "Medium", color = "yellow"}, text = "Reactive to being in water."},
+		title = {label = {text = "Low", color = "yellow"}, text = "Reactive to being underwater."},
 		item  = "potion",
 		color = "FFFF55"
 	},
 	{
-		title = {label = {text = "High", color = "green"}, text = "Reactive to any form of water."},
+		title = {label = {text = "Medium", color = "aqua"}, text = "Reactive to being in water."},
 		item  = "splash_potion",
-		color = "55FF55"
+		color = "55FFFF"
 	},
 	{
-		title = {label = {text = "Max", color = "blue"}, text = "Always active."},
+		title = {label = {text = "High", color = "blue"}, text = "Reactive to any form of water."},
 		item  = "lingering_potion",
 		color = "5555FF"
+	},
+	{
+		title = {label = {text = "Max", color = "dark_blue"}, text = "Tail is always active."},
+		item  = "dragon_breath",
+		color = "0000AA"
 	}
 }
 
 -- Update action page info
 function events.TICK()
-	
-	t.activePage
-		:title(toJson
-			{"",
-			{text = "Toggle Merling Functionality\n\n", bold = true, color = color.primary},
-			{text = "Toggles the ability for Merling attributes to appear.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-		:toggled(active)
 	
 	t.waterPage
 		:title(toJson

@@ -189,7 +189,6 @@ pages.camera
 
 -- Tail actions
 pages.tail
-	:action( -1, tail.activePage)
 	:action( -1, tail.waterPage)
 	:action( -1, tail.smallPage)
 	:action( -1, tail.earsPage)
