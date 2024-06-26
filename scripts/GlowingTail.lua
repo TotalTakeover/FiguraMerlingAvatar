@@ -193,7 +193,7 @@ function events.TICK()
 				{text = "Toggle Glowing\n\n", bold = true, color = color.primary},
 				{text = "Toggles glowing for the tail, and misc parts.\n\n", color = color.secondary},
 				{text = "WARNING: ", bold = true, color = "dark_red"},
-				{text = "This feature has a tendency to not work correctly.\nDue to the rendering properties of emissives, the eyes may not glow.\nIf it does not work, please reload the avatar. Rinse and Repeat.\nThis is the only fix, I have tried everything.\n\n- Total", color = "red"}}
+				{text = "This feature has a tendency to not work correctly.\nDue to the rendering properties of emissives, the tail may not glow.\nIf it does not work, please reload the avatar. Rinse and Repeat.\nThis is the only fix, I have tried everything.\n\n- Total", color = "red"}}
 			)
 			:toggled(toggle)
 		
