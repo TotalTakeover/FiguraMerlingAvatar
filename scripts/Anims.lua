@@ -18,21 +18,21 @@ local isShark = config:load("TailShark") or false
 local isCrawl = config:load("TailCrawl") or false
 
 -- Table setup
-local t = {}
+local a = {}
 
 -- Animation variables
-t.time     = 0
-t.strength = 1
+a.time     = 0
+a.strength = 1
 
 -- Axis variables
-t.pitch    = 0
-t.yaw      = 0
-t.roll     = 0
-t.headY    = 0
+a.pitch    = 0
+a.yaw      = 0
+a.roll     = 0
+a.headY    = 0
 
 -- Animation types
-t.normal = isShark and 0 or 1
-t.shark  = isShark and 1 or 0
+a.normal = isShark and 0 or 1
+a.shark  = isShark and 1 or 0
 
 local canTwirl = false
 local isSing   = false
@@ -245,18 +245,19 @@ end
 function events.RENDER(delta, context)
 	
 	-- Render lerps
-	t.time     = math.lerp(time.prev, time.next, delta)
-	t.strength = math.lerp(strength.prev, strength.next, delta)
+	a.time     = math.lerp(time.prev, time.next, delta)
+	a.strength = math.lerp(strength.prev, strength.next, delta)
 	
-	t.pitch = math.lerp(pitch.current, pitch.nextTick, delta)
-	t.yaw   = math.lerp(yaw.current, yaw.nextTick, delta)
-	t.roll  = math.lerp(roll.current, roll.nextTick, delta)
+	a.pitch = math.lerp(pitch.current, pitch.nextTick, delta)
+	a.yaw   = math.lerp(yaw.current, yaw.nextTick, delta)
+	a.roll  = math.lerp(roll.current, roll.nextTick, delta)
 	
-	t.shark  = math.lerp(shark.current, shark.nextTick, delta)
-	t.normal = math.map(t.shark, 0, 1, 1 ,0)
+	a.shark  = math.lerp(shark.current, shark.nextTick, delta)
+	a.normal = math.map(a.shark, 0, 1, 1 ,0)
+	
 	
 	-- Head Y rot calc (for sleep offset)
-	t.headY = (vanilla_model.HEAD:getOriginRot().y + 180) % 360 - 180
+	a.headY = (vanilla_model.HEAD:getOriginRot().y + 180) % 360 - 180
 	
 end
 
@@ -287,7 +288,7 @@ function events.RENDER(delta, context)
 end
 
 -- Shark anim toggle
-local function setShark(boolean)
+function pings.setAnimShark(boolean)
 	
 	isShark = boolean
 	config:save("TailShark", isShark)
@@ -295,7 +296,7 @@ local function setShark(boolean)
 end
 
 -- Crawl anim toggle
-local function setCrawl(boolean)
+function pings.setAnimCrawl(boolean)
 	
 	isCrawl = boolean
 	config:save("TailCrawl", isCrawl)
@@ -303,7 +304,7 @@ local function setCrawl(boolean)
 end
 
 -- Play twirl anim
-local function playTwirl()
+function pings.animPlayTwirl()
 	
 	if canTwirl then
 		anims.twirl:play()
@@ -312,14 +313,14 @@ local function playTwirl()
 end
 
 -- Singing anim toggle
-local function setSing(boolean)
+function pings.setAnimSing(boolean)
 	
 	isSing = boolean
 	
 end
 
 -- Sync variables
-local function syncAnims(a, b, c)
+function pings.syncAnims(a, b, c)
 	
 	isShark = a
 	isCrawl = b
@@ -327,12 +328,8 @@ local function syncAnims(a, b, c)
 	
 end
 
--- Pings setup
-pings.setTailShark  = setShark
-pings.setTailCrawl  = setCrawl
-pings.animPlayTwirl = playTwirl
-pings.setAnimSing   = setSing
-pings.syncAnims     = syncAnims
+-- Host only instructions
+if not host:isHost() then return a end
 
 -- Twirl keybind
 local twirlBind   = config:load("AnimTwirlKeybind") or "key.keyboard.keypad.6"
@@ -359,19 +356,16 @@ function events.TICK()
 end
 
 -- Sync on tick
-if host:isHost() then
-	function events.TICK()
-		
-		if world.getTime() % 200 == 0 then
-			pings.syncAnims(isShark, isCrawl, isSing)
-		end
-		
+function events.TICK()
+	
+	if world.getTime() % 200 == 0 then
+		pings.syncAnims(isShark, isCrawl, isSing)
 	end
+	
 end
 
--- Activate actions
-setShark(isShark)
-setCrawl(isCrawl)
+-- Table setup
+local t = {}
 
 -- Action wheel pages
 t.sharkPage = action_wheel:newAction()
@@ -429,8 +423,18 @@ function events.TICK()
 		:hoverColor(color.hover)
 		:toggleColor(color.active)
 		:toggled(isSing)
+		
+		t.mountPage
+			:title(toJson
+				{"",
+				{text = "Set Mount Rotation\n\n", bold = true, color = color.primary},
+				{text = "Scroll to set the rotation of your tail while mounted/sitting.\n\n", color = color.secondary},
+				{text = "Current rotation: ", bold = true, color = color.secondary},
+				{text = math.round(mountRot * 90).."\n\n"},
+				{text = "Left click to reset back to default rotation.", color = color.secondary}}
+			)
 	
 end
 
 -- Returns animation variables/action wheel pages
-return t
+return a, t

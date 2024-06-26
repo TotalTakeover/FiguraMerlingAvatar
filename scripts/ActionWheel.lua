@@ -1,3 +1,6 @@
+-- Disables code if not avatar host
+if not host:isHost() then return end
+
 -- Required scripts
 local itemCheck = require("lib.ItemCheck")
 local avatar    = require("scripts.Player")
@@ -7,7 +10,7 @@ local tail      = require("scripts.Tail")
 local whirlpool = require("scripts.WhirlpoolEffect")
 local glow      = require("scripts.GlowingTail")
 local eyes      = require("scripts.GlowingEyes")
-local anims     = require("scripts.Anims")
+local _, anims  = require("scripts.Anims")
 local arms      = require("scripts.Arms")
 local color     = require("scripts.ColorProperties")
 
@@ -89,59 +92,57 @@ local pageActions = {
 -- Update action page info
 function events.TICK()
 	
-	pageActions.avatar
-		:title(toJson
-			{text = "Avatar Settings", bold = true, color = color.primary}
-		)
-		:hoverColor(color.hover)
-	
-	pageActions.tail
-		:title(toJson
-			{text = "Merling Settings", bold = true, color = color.primary}
-		)
-		:hoverColor(color.hover)
-	
-	pageActions.glow
-		:title(toJson
-			{text = "Glowing Settings", bold = true, color = color.primary}
-		)
-		:hoverColor(color.hover)
-	
-	pageActions.anims
-		:title(toJson
-			{text = "Animations", bold = true, color = color.primary}
-		)
-		:hoverColor(color.hover)
-	
-	pageActions.armor
-		:title(toJson
-			{text = "Armor Settings", bold = true, color = color.primary}
-		)
-		:hoverColor(color.hover)
-	
-	pageActions.camera
-		:title(toJson
-			{text = "Camera Settings", bold = true, color = color.primary}
-		)
-		:hoverColor(color.hover)
-	
-	pageActions.dry
-		:title(toJson
-			{text = "Drying Settings", bold = true, color = color.primary}
-		)
-		:hoverColor(color.hover)
-	
-	pageActions.whirlpool
-		:title(toJson
-			{text = "Whirlpool Settings", bold = true, color = color.primary}
-		)
-		:hoverColor(color.hover)
-	
-	pageActions.eyes
-		:title(toJson
-			{text = "Glowing Eyes Settings", bold = true, color = color.primary}
-		)
-		:hoverColor(color.hover)
+	if action_wheel:isEnabled() then
+		pageActions.avatar
+			:title(toJson
+				{text = "Avatar Settings", bold = true, color = color.primary}
+			)
+		
+		pageActions.tail
+			:title(toJson
+				{text = "Merling Settings", bold = true, color = color.primary}
+			)
+		
+		pageActions.glow
+			:title(toJson
+				{text = "Glowing Settings", bold = true, color = color.primary}
+			)
+		
+		pageActions.anims
+			:title(toJson
+				{text = "Animations", bold = true, color = color.primary}
+			)
+		
+		pageActions.armor
+			:title(toJson
+				{text = "Armor Settings", bold = true, color = color.primary}
+			)
+		
+		pageActions.camera
+			:title(toJson
+				{text = "Camera Settings", bold = true, color = color.primary}
+			)
+		
+		pageActions.dry
+			:title(toJson
+				{text = "Drying Settings", bold = true, color = color.primary}
+			)
+		
+		pageActions.whirlpool
+			:title(toJson
+				{text = "Whirlpool Settings", bold = true, color = color.primary}
+			)
+		
+		pageActions.eyes
+			:title(toJson
+				{text = "Glowing Eyes Settings", bold = true, color = color.primary}
+			)
+		
+		for _, page in pairs(pageActions) do
+			page:hoverColor(color.hover)
+		end
+		
+	end
 	
 end
 

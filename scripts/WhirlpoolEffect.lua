@@ -27,7 +27,7 @@ function events.TICK()
 end
 
 -- Bubbles toggle
-local function setBubbles(boolean)
+function pings.setWhirlpoolBubbles(boolean)
 	
 	bubbles = boolean
 	config:save("WhirlpoolBubbles", bubbles)
@@ -38,7 +38,7 @@ local function setBubbles(boolean)
 end
 
 -- Dolphins Grace toggle
-local function setDolphinsGrace(boolean)
+function pings.setWhirlpoolDolphinsGrace(boolean)
 	
 	dolphinsGrace = boolean
 	config:save("WhirlpoolDolphinsGrace", dolphinsGrace)
@@ -49,32 +49,24 @@ local function setDolphinsGrace(boolean)
 end
 
 -- Sync variables
-local function syncWhirlpool(a, b)
+function pings.syncWhirlpool(a, b)
 	
 	bubbles        = a
 	dolphinsGrace  = b
 	
 end
 
--- Pings setup
-pings.setWhirlpoolBubbles       = setBubbles
-pings.setWhirlpoolDolphinsGrace = setDolphinsGrace
-pings.syncWhirlpool             = syncWhirlpool
+-- Host only instructions
+if not host:isHost() then return end
 
 -- Sync on tick
-if host:isHost() then
-	function events.TICK()
-		
-		if world.getTime() % 200 == 0 then
-			pings.syncWhirlpool(bubbles, dolphinsGrace)
-		end
-		
+function events.TICK()
+	
+	if world.getTime() % 200 == 0 then
+		pings.syncWhirlpool(bubbles, dolphinsGrace)
 	end
+	
 end
-
--- Activate actions
-setBubbles(bubbles)
-setDolphinsGrace(dolphinsGrace)
 
 -- Table setup
 local t = {}
@@ -95,23 +87,26 @@ t.dolphinsGracePage = action_wheel:newAction()
 -- Update action page info
 function events.TICK()
 	
-	t.bubblePage
-		:title(toJson
-			{"",
-			{text = "Whirlpool Effect Toggle\n\n", bold = true, color = color.primary},
-			{text = "Toggles the whirlpool created while swimming.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-	
-	t.dolphinsGracePage
-		:title(toJson
-			{"",
-			{text = "Dolphin's Grace Toggle\n\n", bold = true, color = color.primary},
-			{text = "Toggles the whirlpool based on having the Dolphin's Grace Effect.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
+	if action_wheel:isEnabled() then
+		t.bubblePage
+			:title(toJson
+				{"",
+				{text = "Whirlpool Effect Toggle\n\n", bold = true, color = color.primary},
+				{text = "Toggles the whirlpool created while swimming.", color = color.secondary}}
+			)
+		
+		t.dolphinsGracePage
+			:title(toJson
+				{"",
+				{text = "Dolphin's Grace Toggle\n\n", bold = true, color = color.primary},
+				{text = "Toggles the whirlpool based on having the Dolphin's Grace Effect.", color = color.secondary}}
+			)
+		
+		for _, page in pairs(t) do
+			page:hoverColor(color.hover):toggleColor(color.active)
+		end
+		
+	end
 	
 end
 

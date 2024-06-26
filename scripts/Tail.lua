@@ -128,7 +128,7 @@ function events.RENDER(delta, context)
 end
 
 -- Water sensitivity
-local function setWater(i)
+function pings.setTailWater(i)
 	
 	water = water + i
 	if water > 5 then water = 1 end
@@ -141,7 +141,7 @@ local function setWater(i)
 end
 
 -- Small toggle
-local function setSmall(boolean)
+function pings.setTailSmall(boolean)
 	
 	small = boolean
 	config:save("TailSmall", small)
@@ -149,7 +149,7 @@ local function setSmall(boolean)
 end
 
 -- Ears toggle
-local function setEars(boolean)
+function pings.setTailEars(boolean)
 	
 	ears = boolean
 	config:save("TailEars", ears)
@@ -157,7 +157,7 @@ local function setEars(boolean)
 end
 
 -- Dry toggle
-local function setDry(boolean)
+function pings.setTailDry(boolean)
 	
 	canDry = boolean
 	config:save("TailDry", canDry)
@@ -173,7 +173,7 @@ local function setDryTimer(x)
 end
 
 -- Sound toggle
-local function setFallSound(boolean)
+function pings.setTailFallSound(boolean)
 
 	fallSound = boolean
 	config:save("TailFallSound", fallSound)
@@ -195,13 +195,8 @@ function pings.syncTail(a, b, c, d, e, f)
 	
 end
 
--- Pings setup
-pings.setTailWater     = setWater
-pings.setTailSmall     = setSmall
-pings.setTailEars      = setEars
-pings.setTailDry       = setDry
-pings.setTailFallSound = setFallSound
-pings.syncTail         = syncTail
+-- Host only instructions
+if not host:isHost() then return end
 
 -- Tail Keybind
 local waterBind   = config:load("TailWaterKeybind") or "key.keyboard.keypad.1"
@@ -237,22 +232,13 @@ function events.TICK()
 end
 
 -- Sync on tick
-if host:isHost() then
-	function events.TICK()
-		
-		if world.getTime() % 200 == 0 then
-		end
-		
+function events.TICK()
+	
+	if world.getTime() % 200 == 0 then
 		pings.syncTail(water, small, ears, canDry, dryTimer, fallSound)
 	end
+	
 end
-
--- Activate actions
-setWater(0)
-setSmall(small)
-setEars(ears)
-setDry(canDry)
-setFallSound(fallSound)
 
 -- Table setup
 local t = {}
@@ -318,61 +304,58 @@ local waterInfo = {
 -- Update action page info
 function events.TICK()
 	
-	t.waterPage
-		:title(toJson
-			{"",
-			{text = "Water Sensitivity\n\n", bold = true, color = color.primary},
-			{text = "Determines how your tail should form in contact with water.\n\n", color = color.secondary},
-			{text = "Current configuration: ", bold = true, color = color.secondary},
-			{text = waterInfo[water].title.label.text, color = waterInfo[water].title.label.color},
-			{text = " | "},
-			{text = waterInfo[water].title.text, color = color.secondary}}
-		)
+	if action_wheel:isEnabled() then
+		t.waterPage
+			:title(toJson
+				{"",
+				{text = "Water Sensitivity\n\n", bold = true, color = color.primary},
+				{text = "Determines how your tail should form in contact with water.\n\n", color = color.secondary},
+				{text = "Current configuration: ", bold = true, color = color.secondary},
+				{text = waterInfo[water].title.label.text, color = waterInfo[water].title.label.color},
+				{text = " | "},
+				{text = waterInfo[water].title.text, color = color.secondary}}
+			)
+			:color(vectors.hexToRGB(waterInfo[water].color))
+			:item(itemCheck(waterInfo[water].item.."{'CustomPotionColor':" .. tostring(0x0094FF) .. "}"))
 		
-		:color(vectors.hexToRGB(waterInfo[water].color))
-		:hoverColor(color.hover)
-		:item(itemCheck(waterInfo[water].item.."{'CustomPotionColor':" .. tostring(0x0094FF) .. "}"))
-	
-	t.earsPage
-		:title(toJson
-			{"",
-			{text = "Toggle Ears\n\n", bold = true, color = color.primary},
-			{text = "Toggles the appearence of your ears.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-		:toggled(ears)
-	
-	t.smallPage
-		:title(toJson
-			{"",
-			{text = "Toggle Small Tail\n\n", bold = true, color = color.primary},
-			{text = "When outside water, toggles the appearence of the tail into a smaller tail.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-		:toggled(small)
-	
-	t.dryPage
-		:title(toJson
-			{"",
-			{text = "Toggle Drying/Timer\n\n", bold = true, color = color.primary},
-			{text = "Toggles the gradual drying of your tail until your legs form again.\n\n", color = color.secondary},
-			{text = "Current drying timer: ", bold = true, color = color.secondary},
-			{text = (canDry and ((dryTimer / 20).." Seconds") or "None").."\n\n"},
-			{text = "Scroll to adjust the timer.\nRight click resets timer to 20 seconds.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-	
-	t.soundPage
-		:title(toJson
-			{"",
-			{text = "Toggle Flop Sound\n\n", bold = true, color = color.primary},
-			{text = "Toggles flopping sound effects when landing on the ground.\nIf tail can dry, volume will gradually decrease over time until dry.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
+		t.earsPage
+			:title(toJson
+				{"",
+				{text = "Toggle Ears\n\n", bold = true, color = color.primary},
+				{text = "Toggles the appearence of your ears.", color = color.secondary}}
+			)
+			:toggled(ears)
+		
+		t.smallPage
+			:title(toJson
+				{"",
+				{text = "Toggle Small Tail\n\n", bold = true, color = color.primary},
+				{text = "Toggles the appearence of the tail into a smaller tail, only if the tail cannot form.", color = color.secondary}}
+			)
+			:toggled(small)
+		
+		t.dryPage
+			:title(toJson
+				{"",
+				{text = "Toggle Drying/Timer\n\n", bold = true, color = color.primary},
+				{text = "Toggles the gradual drying of your tail until your legs form again.\n\n", color = color.secondary},
+				{text = "Current drying timer: ", bold = true, color = color.secondary},
+				{text = (canDry and ((dryTimer / 20).." Seconds") or "None").."\n\n"},
+				{text = "Scroll to adjust the timer.\nRight click resets timer to 20 seconds.", color = color.secondary}}
+			)
+		
+		t.soundPage
+			:title(toJson
+				{"",
+				{text = "Toggle Flop Sound\n\n", bold = true, color = color.primary},
+				{text = "Toggles flopping sound effects when landing on the ground.\nIf tail can dry, volume will gradually decrease over time until dry.", color = color.secondary}}
+			)
+		
+		for _, page in pairs(t) do
+			page:hoverColor(color.hover):toggleColor(color.active)
+		end
+		
+	end
 	
 end
 

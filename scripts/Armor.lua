@@ -197,7 +197,7 @@ function events.TICK()
 end
 
 -- Armor all toggle
-local function setAll(boolean)
+function pings.setArmorAll(boolean)
 	
 	helmet     = boolean
 	chestplate = boolean
@@ -214,7 +214,7 @@ local function setAll(boolean)
 end
 
 -- Armor helmet toggle
-local function setHelmet(boolean)
+function pings.setArmorHelmet(boolean)
 	
 	helmet = boolean
 	config:save("ArmorHelmet", helmet)
@@ -225,7 +225,7 @@ local function setHelmet(boolean)
 end
 
 -- Armor chestplate toggle
-local function setChestplate(boolean)
+function pings.setArmorChestplate(boolean)
 	
 	chestplate = boolean
 	config:save("ArmorChestplate", chestplate)
@@ -236,7 +236,7 @@ local function setChestplate(boolean)
 end
 
 -- Armor leggings toggle
-local function setLeggings(boolean)
+function pings.setArmorLeggings(boolean)
 	
 	leggings = boolean
 	config:save("ArmorLeggings", leggings)
@@ -247,7 +247,7 @@ local function setLeggings(boolean)
 end
 
 -- Armor boots toggle
-local function setBoots(boolean)
+function pings.setArmorBoots(boolean)
 	
 	boots = boolean
 	config:save("ArmorBoots", boots)
@@ -258,7 +258,7 @@ local function setBoots(boolean)
 end
 
 -- Sync variables
-local function syncArmor(a, b, c, d)
+function pings.syncArmor(a, b, c, d)
 	
 	helmet     = a
 	chestplate = b
@@ -267,30 +267,17 @@ local function syncArmor(a, b, c, d)
 	
 end
 
--- Pings setup
-pings.setArmorAll        = setAll
-pings.setArmorHelmet     = setHelmet
-pings.setArmorChestplate = setChestplate
-pings.setArmorLeggings   = setLeggings
-pings.setArmorBoots      = setBoots
-pings.syncArmor          = syncArmor
+-- Host only instructions
+if not host:isHost() then return end
 
 -- Sync on tick
-if host:isHost() then
-	function events.TICK()
-		
-		if world.getTime() % 200 == 0 then
-			pings.syncArmor(helmet, chestplate, leggings, boots)
-		end
-		
+function events.TICK()
+	
+	if world.getTime() % 200 == 0 then
+		pings.syncArmor(helmet, chestplate, leggings, boots)
 	end
+	
 end
-
--- Activate actions
-setHelmet(helmet)
-setChestplate(chestplate)
-setLeggings(leggings)
-setBoots(boots)
 
 -- Setup table
 local t = {}
@@ -324,55 +311,52 @@ t.bootsPage = action_wheel:newAction()
 -- Update action page info
 function events.TICK()
 	
-	t.allPage
-		:title(toJson
-			{"",
-			{text = "Toggle All Armor\n\n", bold = true, color = color.primary},
-			{text = "Toggles visibility of all armor parts.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-		:toggled(helmet and chestplate and leggings and boots)
-	
-	t.helmetPage
-		:title(toJson
-			{"",
-			{text = "Toggle Helmet\n\n", bold = true, color = color.primary},
-			{text = "Toggles visibility of helmet parts.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-		:toggled(helmet)
-	
-	t.chestplatePage
-		:title(toJson
-			{"",
-			{text = "Toggle Chestplate\n\n", bold = true, color = color.primary},
-			{text = "Toggles visibility of chestplate parts.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-		:toggled(chestplate)
-	
-	t.leggingsPage
-		:title(toJson
-			{"",
-			{text = "Toggle Leggings\n\n", bold = true, color = color.primary},
-			{text = "Toggles visibility of leggings parts.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-		:toggled(leggings)
-	
-	t.bootsPage
-		:title(toJson
-			{"",
-			{text = "Toggle Boots\n\n", bold = true, color = color.primary},
-			{text = "Toggles visibility of boots.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-		:toggled(boots)
+	if action_wheel:isEnabled() then
+		t.allPage
+			:title(toJson
+				{"",
+				{text = "Toggle All Armor\n\n", bold = true, color = color.primary},
+				{text = "Toggles visibility of all armor parts.", color = color.secondary}}
+			)
+			:toggled(helmet and chestplate and leggings and boots)
+		
+		t.helmetPage
+			:title(toJson
+				{"",
+				{text = "Toggle Helmet\n\n", bold = true, color = color.primary},
+				{text = "Toggles visibility of helmet parts.", color = color.secondary}}
+			)
+			:toggled(helmet)
+		
+		t.chestplatePage
+			:title(toJson
+				{"",
+				{text = "Toggle Chestplate\n\n", bold = true, color = color.primary},
+				{text = "Toggles visibility of chestplate parts.", color = color.secondary}}
+			)
+			:toggled(chestplate)
+		
+		t.leggingsPage
+			:title(toJson
+				{"",
+				{text = "Toggle Leggings\n\n", bold = true, color = color.primary},
+				{text = "Toggles visibility of leggings parts.", color = color.secondary}}
+			)
+			:toggled(leggings)
+		
+		t.bootsPage
+			:title(toJson
+				{"",
+				{text = "Toggle Boots\n\n", bold = true, color = color.primary},
+				{text = "Toggles visibility of boots.", color = color.secondary}}
+			)
+			:toggled(boots)
+		
+		for _, page in pairs(t) do
+			page:hoverColor(color.hover):toggleColor(color.active)
+		end
+		
+	end
 	
 end
 

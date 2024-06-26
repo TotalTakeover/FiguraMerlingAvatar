@@ -94,7 +94,7 @@ function events.RENDER(delta, context)
 end
 
 -- Arm movement toggle
-local function setArmMove(boolean)
+function pings.setAvatarArmMove(boolean)
 	
 	armMove = boolean
 	config:save("AvatarArmMove", armMove)
@@ -102,29 +102,23 @@ local function setArmMove(boolean)
 end
 
 -- Sync variable
-local function syncArms(a)
+function pings.syncArms(a)
 	
 	armMove = a
 	
 end
 
--- Ping setup
-pings.setAvatarArmMove = setArmMove
-pings.syncArms         = syncArms
+-- Host only instructions
+if not host:isHost() then return end
 
 -- Sync on tick
-if host:isHost() then
-	function events.TICK()
-		
-		if world.getTime() % 200 == 0 then
-			pings.syncArms(armMove)
-		end
-		
+function events.TICK()
+	
+	if world.getTime() % 200 == 0 then
+		pings.syncArms(armMove)
 	end
+	
 end
-
--- Activate action
-setArmMove(armMove)
 
 -- Table setup
 local t = {}
@@ -139,14 +133,19 @@ t.movePage = action_wheel:newAction()
 -- Update action page info
 function events.TICK()
 	
-	t.movePage
-		:title(toJson
-			{"",
-			{text = "Arm Movement Toggle\n\n", bold = true, color = color.primary},
-			{text = "Toggles the movement swing movement of the arms.\nActions are not effected.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
+	if action_wheel:isEnabled() then
+		t.movePage
+			:title(toJson
+				{"",
+				{text = "Arm Movement Toggle\n\n", bold = true, color = color.primary},
+				{text = "Toggles the movement swing movement of the arms.\nActions are not effected.", color = color.secondary}}
+			)
+		
+		for _, page in pairs(t) do
+			page:hoverColor(color.hover):toggleColor(color.active)
+		end
+		
+	end
 	
 end
 
