@@ -16,6 +16,8 @@ local anims = animations["models.Merling"]
 config:name("Merling")
 local isShark = config:load("TailShark") or false
 local isCrawl = config:load("TailCrawl") or false
+local mountDir = config:load("AnimMountDir") or false
+local mountRot = config:load("AnimMountRot") or 1
 
 -- Table setup
 local a = {}
@@ -69,6 +71,13 @@ local shark = {
 	current  = 0,
 	nextTick = 0,
 	target   = 0
+}
+
+local mountRotLerp = {
+	current    = mountRot,
+	nextTick   = mountRot,
+	target     = mountRot,
+	currentPos = mountRot
 }
 
 -- Set lerp start on init
@@ -209,22 +218,31 @@ function events.TICK()
 	yaw.nextTick   = math.lerp(yaw.nextTick,   yaw.target,   1)
 	roll.nextTick  = math.lerp(roll.nextTick,  roll.target,  0.1)
 	
+	-- Mount rot target
+	mountRotLerp.target = mountRot
+	
+	-- Tick lerp
+	mountRotLerp.current  = mountRotLerp.nextTick
+	mountRotLerp.nextTick = math.lerp(mountRotLerp.nextTick, mountRotLerp.target, 0.2)
+	
 	-- Animation states
-	local swim  = largeTail and ((not onGround and waterTicks.water < 20) or (pose.climb or pose.swim or pose.crawl or pose.elytra) or effects.cF) and not pose.sleep and not player:getVehicle()
-	local stand = largeTail and not isCrawl and groundAnim
-	local crawl = largeTail and     isCrawl and groundAnim
-	local small = not largeTail
-	local mount = largeTail and player:getVehicle()
-	local sleep = pose.sleep
-	local ears  = player:isUnderwater()
-	local sing  = isSing and not pose.sleep
+	local swim      = largeTail and ((not onGround and waterTicks.water < 20) or (pose.climb or pose.swim or pose.crawl or pose.elytra or player:getVehicle()) or effects.cF) and not pose.sleep
+	local stand     = largeTail and not isCrawl and groundAnim
+	local crawl     = largeTail and     isCrawl and groundAnim
+	local small     = not largeTail
+	local mountUp   = largeTail and player:getVehicle() and mountDir
+	local mountDown = largeTail and player:getVehicle() and not mountDir
+	local sleep     = pose.sleep
+	local ears      = player:isUnderwater()
+	local sing      = isSing and not pose.sleep
 	
 	-- Animations
 	anims.swim:playing(swim)
 	anims.stand:playing(stand)
 	anims.crawl:playing(crawl)
 	anims.small:playing(small)
-	anims.mount:playing(mount)
+	anims.mountUp:playing(mountUp)
+	anims.mountDown:playing(mountDown)
 	anims.sleep:playing(sleep)
 	anims.ears:playing(ears)
 	anims.sing:playing(sing)
@@ -255,22 +273,28 @@ function events.RENDER(delta, context)
 	a.shark  = math.lerp(shark.current, shark.nextTick, delta)
 	a.normal = math.map(a.shark, 0, 1, 1 ,0)
 	
+	mountRotLerp.currentPos = math.lerp(mountRotLerp.current, mountRotLerp.nextTick, delta)
 	
 	-- Head Y rot calc (for sleep offset)
 	a.headY = (vanilla_model.HEAD:getOriginRot().y + 180) % 360 - 180
+	
+	-- Animation blending
+	anims.mountUp:blend(mountRotLerp.currentPos)
+	anims.mountDown:blend(mountRotLerp.currentPos)
 	
 end
 
 -- GS Blending Setup
 local blendAnims = {
-	{ anim = anims.swim,  ticks = {7,7} },
-	{ anim = anims.stand, ticks = {7,7} },
-	{ anim = anims.crawl, ticks = {7,7} },
-	{ anim = anims.small, ticks = {7,7} },
-	{ anim = anims.mount, ticks = {7,7} },
-	{ anim = anims.sleep, ticks = {7,7} },
-	{ anim = anims.ears,  ticks = {7,7} },
-	{ anim = anims.sing,  ticks = {3,3} }
+	{ anim = anims.swim,      ticks = {7,7} },
+	{ anim = anims.stand,     ticks = {7,7} },
+	{ anim = anims.crawl,     ticks = {7,7} },
+	{ anim = anims.small,     ticks = {7,7} },
+	{ anim = anims.mountUp,   ticks = {7,7} },
+	{ anim = anims.mountDown, ticks = {7,7} },
+	{ anim = anims.sleep,     ticks = {7,7} },
+	{ anim = anims.ears,      ticks = {7,7} },
+	{ anim = anims.sing,      ticks = {3,3} }
 }
 	
 for _, blend in ipairs(blendAnims) do
@@ -303,6 +327,22 @@ function pings.setAnimCrawl(boolean)
 	
 end
 
+-- Mount direction anim toggle
+function pings.setAnimMountDir()
+	
+	mountDir = not mountDir
+	config:save("AnimMountDir", mountDir)
+	
+end
+
+-- Set mount rotation
+local function setMountRot(x)
+	
+	mountRot = math.clamp(mountRot + x * (5/90), -1, 1)
+	config:save("AnimMountRot", mountRot)
+	
+end
+
 -- Play twirl anim
 function pings.animPlayTwirl()
 	
@@ -320,11 +360,13 @@ function pings.setAnimSing(boolean)
 end
 
 -- Sync variables
-function pings.syncAnims(a, b, c)
+function pings.syncAnims(a, b, c, d, e)
 	
-	isShark = a
-	isCrawl = b
-	isSing  = c
+	isShark  = a
+	isCrawl  = b
+	mountDir = c
+	mountRot = d
+	isSing   = e
 	
 end
 
@@ -359,7 +401,7 @@ end
 function events.TICK()
 	
 	if world.getTime() % 200 == 0 then
-		pings.syncAnims(isShark, isCrawl, isSing)
+		pings.syncAnims(isShark, isCrawl, mountDir, mountRot, isSing)
 	end
 	
 end
@@ -371,14 +413,20 @@ local t = {}
 t.sharkPage = action_wheel:newAction()
 	:item(itemCheck("dolphin_spawn_egg"))
 	:toggleItem(itemCheck("guardian_spawn_egg"))
-	:onToggle(pings.setTailShark)
+	:onToggle(pings.setAnimShark)
 	:toggled(isShark)
 
 t.crawlPage = action_wheel:newAction()
 	:item(itemCheck("armor_stand"))
 	:toggleItem(itemCheck("oak_boat"))
-	:onToggle(pings.setTailCrawl)
+	:onToggle(pings.setAnimCrawl)
 	:toggled(isCrawl)
+
+t.mountPage = action_wheel:newAction()
+	:item(itemCheck("saddle"))
+	:onScroll(setMountRot)
+	:onLeftClick(pings.setAnimMountDir)
+	:onRightClick(function() mountRot = 1 config:save("AnimMountRot", mountRot) end)
 
 t.twirlPage = action_wheel:newAction()
 	:item(itemCheck("cod"))
@@ -392,47 +440,49 @@ t.singPage = action_wheel:newAction()
 -- Update action page info
 function events.TICK()
 	
-	t.sharkPage
-		:title(toJson
-			{"",
-			{text = "Toggle Shark Animations\n\n", bold = true, color = color.primary},
-			{text = "Toggles the movement of the tail to be more shark based.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-	
-	t.crawlPage
-		:title(toJson
-			{"",
-			{text = "Toggle Crawl Animation\n\n", bold = true, color = color.primary},
-			{text = "Toggles crawling over standing when you are touching the ground.", color = color.secondary}}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-	
-	t.twirlPage
-		:title(toJson
-			{text = "Play Twirl animation", bold = true, color = color.primary}
-		)
-		:hoverColor(color.hover)
-	
-	t.singPage
-		:title(toJson
-			{text = "Play Singing animation", bold = true, color = color.primary}
-		)
-		:hoverColor(color.hover)
-		:toggleColor(color.active)
-		:toggled(isSing)
+	if action_wheel:isEnabled() then
+		t.sharkPage
+			:title(toJson
+				{"",
+				{text = "Toggle Shark Animations\n\n", bold = true, color = color.primary},
+				{text = "Toggles the movement of the tail to be more shark based.", color = color.secondary}}
+			)
+		
+		t.crawlPage
+			:title(toJson
+				{"",
+				{text = "Toggle Crawl Animation\n\n", bold = true, color = color.primary},
+				{text = "Toggles crawling over standing when you are touching the ground.", color = color.secondary}}
+			)
 		
 		t.mountPage
 			:title(toJson
 				{"",
 				{text = "Set Mount Rotation\n\n", bold = true, color = color.primary},
 				{text = "Scroll to set the rotation of your tail while mounted/sitting.\n\n", color = color.secondary},
+				{text = "Current direction: ", bold = true, color = color.secondary},
+				{text = (mountDir and "Up" or "Down").."\n"},
 				{text = "Current rotation: ", bold = true, color = color.secondary},
 				{text = math.round(mountRot * 90).."\n\n"},
 				{text = "Left click to reset back to default rotation.", color = color.secondary}}
 			)
+		
+		t.twirlPage
+			:title(toJson
+				{text = "Play Twirl animation", bold = true, color = color.primary}
+			)
+		
+		t.singPage
+			:title(toJson
+				{text = "Play Singing animation", bold = true, color = color.primary}
+			)
+			:toggled(isSing)
+		
+		for _, page in pairs(t) do
+			page:hoverColor(color.hover):toggleColor(color.active)
+		end
+		
+	end
 	
 end
 

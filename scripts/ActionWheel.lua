@@ -229,6 +229,7 @@ pages.eyes
 pages.anims
 	:action( -1, anims.sharkPage)
 	:action( -1, anims.crawlPage)
+	:action( -1, anims.mountPage)
 	:action( -1, arms.movePage)
 	:action( -1, anims.twirlPage)
 	:action( -1, anims.singPage)
