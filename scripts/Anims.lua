@@ -16,10 +16,8 @@ local anims = animations["models.Merling"]
 config:name("Merling")
 local isShark   = config:load("AnimShark") or false
 local isCrawl   = config:load("AnimCrawl") or false
-local mountDir  = config:load("AnimMountDir")
-local mountFlip = config:load("AnimMountFlip")
-if mountDir  == nil then mountDir  = true end
-if mountFlip == nil then mountFlip = true end
+local mountDir  = config:load("AnimMountDir") or false
+local mountFlip = config:load("AnimMountFlip") or false
 
 -- Table setup
 local a = {}

@@ -26,9 +26,13 @@ local skin = {
 	
 	merlingParts.leftArmDefault,
 	merlingParts.leftArmSlim,
+	merlingParts.leftArmDefaultFP,
+	merlingParts.leftArmSlimFP,
 	
 	merlingParts.rightArmDefault,
 	merlingParts.rightArmSlim,
+	merlingParts.rightArmDefaultFP,
+	merlingParts.rightArmSlimFP,
 	
 	merlingParts.LeftLeg.Leg,
 	merlingParts.LeftLeg.Layer,
@@ -55,11 +59,15 @@ local layer = {
 	},
 	LEFT_SLEEVE = {
 		merlingParts.leftArmDefault.Layer,
-		merlingParts.leftArmSlim.Layer
+		merlingParts.leftArmSlim.Layer,
+		merlingParts.leftArmDefaultFP.Layer,
+		merlingParts.leftArmSlimFP.Layer
 	},
 	RIGHT_SLEEVE = {
 		merlingParts.rightArmDefault.Layer,
-		merlingParts.rightArmSlim.Layer
+		merlingParts.rightArmSlim.Layer,
+		merlingParts.rightArmDefaultFP.Layer,
+		merlingParts.rightArmSlimFP.Layer
 	},
 	LEFT_PANTS_LEG = {
 		merlingParts.LeftLeg.Layer
@@ -127,9 +135,13 @@ function events.TICK()
 	
 	merlingParts.leftArmDefault:visible(not slimShape)
 	merlingParts.rightArmDefault:visible(not slimShape)
+	merlingParts.leftArmDefaultFP:visible(not slimShape)
+	merlingParts.rightArmDefaultFP:visible(not slimShape)
 	
 	merlingParts.leftArmSlim:visible(slimShape)
 	merlingParts.rightArmSlim:visible(slimShape)
+	merlingParts.leftArmSlimFP:visible(slimShape)
+	merlingParts.rightArmSlimFP:visible(slimShape)
 	
 	-- Skin textures
 	local skinType = vanillaSkin and "SKIN" or "PRIMARY"
