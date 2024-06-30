@@ -9,7 +9,7 @@ function events.ON_PLAY_SOUND(id, pos, vol, pitch, loop, cat, path)
 	-- Make sure the sound is (most likely) played by the user
 	if (player:getPos() - pos):length() > 0.05 then return end
 	
-	-- If sound contains ".hurt", stop the actual damage sound, and replace it
+	-- If sound contains ".hurt", play an additional hurt sound along side it
 	if id:find(".hurt") then
 		return sounds:playSound("entity.salmon.hurt", pos, 0.6, math.random()+0.5)
 	end
