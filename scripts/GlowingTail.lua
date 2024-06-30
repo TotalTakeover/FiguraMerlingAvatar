@@ -1,8 +1,6 @@
 -- Required scripts
 local merlingParts = require("lib.GroupIndex")(models.models.Merling)
-local itemCheck    = require("lib.ItemCheck")
 local waterTicks   = require("scripts.WaterTicks")
-local color        = require("scripts.ColorProperties")
 
 -- Config setup
 config:name("Merling")
@@ -138,6 +136,10 @@ end
 
 -- Host only instructions
 if not host:isHost() then return end
+
+-- Required scripts
+local itemCheck = require("lib.ItemCheck")
+local color     = require("scripts.ColorProperties")
 
 -- Keybind
 local toggleBind   = config:load("GlowToggleKeybind") or "key.keyboard.keypad.4"

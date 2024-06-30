@@ -1,10 +1,8 @@
 -- Required scripts
 local merlingParts = require("lib.GroupIndex")(models.models.Merling)
 local average      = require("lib.Average")
-local itemCheck    = require("lib.ItemCheck")
 local waterTicks   = require("scripts.WaterTicks")
 local effects      = require("scripts.SyncedVariables")
-local color        = require("scripts.ColorProperties")
 
 -- Config setup
 config:name("Merling")
@@ -117,6 +115,10 @@ end
 
 -- Host only instructions
 if not host:isHost() then return end
+
+-- Required scripts
+local itemCheck = require("lib.ItemCheck")
+local color     = require("scripts.ColorProperties")
 
 -- Sync on tick
 function events.TICK()

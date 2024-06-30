@@ -1,10 +1,8 @@
 -- Required scripts
 local merlingParts = require("lib.GroupIndex")(models.models.Merling)
 local ground       = require("lib.GroundCheck")
-local itemCheck    = require("lib.ItemCheck")
 local waterTicks   = require("scripts.WaterTicks")
 local effects      = require("scripts.SyncedVariables")
-local color        = require("scripts.ColorProperties")
 
 -- Config setup
 config:name("Merling")
@@ -196,6 +194,10 @@ end
 
 -- Host only instructions
 if not host:isHost() then return end
+
+-- Required scripts
+local itemCheck = require("lib.ItemCheck")
+local color     = require("scripts.ColorProperties")
 
 -- Tail Keybind
 local waterBind   = config:load("TailWaterKeybind") or "key.keyboard.keypad.1"

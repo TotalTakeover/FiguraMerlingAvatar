@@ -1,7 +1,5 @@
--- Required scripts
+-- Required script
 local merlingParts = require("lib.GroupIndex")(models.models.Merling)
-local itemCheck    = require("lib.ItemCheck")
-local color        = require("scripts.ColorProperties")
 
 -- Config setup
 config:name("Merling")
@@ -193,6 +191,10 @@ end
 
 -- Host only instructions
 if not host:isHost() then return end
+
+-- Required scripts
+local itemCheck = require("lib.ItemCheck")
+local color     = require("scripts.ColorProperties")
 
 -- Sync on tick
 function events.TICK()

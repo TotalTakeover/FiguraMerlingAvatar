@@ -3,11 +3,9 @@ require("lib.GSAnimBlend")
 local merlingParts = require("lib.GroupIndex")(models.models.Merling)
 local ground       = require("lib.GroundCheck")
 local average      = require("lib.Average")
-local itemCheck    = require("lib.ItemCheck")
 local waterTicks   = require("scripts.WaterTicks")
 local pose         = require("scripts.Posing")
 local effects      = require("scripts.SyncedVariables")
-local color        = require("scripts.ColorProperties")
 
 -- Animations setup
 local anims = animations["models.Merling"]
@@ -376,6 +374,10 @@ end
 
 -- Host only instructions
 if not host:isHost() then return a end
+
+-- Required scripts
+local itemCheck = require("lib.ItemCheck")
+local color     = require("scripts.ColorProperties")
 
 -- Twirl keybind
 local twirlBind   = config:load("AnimTwirlKeybind") or "key.keyboard.keypad.6"

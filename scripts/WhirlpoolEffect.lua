@@ -1,8 +1,6 @@
 -- Required scripts
-local itemCheck = require("lib.ItemCheck")
-local effects   = require("scripts.SyncedVariables")
-local pose      = require("scripts.Posing")
-local color     = require("scripts.ColorProperties")
+local effects = require("scripts.SyncedVariables")
+local pose    = require("scripts.Posing")
 
 -- Config setup
 config:name("Merling")
@@ -58,6 +56,10 @@ end
 
 -- Host only instructions
 if not host:isHost() then return end
+
+-- Required scripts
+local itemCheck = require("lib.ItemCheck")
+local color     = require("scripts.ColorProperties")
 
 -- Sync on tick
 function events.TICK()
