@@ -3,8 +3,18 @@ local merlingParts = require("lib.GroupIndex")(models.models.Merling)
 local squapi       = require("lib.SquAPI")
 local average      = require("lib.Average")
 
--- Ear function
-squapi.ear(merlingParts.LeftEar, merlingParts.RightEar, false, _, 0.35, true, 1, 0.05, 0.05)
+-- Squishy ears
+squapi.ear(
+	merlingParts.LeftEar,
+	merlingParts.RightEar,
+	false, -- Do Flick (False)
+	400,   -- Flick Chance (400)
+	0.35,  -- Range Multiplier (0.35)
+	true,  -- Horizontal Ears (True)
+	1,     -- Bend Strength (1)
+	0.05,  -- Stiffness (0.05)
+	0.05   -- Bounce (0.05)
+)
 
 -- Tails table
 local tail = {
@@ -17,22 +27,23 @@ local tail = {
 	
 }
 
--- Tail function
-squapi.tails(tail,
-	2.5,   --intensity
-	0,     --tailintensityY
-	0,     --tailintensityX
-	0,     --tailYSpeed
-	0,     --tailXSpeed
-	0.25,  --tailVelBend
-	nil,   --initialTailOffset
-	0.5,   --segOffsetMultiplier
-	0.01,  --tailStiff
-	0.025, --tailBounce
-	60,    --tailFlyOffset
-	4,     --downlimit
-	6      --uplimit
-)
+-- Squishy tail
+squapi.tails(
+	tail,
+	2.5,   -- Intensity (2.5)
+	0,     -- Intensity Y (0)
+	0,     -- Intensity X (0)
+	0,     -- Speed Y (0)
+	0,     -- Speed X (0)
+	0.25,  -- Tail Vel Bend (0.25)
+	0,     -- Initial Tail Offset (0)
+	0.5,   -- Seg Offset Multiplier (0.5)
+	0.01,  -- Stiffness (0.01)
+	0.025, -- Bounce (0.025)
+	60,    -- Fly Offset (60)
+	4,     -- Down Limit (4)
+	6      -- Up Limit (6)
+)    
 
 function events.RENDER(delta, context)
 	
