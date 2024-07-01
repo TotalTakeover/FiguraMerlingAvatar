@@ -112,7 +112,7 @@ local planeParts = {
 	
 }
 
--- Apply
+-- Apply translucent cull
 for _, part in ipairs(planeParts) do
 	part:primaryRenderType("TRANSLUCENT_CULL")
 end
@@ -205,10 +205,10 @@ function events.TICK()
 	
 end
 
--- Setup table
+-- Table setup
 local t = {}
 
--- Action wheel pages
+-- Actions
 t.vanillaSkinPage = action_wheel:newAction()
 	:item(itemCheck("player_head{'SkullOwner':'"..avatar:getEntityName().."'}"))
 	:onToggle(pings.setAvatarVanillaSkin)
@@ -220,7 +220,7 @@ t.modelPage = action_wheel:newAction()
 	:onToggle(pings.setAvatarModelType)
 	:toggled(slim)
 
--- Update action page info
+-- Update actions
 function events.TICK()
 	
 	if action_wheel:isEnabled() then
@@ -246,5 +246,5 @@ function events.TICK()
 	
 end
 
--- Return action wheel pages
+-- Return actions
 return t

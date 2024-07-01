@@ -37,7 +37,6 @@ function events.ENTITY_INIT()
 	
 end
 
--- Gradual value
 function events.TICK()
 	
 	-- Arm variables
@@ -132,14 +131,14 @@ end
 -- Table setup
 local t = {}
 
--- Action wheel
+-- Action
 t.movePage = action_wheel:newAction()
 	:item(itemCheck("red_dye"))
 	:toggleItem(itemCheck("rabbit_foot"))
 	:onToggle(pings.setAvatarArmMove)
 	:toggled(armMove)
 
--- Update action page info
+-- Update action
 function events.TICK()
 	
 	if action_wheel:isEnabled() then
@@ -158,5 +157,5 @@ function events.TICK()
 	
 end
 
--- Return action wheel pages
+-- Return action
 return t

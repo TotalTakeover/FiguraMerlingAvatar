@@ -26,6 +26,7 @@ local dirRot = {
 	west  = 90
 }
 
+-- Get part matrix of part and parent parts
 local function calcMatrix(p)
 	return p and p ~= models and (calcMatrix(p:getParent()) * p:getPositionMatrix()) or matrices.mat4()
 end
@@ -110,6 +111,7 @@ function events.RENDER(delta, context)
 			
 		end
 		
+		-- Apply offset
 		posOffset = posOffset * offsetScale
 		
 		-- Check for block obstruction
@@ -133,12 +135,13 @@ function events.RENDER(delta, context)
 			:offsetCameraPivot(camPos and not obstructed and posOffset or 0)
 			:eyeOffset(eyePos and camPos and not obstructed and posOffset or 0)
 		
-		-- Nameplate Placement
+		-- Nameplate placement
 		nameplate.ENTITY
 			:pivot(nameOffset)
 		
 	end
 	
+	-- Disable head if first person mod is active
 	head:visible(context ~= "OTHER")
 	
 end
@@ -187,7 +190,7 @@ end
 -- Table setup
 local t = {}
 
--- Action wheel pages
+-- Actions
 t.posPage = action_wheel:newAction()
 	:item(itemCheck("skeleton_skull"))
 	:toggleItem(itemCheck("player_head{'SkullOwner':'"..avatar:getEntityName().."'}"))
@@ -200,7 +203,7 @@ t.eyePage = action_wheel:newAction()
 	:onToggle(pings.setCameraEye)
 	:toggled(eyePos)
 
--- Update action page info
+-- Update actions
 function events.TICK()
 	
 	if action_wheel:isEnabled() then
@@ -229,5 +232,5 @@ function events.TICK()
 	
 end
 
--- Return action wheel pages
+-- Return actions
 return t

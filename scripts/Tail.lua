@@ -116,7 +116,7 @@ function events.RENDER(delta, context)
 	merlingParts.LeftLeg:scale(legScale)
 	merlingParts.RightLeg:scale(legScale)
 	
-	-- Apply Ears
+	-- Apply ears
 	merlingParts.LeftEar:scale(earScale)
 	merlingParts.RightEar:scale(earScale)
 	merlingParts.LeftEarSkull:scale(earScale)
@@ -203,7 +203,7 @@ local color     = require("scripts.ColorProperties")
 local waterBind   = config:load("TailWaterKeybind") or "key.keyboard.keypad.1"
 local setWaterKey = keybinds:newKeybind("Merling Water Type"):onPress(function() pings.setTailWater(1) end):key(waterBind)
 
--- Small Tail keybind
+-- Small tail keybind
 local smallBind   = config:load("TailSmallKeybind") or "key.keyboard.keypad.2"
 local setSmallKey = keybinds:newKeybind("Small Tail Toggle"):onPress(function() pings.setTailSmall(not small) end):key(smallBind)
 
@@ -244,7 +244,7 @@ end
 -- Table setup
 local t = {}
 
--- Action wheel pages
+-- Actions
 t.waterPage = action_wheel:newAction()
 	:onLeftClick(function() pings.setTailWater(1)end)
 	:onRightClick(function() pings.setTailWater(-1) end)
@@ -302,7 +302,7 @@ local waterInfo = {
 	}
 }
 
--- Update action page info
+-- Update actions
 function events.TICK()
 	
 	if action_wheel:isEnabled() then
@@ -360,5 +360,5 @@ function events.TICK()
 	
 end
 
--- Return action wheel pages
+-- Return actions
 return t

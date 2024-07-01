@@ -13,5 +13,5 @@ t.active    = vectors.hexToRGB("55FFFF")
 t.primary   = "blue"
 t.secondary = "aqua"
 
--- Return table
+-- Return variables
 return t

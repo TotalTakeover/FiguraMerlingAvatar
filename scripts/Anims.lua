@@ -34,9 +34,11 @@ a.headY    = 0
 a.normal = isShark and 0 or 1
 a.shark  = isShark and 1 or 0
 
+-- Variables
 local canTwirl = false
 local isSing   = false
 
+-- Lerps
 local time = {
 	prev = 0,
 	next = 0
@@ -190,7 +192,7 @@ function events.TICK()
 	-- Z Axis control
 	if effects.dG then
 		
-		-- Dolphins grace applied
+		-- Dolphin's grace applied
 		roll.target = 0
 		
 	elseif pose.elytra then
@@ -298,7 +300,8 @@ local blendAnims = {
 	{ anim = anims.ears,      ticks = {7,7} },
 	{ anim = anims.sing,      ticks = {3,3} }
 }
-	
+
+-- Apply GS Blending
 for _, blend in ipairs(blendAnims) do
 	blend.anim:blendTime(table.unpack(blend.ticks)):onBlend("easeOutQuad")
 end
@@ -415,7 +418,7 @@ end
 -- Table setup
 local t = {}
 
--- Action wheel pages
+-- Actions
 t.sharkPage = action_wheel:newAction()
 	:item(itemCheck("dolphin_spawn_egg"))
 	:toggleItem(itemCheck("guardian_spawn_egg"))
@@ -442,7 +445,7 @@ t.singPage = action_wheel:newAction()
 	:toggleItem(itemCheck("music_disc_cat"))
 	:onToggle(pings.setAnimSing)
 
--- Update action page info
+-- Update actions
 function events.TICK()
 	
 	if action_wheel:isEnabled() then
@@ -490,5 +493,5 @@ function events.TICK()
 	
 end
 
--- Returns animation variables/action wheel pages
+-- Returns animation variables & actions
 return a, t

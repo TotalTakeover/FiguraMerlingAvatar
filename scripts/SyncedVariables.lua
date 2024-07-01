@@ -1,4 +1,4 @@
--- Setup table
+-- Table setup
 local t = {
 	dG = false,
 	nV = false,

@@ -73,7 +73,7 @@ end
 -- Table setup
 local t = {}
 
--- Action wheel pages
+-- Actions
 t.bubblePage = action_wheel:newAction()
 	:item(itemCheck("soul_sand"))
 	:toggleItem(itemCheck("magma_block"))
@@ -86,7 +86,7 @@ t.dolphinsGracePage = action_wheel:newAction()
 	:onToggle(pings.setWhirlpoolDolphinsGrace)
 	:toggled(dolphinsGrace)
 
--- Update action page info
+-- Update actions
 function events.TICK()
 	
 	if action_wheel:isEnabled() then
@@ -112,5 +112,5 @@ function events.TICK()
 	
 end
 
--- Return action wheel pages
+-- Return actions
 return t

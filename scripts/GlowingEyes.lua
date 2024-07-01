@@ -79,7 +79,7 @@ function events.RENDER(delta, context)
 	
 end
 
--- Glowing eyes toggler
+-- Glowing eyes toggle
 function pings.setEyesToggle(boolean)
 	
 	toggle = boolean
@@ -90,7 +90,7 @@ function pings.setEyesToggle(boolean)
 	
 end
 
--- Glowing eyes power toggler
+-- Power toggle
 function pings.setEyesPower(boolean)
 	
 	power = boolean
@@ -101,7 +101,7 @@ function pings.setEyesPower(boolean)
 	
 end
 
--- Glowing eyes night vision toggler
+-- Night vision toggle
 function pings.setEyesNightVision(boolean)
 	
 	nightVision = boolean
@@ -112,7 +112,7 @@ function pings.setEyesNightVision(boolean)
 	
 end
 
--- Glowing eyes water toggler
+-- Water toggle
 function pings.setEyesWater(boolean)
 	
 	water = boolean
@@ -140,7 +140,7 @@ if not host:isHost() then return end
 local itemCheck = require("lib.ItemCheck")
 local color     = require("scripts.ColorProperties")
 
--- Keybind
+-- Glow eyes keybind
 local toggleBind   = config:load("EyesToggleKeybind") or "key.keyboard.keypad.5"
 local setToggleKey = keybinds:newKeybind("Glowing Eyes Toggle"):onPress(function() pings.setEyesToggle(not toggle) end):key(toggleBind)
 
@@ -167,7 +167,7 @@ end
 -- Table setup
 local t = {}
 
--- Action wheels
+-- Actions
 t.togglePage = action_wheel:newAction()
 	:item(itemCheck("ender_pearl"))
 	:toggleItem(itemCheck("ender_eye"))
@@ -191,7 +191,7 @@ t.waterPage = action_wheel:newAction()
 	:onToggle(pings.setEyesWater)
 	:toggled(water)
 
--- Update action page info
+-- Update actions
 function events.TICK()
 	
 	if action_wheel:isEnabled() then
@@ -236,5 +236,5 @@ function events.TICK()
 	
 end
 
--- Return action wheel pages
+-- Return actions
 return t

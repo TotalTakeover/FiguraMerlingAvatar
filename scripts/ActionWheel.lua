@@ -89,7 +89,7 @@ local pageActions = {
 	
 }
 
--- Update action page info
+-- Update actions
 function events.TICK()
 	
 	if action_wheel:isEnabled() then

@@ -4,7 +4,7 @@ config:name("Merling")
 -- Table setup
 local t = {
 	wet   = 0, -- Rain
-	water = 0, -- In Water
+	water = 0, -- In water
 	under = 0  -- Underwater
 }
 
@@ -30,10 +30,10 @@ function events.ON_PLAY_SOUND(id, pos, vol, pitch, loop, category, path)
 	
 end
 
--- Each tick add one to each timer. Reset if confition met.
+-- Each tick add one to each timer. Reset if confition met
 function events.TICK()
 	
-	-- Add if not currently riptiding.
+	-- Add if not currently riptiding
 	if not player:riptideSpinning() then
 		t.wet   = t.wet   + 1
 		t.water = t.water + 1
@@ -57,7 +57,7 @@ function events.TICK()
 		splash  = false
 	end
 	
-	-- Check for if player is in water
+	-- Check for if player is in liquid
 	if player:isInWater() or player:isInLava() then
 		t.water = 0
 	end
@@ -69,5 +69,5 @@ function events.TICK()
 	
 end
 
--- Return table
+-- Return variables
 return t

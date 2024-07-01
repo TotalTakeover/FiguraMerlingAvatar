@@ -141,7 +141,7 @@ if not host:isHost() then return end
 local itemCheck = require("lib.ItemCheck")
 local color     = require("scripts.ColorProperties")
 
--- Keybind
+-- Glow keybind
 local toggleBind   = config:load("GlowToggleKeybind") or "key.keyboard.keypad.4"
 local setToggleKey = keybinds:newKeybind("Glow Toggle"):onPress(function() pings.setGlowToggle(not toggle) end):key(toggleBind)
 
@@ -165,10 +165,10 @@ function events.TICK()
 	
 end
 
--- Setup table
+-- Table setup
 local t = {}
 
--- Action wheel pages
+-- Actions
 t.togglePage = action_wheel:newAction()
 	:item(itemCheck("ink_sac"))
 	:toggleItem(itemCheck("glow_ink_sac"))
@@ -185,7 +185,7 @@ t.waterPage = action_wheel:newAction()
 	:onToggle(pings.setGlowWater)
 	:toggled(water)
 
--- Update action page info
+-- Update actions
 function events.TICK()
 	
 	if action_wheel:isEnabled() then
@@ -222,5 +222,5 @@ function events.TICK()
 	
 end
 
--- Return action wheel pages
+-- Return actions
 return t
