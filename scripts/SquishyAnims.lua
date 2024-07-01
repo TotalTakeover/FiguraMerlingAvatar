@@ -7,10 +7,10 @@ local average      = require("lib.Average")
 squapi.ear(
 	merlingParts.LeftEar,
 	merlingParts.RightEar,
-	false, -- Do Flick (False)
+	false, -- Do Flick (false)
 	400,   -- Flick Chance (400)
 	0.35,  -- Range Multiplier (0.35)
-	true,  -- Horizontal Ears (True)
+	true,  -- Horizontal (true)
 	1,     -- Bend Strength (1)
 	0.05,  -- Stiffness (0.05)
 	0.05   -- Bounce (0.05)
@@ -35,8 +35,8 @@ squapi.tails(
 	0,     -- Intensity X (0)
 	0,     -- Speed Y (0)
 	0,     -- Speed X (0)
-	0.25,  -- Tail Vel Bend (0.25)
-	0,     -- Initial Tail Offset (0)
+	0.25,  -- Vel Bend (0.25)
+	0,     -- Initial Offset (0)
 	0.5,   -- Seg Offset Multiplier (0.5)
 	0.01,  -- Stiffness (0.01)
 	0.025, -- Bounce (0.025)

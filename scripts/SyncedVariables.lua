@@ -75,5 +75,5 @@ if host:isHost() then
 	end
 end
 
--- Returns table
+-- Returns variables
 return t

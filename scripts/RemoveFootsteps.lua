@@ -13,7 +13,7 @@ function events.ON_PLAY_SOUND(id, pos, vol, pitch, loop, cat, path)
 	-- Make sure the sound is (most likely) played by the user
 	if (player:getPos() - pos):length() > 0.05 then return end
 	
-	-- If sound contains ".step", and the user's merling is above the 0.75 scale threshold, stop the actual step sound
+	-- If sound contains ".step", and the user's merling is above the 0.75 scale threshold, stop the sound
 	if id:find(".step") and average(merlingParts.Tail1:getScale():unpack()) >= 0.75 then return true end
 	
 end
