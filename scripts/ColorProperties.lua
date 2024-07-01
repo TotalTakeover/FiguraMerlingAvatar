@@ -7,7 +7,7 @@ if not host:isHost() then return end
 -- Table setup
 local t = {}
 
--- Set colors
+-- Action variables
 t.hover     = vectors.hexToRGB("5555FF")
 t.active    = vectors.hexToRGB("55FFFF")
 t.primary   = "blue"

@@ -13,7 +13,7 @@ merlingParts.RightLeg:visible(true)
 merlingParts.Skull   :visible(true)
 merlingParts.Portrait:visible(true)
 
--- All vanilla skin parts
+-- Vanilla skin parts
 local skin = {
 	
 	merlingParts.Head.Head,
@@ -46,7 +46,7 @@ local skin = {
 	
 }
 
--- All layer parts
+-- Layer parts
 local layer = {
 
 	HAT = {
@@ -97,7 +97,7 @@ local layer = {
 	
 --]]
 
--- All plane parts
+-- Plane parts
 local planeParts = {
 	
 	merlingParts.LeftEar.Ear,

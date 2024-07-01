@@ -9,7 +9,7 @@ local dynamic = config:load("GlowDynamic") or false
 local water   = config:load("GlowWater") or false
 if toggle == nil then toggle = true end
 
--- All glowing parts
+-- Glowing parts
 local glowingParts = {
 	
 	merlingParts.LeftEar.Ear,
