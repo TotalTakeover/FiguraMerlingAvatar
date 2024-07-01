@@ -73,14 +73,14 @@ local layer = {
 	RIGHT_PANTS_LEG = {
 		merlingParts.RightLeg.Layer
 	},
+	CAPE = {
+		merlingParts.Cape
+	},
 	TAIL = {
 		merlingParts.Tail1.Layer,
 		merlingParts.Tail2.Layer,
 		merlingParts.Tail3.Layer,
 		merlingParts.Tail4.Layer
-	},
-	CAPE = {
-		merlingParts.Cape
 	}
 	
 }
