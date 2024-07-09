@@ -4,20 +4,20 @@ local squapi       = require("lib.SquAPI")
 local average      = require("lib.Average")
 
 -- Squishy ears
-squapi.ear(
+local ears = squapi.ear:new(
 	merlingParts.LeftEar,
 	merlingParts.RightEar,
-	false, -- Do Flick (false)
-	400,   -- Flick Chance (400)
 	0.35,  -- Range Multiplier (0.35)
 	true,  -- Horizontal (true)
 	1,     -- Bend Strength (1)
-	0.05,  -- Stiffness (0.05)
-	0.05   -- Bounce (0.05)
+	false, -- Do Flick (false)
+	400,   -- Flick Chance (400)
+	0.1,   -- Stiffness (0.1)
+	0.9    -- Bounce (0.9)
 )
 
 -- Tails table
-local tail = {
+local tailParts = {
 	
 	merlingParts.Tail1,
 	merlingParts.Tail2,
@@ -28,29 +28,28 @@ local tail = {
 }
 
 -- Squishy tail
-squapi.tails(
-	tail,
-	2.5,   -- Intensity (2.5)
-	0,     -- Intensity Y (0)
+local tail = squapi.tail:new(
+	tailParts,
 	0,     -- Intensity X (0)
-	0,     -- Speed Y (0)
+	0,     -- Intensity Y (0)
 	0,     -- Speed X (0)
-	0.25,  -- Vel Bend (0.25)
+	0,     -- Speed Y (0)
+	2,     -- Bend (2)
+	1,     -- Velocity Push (1)
 	0,     -- Initial Offset (0)
-	0.5,   -- Seg Offset Multiplier (0.5)
-	0.01,  -- Stiffness (0.01)
-	0.025, -- Bounce (0.025)
+	0,     -- Seg Offset (0)
+	0.015, -- Stiffness (0.015)
+	0.95,  -- Bounce (0.95)
 	60,    -- Fly Offset (60)
-	4,     -- Down Limit (4)
-	6      -- Up Limit (6)
-)    
+	-15,   -- Down Limit (-15)
+	25     -- Up Limit (25)
+)
 
-function events.RENDER(delta, context)
+local bend = tail.bendStrength
+function events.TICK()
 	
 	-- Control the intensity of the tail function based on its scale
 	local scale = (-math.abs(average(merlingParts.Tail1:getScale():unpack()) - 0.5) + 0.5) * 2
-	for _, part in ipairs(tail) do
-		part:offsetRot(part:getOffsetRot() * scale)
-	end
+	tail.bendStrength  = scale * bend
 	
 end
