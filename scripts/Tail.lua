@@ -47,9 +47,14 @@ local earsScale = {
 -- Set lerp start on init
 function events.ENTITY_INIT()
 	
-	local apply = active and 1 or 0
+	local apply = water == 5 and 1 or 0
 	for k, v in pairs(scale) do
 		scale[k] = apply
+	end
+	
+	local apply = small and 1 or 0
+	for k, v in pairs(smallScale) do
+		smallScale[k] = apply
 	end
 	
 	local apply = ears and 1 or 0
