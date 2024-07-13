@@ -12,7 +12,7 @@ local t = {
 function events.ENTITY_INIT()
 	
 	local apply = config:load("TailDryTimer") or 400
-	for k, v in pairs(t) do
+	for k in pairs(t) do
 		t[k] = apply
 	end
 	

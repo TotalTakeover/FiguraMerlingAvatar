@@ -22,7 +22,7 @@ local eyes = {
 function events.ENTITY_INIT()
 	
 	local apply = toggle and 1 or 0
-	for k, v in pairs(eyes) do
+	for k in pairs(eyes) do
 		eyes[k] = apply
 	end
 	

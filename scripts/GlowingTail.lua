@@ -40,7 +40,7 @@ local glow = {
 function events.ENTITY_INIT()
 	
 	local apply = toggle and 1 or 0
-	for k, v in pairs(glow) do
+	for k in pairs(glow) do
 		glow[k] = apply
 	end
 	

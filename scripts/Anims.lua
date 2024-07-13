@@ -84,11 +84,11 @@ local mountFlipLerp = {
 function events.ENTITY_INIT()
 	
 	local apply = isShark and 1 or 0
-	for k, v in pairs(shark) do
+	for k in pairs(shark) do
 		shark[k] = apply
 	end
 	local apply = mountFlip and 1 or 0
-	for k, v in pairs(mountFlipLerp) do
+	for k in pairs(mountFlipLerp) do
 		mountFlipLerp[k] = apply
 	end
 	

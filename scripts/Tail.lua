@@ -48,17 +48,17 @@ local earsScale = {
 function events.ENTITY_INIT()
 	
 	local apply = water == 5 and 1 or 0
-	for k, v in pairs(scale) do
+	for k in pairs(scale) do
 		scale[k] = apply
 	end
 	
 	local apply = small and 1 or 0
-	for k, v in pairs(smallScale) do
+	for k in pairs(smallScale) do
 		smallScale[k] = apply
 	end
 	
 	local apply = ears and 1 or 0
-	for k, v in pairs(earsScale) do
+	for k in pairs(earsScale) do
 		earsScale[k] = apply
 	end
 	

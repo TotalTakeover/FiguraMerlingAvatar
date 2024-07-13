@@ -28,10 +28,10 @@ local rightArm = {
 function events.ENTITY_INIT()
 	
 	local apply = armMove and 1 or 0
-	for k, v in pairs(leftArm) do
+	for k in pairs(leftArm) do
 		leftArm[k] = apply
 	end
-	for k, v in pairs(rightArm) do
+	for k in pairs(rightArm) do
 		rightArm[k] = apply
 	end
 	
