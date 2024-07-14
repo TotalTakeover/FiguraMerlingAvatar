@@ -65,7 +65,7 @@ local tail = squapi.tail:new(
 	0,     -- Seg Offset (0)
 	0.015, -- Stiffness (0.015)
 	0.95,  -- Bounce (0.95)
-	60,    -- Fly Offset (60)
+	25,    -- Fly Offset (25)
 	-15,   -- Down Limit (-15)
 	25     -- Up Limit (25)
 )
