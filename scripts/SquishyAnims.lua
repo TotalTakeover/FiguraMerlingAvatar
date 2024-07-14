@@ -70,7 +70,10 @@ local tail = squapi.tail:new(
 	25     -- Up Limit (25)
 )
 
-local bend = tail.bendStrength
+-- Tail strength variables
+local tailStrength  = tail.bendStrength
+local tailFlyOffset = tail.flyingOffset
+
 -- Squishy vanilla arms
 local leftArm = squapi.arm:new(
 	merlingParts.LeftArm,
@@ -123,7 +126,9 @@ function events.TICK()
 	
 	-- Control the intensity of the tail function based on its scale
 	local scale = (-math.abs(average(merlingParts.Tail1:getScale():unpack()) - 0.5) + 0.5) * 2
-	tail.bendStrength  = scale * bend
+	tail.bendStrength = scale * tailStrength
+	tail.flyingOffset = scale * tailFlyOffset
+	
 end
 
 function events.RENDER(delta, context)
