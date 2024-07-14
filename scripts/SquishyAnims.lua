@@ -2,22 +2,47 @@
 local merlingParts = require("lib.GroupIndex")(models.models.Merling)
 local squapi       = require("lib.SquAPI")
 local average      = require("lib.Average")
+local waterTicks   = require("scripts.WaterTicks")
+local effects      = require("scripts.SyncedVariables")
+
+-- Animation setup
+local anims = animations["models.Merling"]
+
+-- Config setup
+config:name("Merling")
+local armsMove = config:load("SquapiArmsMove") or false
+
+-- Lerp left arm table
+local leftArmLerp = {
+	current    = 0,
+	nextTick   = 0,
+	target     = 0,
+	currentPos = 0
+}
+
+-- Lerp right arm table
+local rightArmLerp = {
+	current    = 0,
+	nextTick   = 0,
+	target     = 0,
+	currentPos = 0
+}
 
 -- Squishy ears
-squapi.ear(
+local ears = squapi.ear:new(
 	merlingParts.LeftEar,
 	merlingParts.RightEar,
-	false, -- Do Flick (false)
-	400,   -- Flick Chance (400)
 	0.35,  -- Range Multiplier (0.35)
 	true,  -- Horizontal (true)
 	1,     -- Bend Strength (1)
-	0.05,  -- Stiffness (0.05)
-	0.05   -- Bounce (0.05)
+	false, -- Do Flick (false)
+	400,   -- Flick Chance (400)
+	0.1,   -- Stiffness (0.1)
+	0.9    -- Bounce (0.9)
 )
 
 -- Tails table
-local tail = {
+local tailParts = {
 	
 	merlingParts.Tail1,
 	merlingParts.Tail2,
@@ -28,29 +53,183 @@ local tail = {
 }
 
 -- Squishy tail
-squapi.tails(
-	tail,
-	2.5,   -- Intensity (2.5)
-	0,     -- Intensity Y (0)
+local tail = squapi.tail:new(
+	tailParts,
 	0,     -- Intensity X (0)
-	0,     -- Speed Y (0)
+	0,     -- Intensity Y (0)
 	0,     -- Speed X (0)
-	0.25,  -- Vel Bend (0.25)
+	0,     -- Speed Y (0)
+	2,     -- Bend (2)
+	1,     -- Velocity Push (1)
 	0,     -- Initial Offset (0)
-	0.5,   -- Seg Offset Multiplier (0.5)
-	0.01,  -- Stiffness (0.01)
-	0.025, -- Bounce (0.025)
-	60,    -- Fly Offset (60)
-	4,     -- Down Limit (4)
-	6      -- Up Limit (6)
-)    
+	0,     -- Seg Offset (0)
+	0.015, -- Stiffness (0.015)
+	0.95,  -- Bounce (0.95)
+	25,    -- Fly Offset (25)
+	-15,   -- Down Limit (-15)
+	25     -- Up Limit (25)
+)
 
-function events.RENDER(delta, context)
+-- Tail strength variables
+local tailStrength  = tail.bendStrength
+local tailFlyOffset = tail.flyingOffset
+
+-- Squishy vanilla arms
+local leftArm = squapi.arm:new(
+	merlingParts.LeftArm,
+	1,     -- Strength (1)
+	false, -- Right Arm (false)
+	true   -- Keep Position (false)
+)
+
+local rightArm = squapi.arm:new(
+	merlingParts.RightArm,
+	1,    -- Strength (1)
+	true, -- Right Arm (true)
+	true  -- Keep Position (false)
+)
+
+-- Arm strength variables
+local leftArmStrength  = leftArm.strength
+local rightArmStrength = rightArm.strength
+
+function events.TICK()
+	
+	-- Arm variables
+	local handedness  = player:isLeftHanded()
+	local activeness  = player:getActiveHand()
+	local leftActive  = not handedness and "OFF_HAND" or "MAIN_HAND"
+	local rightActive = handedness and "OFF_HAND" or "MAIN_HAND"
+	local leftSwing   = player:getSwingArm() == leftActive
+	local rightSwing  = player:getSwingArm() == rightActive
+	local leftItem    = player:getHeldItem(not handedness)
+	local rightItem   = player:getHeldItem(handedness)
+	local using       = player:isUsingItem()
+	local usingL      = activeness == leftActive and leftItem:getUseAction() or "NONE"
+	local usingR      = activeness == rightActive and rightItem:getUseAction() or "NONE"
+	local bow         = using and (usingL == "BOW" or usingR == "BOW")
+	local crossL      = leftItem.tag and leftItem.tag["Charged"] == 1
+	local crossR      = rightItem.tag and rightItem.tag["Charged"] == 1
+	
+	-- Arm movement overrides
+	local armShouldMove = (waterTicks.under >= 20 and not effects.cF) or average(merlingParts.Tail1:getScale():unpack()) <= 0.6 or anims.crawl:isPlaying()
+	
+	-- Control targets based on variables
+	leftArmLerp.target  = (armsMove or armShouldMove or leftSwing  or bow or ((crossL or crossR) or (using and usingL ~= "NONE"))) and 1 or 0
+	rightArmLerp.target = (armsMove or armShouldMove or rightSwing or bow or ((crossL or crossR) or (using and usingR ~= "NONE"))) and 1 or 0
+	
+	-- Tick lerp
+	leftArmLerp.current   = leftArmLerp.nextTick
+	rightArmLerp.current  = rightArmLerp.nextTick
+	leftArmLerp.nextTick  = math.lerp(leftArmLerp.nextTick,  leftArmLerp.target,  0.5)
+	rightArmLerp.nextTick = math.lerp(rightArmLerp.nextTick, rightArmLerp.target, 0.5)
 	
 	-- Control the intensity of the tail function based on its scale
 	local scale = (-math.abs(average(merlingParts.Tail1:getScale():unpack()) - 0.5) + 0.5) * 2
-	for _, part in ipairs(tail) do
-		part:offsetRot(part:getOffsetRot() * scale)
+	tail.bendStrength = scale * tailStrength
+	tail.flyingOffset = scale * tailFlyOffset
+	
+end
+
+function events.RENDER(delta, context)
+	
+	-- Variables
+	local idleTimer   = world.getTime(delta)
+	local idleRot     = vec(math.deg(math.sin(idleTimer * 0.067) * 0.05), 0, math.deg(math.cos(idleTimer * 0.09) * 0.05 + 0.05))
+	local firstPerson = context == "FIRST_PERSON"
+	
+	-- Render lerp
+	leftArmLerp.currentPos  = math.lerp(leftArmLerp.current,  leftArmLerp.nextTick,  delta)
+	rightArmLerp.currentPos = math.lerp(rightArmLerp.current, rightArmLerp.nextTick, delta)
+	
+	-- Adjust arm strengths
+	leftArm.strength  = leftArmStrength  * leftArmLerp.currentPos
+	rightArm.strength = rightArmStrength * rightArmLerp.currentPos
+	
+	-- Adjust arm characteristics after applied by squapi
+	merlingParts.LeftArm
+		:offsetRot(
+			merlingParts.LeftArm:getOffsetRot()
+			+ ((-idleRot + (vanilla_model.BODY:getOriginRot() * 0.75)) * math.map(leftArmLerp.currentPos, 0, 1, 1, 0))
+			+ (merlingParts.LeftArm:getAnimRot() * math.map(leftArmLerp.currentPos, 0, 1, 0, -2))
+		)
+		:pos(merlingParts.LeftArm:getPos() * vec(1, 1, -1))
+		:visible(not firstPerson)
+	
+	merlingParts.RightArm
+		:offsetRot(
+			merlingParts.RightArm:getOffsetRot()
+			+ ((idleRot + (vanilla_model.BODY:getOriginRot() * 0.75)) * math.map(rightArmLerp.currentPos, 0, 1, 1, 0))
+			+ (merlingParts.RightArm:getAnimRot() * math.map(rightArmLerp.currentPos, 0, 1, 0, -2))
+		)
+		:pos(merlingParts.RightArm:getPos() * vec(1, 1, -1))
+		:visible(not firstPerson)
+	
+	-- Set visible if in first person
+	merlingParts.LeftArmFP:visible(firstPerson)
+	merlingParts.RightArmFP:visible(firstPerson)
+	
+end
+
+-- Arm movement toggle
+function pings.setSquapiArmsMove(boolean)
+	
+	armsMove = boolean
+	config:save("SquapiArmsMove", armsMove)
+	
+end
+
+-- Sync variable
+function pings.syncSquapi(a)
+	
+	armsMove = a
+	
+end
+
+-- Host only instructions
+if not host:isHost() then return end
+
+-- Required scripts
+local itemCheck = require("lib.ItemCheck")
+local color     = require("scripts.ColorProperties")
+
+-- Sync on tick
+function events.TICK()
+	
+	if world.getTime() % 200 == 0 then
+		pings.syncSquapi(armsMove)
 	end
 	
 end
+
+-- Table setup
+local t = {}
+
+-- Action
+t.armsPage = action_wheel:newAction()
+	:item(itemCheck("red_dye"))
+	:toggleItem(itemCheck("rabbit_foot"))
+	:onToggle(pings.setSquapiArmsMove)
+	:toggled(armsMove)
+
+-- Update action
+function events.TICK()
+	
+	if action_wheel:isEnabled() then
+		t.armsPage
+			:title(toJson
+				{"",
+				{text = "Arm Movement Toggle\n\n", bold = true, color = color.primary},
+				{text = "Toggles the movement swing movement of the arms.\nActions are not effected.", color = color.secondary}}
+			)
+		
+		for _, page in pairs(t) do
+			page:hoverColor(color.hover):toggleColor(color.active)
+		end
+		
+	end
+	
+end
+
+-- Return action
+return t
