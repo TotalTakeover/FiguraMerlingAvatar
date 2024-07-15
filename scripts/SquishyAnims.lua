@@ -28,6 +28,19 @@ local rightArmLerp = {
 	currentPos = 0
 }
 
+-- Set lerp starts on init
+function events.ENTITY_INIT()
+	
+	local apply = armsMove and 1 or 0
+	for k, v in pairs(leftArmLerp) do
+		leftArmLerp[k] = apply
+	end
+	for k, v in pairs(rightArmLerp) do
+		rightArmLerp[k] = apply
+	end
+	
+end
+
 -- Squishy ears
 local ears = squapi.ear:new(
 	merlingParts.LeftEar,
