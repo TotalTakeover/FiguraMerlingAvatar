@@ -288,7 +288,7 @@ function events.RENDER(delta, context)
 				{text = "Toggle Dynamic Glowing\n\n", bold = true, color = color.primary},
 				{text = "Toggles glowing based on lightlevel.\nThe darker the location, the brighter your tail glows.", color = color.secondary}}
 			)
-			:toggleItem(itemCheck("light{BlockStateTag:{level:"..world.getLightLevel(player:getPos()).."}}"))
+			:toggleItem(itemCheck("light{BlockStateTag:{level:"..math.map(world.getLightLevel(player:getPos()), 0, 15, 15, 0).."}}"))
 		
 		t.waterPage
 			:title(toJson
