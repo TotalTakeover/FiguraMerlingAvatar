@@ -221,7 +221,7 @@ t.modelPage = action_wheel:newAction()
 	:toggled(slim)
 
 -- Update actions
-function events.TICK()
+function events.RENDER(delta, context)
 	
 	if action_wheel:isEnabled() then
 		t.vanillaSkinPage

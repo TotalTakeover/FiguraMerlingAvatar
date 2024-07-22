@@ -308,7 +308,7 @@ t.bootsPage = action_wheel:newAction()
 	:onToggle(pings.setArmorBoots)
 
 -- Update actions
-function events.TICK()
+function events.RENDER(delta, context)
 	
 	if action_wheel:isEnabled() then
 		t.allPage

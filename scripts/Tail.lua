@@ -308,7 +308,7 @@ local waterInfo = {
 }
 
 -- Update actions
-function events.TICK()
+function events.RENDER(delta, context)
 	
 	if action_wheel:isEnabled() then
 		t.waterPage
