@@ -1,12 +1,12 @@
--- Required scripts
+-- Required script
 local merlingParts = require("lib.GroupIndex")(models.models.Merling)
-local waterTicks   = require("scripts.WaterTicks")
 
 -- Config setup
 config:name("Merling")
 local toggle  = config:load("GlowToggle")
 local dynamic = config:load("GlowDynamic") or false
 local water   = config:load("GlowWater") or false
+local unique  = config:load("GlowUnique") or false
 if toggle == nil then toggle = true end
 
 -- Glowing parts
@@ -28,20 +28,33 @@ local glowingParts = {
 	
 }
 
--- Lerp glow table
-local glow = {
-	current    = 0,
-	nextTick   = 0,
-	target     = 0,
-	currentPos = 0
-}
-
--- Set lerp start on init
-function events.ENTITY_INIT()
+for i, part in ipairs(glowingParts) do
 	
 	local apply = toggle and 1 or 0
-	for k in pairs(glow) do
-		glow[k] = apply
+	glowingParts[i] = {
+		part   = part,
+		splash = false,
+		timer  = 0,
+		glow   = {
+			current    = apply,
+			nextTick   = apply,
+			target     = apply,
+			currentPos = apply
+		}
+	}
+	
+end
+
+-- Check if a splash potion is broken near a part
+function events.ON_PLAY_SOUND(id, pos, vol, pitch, loop, category, path)
+	
+	if player:isLoaded() then
+		for _, index in ipairs(glowingParts) do
+			local partPos  = index.part:getParent():partToWorldMatrix():apply()
+			local atPos    = pos < partPos + 1.5 and pos > partPos - 1.5
+			local splashID = id == "minecraft:entity.splash_potion.break" or id == "minecraft:entity.lingering_potion.break"
+			index.splash = atPos and splashID and path
+		end
 	end
 	
 end
@@ -51,43 +64,99 @@ function events.TICK()
 	
 	-- Set glow target
 	-- Toggle check
-	if toggle then
+	for _, index in ipairs(glowingParts) do
 		
-		glow.target = 1
-		
-		-- Light level check
-		if dynamic then
-			glow.target = glow.target * math.map(world.getLightLevel(player:getPos(delta)), 0, 15, 1, 0)
+		if toggle then
+			
+			-- Init apply
+			index.glow.target = 1
+			
+			-- Get pos
+			local pos = unique and index.part:getParent():partToWorldMatrix():apply() or player:getPos()
+			
+			-- Light level check
+			if dynamic then
+				
+				-- Variable
+				local light = math.map(world.getLightLevel(pos), 0, 15, 1, 0)
+				
+				-- Apply
+				index.glow.target = index.glow.target * light
+				
+			end
+			
+			-- Water check
+			if water then
+				
+				-- Variables
+				local wet = false
+				
+				if unique then
+					
+					-- Check fluid tags
+					local block = world.getBlockState(pos)
+					for _, tag in ipairs(block:getFluidTags()) do
+						if tag:find("water") then
+							wet = true
+							break
+						end
+					end
+					
+					-- Check rain
+					if world.getRainGradient() > 0.2 and world.isOpenSky(pos) and world.getBiome(pos):getPrecipitation() == "RAIN" then
+						wet = true
+					end
+					
+					-- Check splash
+					if index.splash then
+						index.splash = false
+						wet = true
+					end
+					
+				else
+					
+					wet = player:isWet()
+					
+				end
+				
+				-- Adjust timer
+				index.timer = wet and 100 or math.max(index.timer - 1, 0)
+				
+				-- Apply
+				index.glow.target = index.glow.target * math.map(index.timer, 0, 100, 0, 1)
+				
+			end
+			
+		else
+			
+			-- Apply
+			index.glow.target = 0
+			
 		end
 		
-		-- Water check
-		if water then
-			glow.target = glow.target * math.map(math.clamp(waterTicks.wet, 0, 100), 0, 100, 1, 0)
-		end
-		
-	else
-		
-		glow.target = 0
+		-- Tick lerp
+		index.glow.current = index.glow.nextTick
+		index.glow.nextTick = math.lerp(index.glow.nextTick, index.glow.target, 0.05)
 		
 	end
-	
-	-- Tick lerp
-	glow.current = glow.nextTick
-	glow.nextTick = math.lerp(glow.nextTick, glow.target, 0.05)
 	
 end
 
 function events.RENDER(delta, context)
 	
-	-- Render lerp
-	glow.currentPos = math.lerp(glow.current, glow.nextTick, delta)
-	
-	-- Apply
+	-- Check render type
 	local renderType = context == "RENDER" and "EMISSIVE" or "EYES"
-	for _, part in ipairs(glowingParts) do
-		part
-			:secondaryColor(glow.currentPos)
+	
+	for _, index in ipairs(glowingParts) do
+		
+		-- Render lerp
+		index.glow.currentPos = math.lerp(index.glow.current, index.glow.nextTick, delta)
+		
+		-- Apply
+		index.part
+			:secondaryColor(index.glow.currentPos)
 			:secondaryRenderType(renderType)
+		
 	end
 	
 end
@@ -125,12 +194,24 @@ function pings.setGlowWater(boolean)
 	
 end
 
--- Sync variables
-function pings.syncGlow(a, b, c)
+-- Unique toggle
+function pings.setGlowUnique(boolean)
 	
-	toggle  = a
-	dynamic = b
-	water   = c
+	unique = boolean
+	config:save("GlowUnique", unique)
+	if host:isHost() and player:isLoaded() and unique then
+		sounds:playSound("ambient.underwater.enter", player:getPos(), 0.35)
+	end
+	
+end
+
+-- Sync variables
+function pings.syncGlow(a, b, c, d)
+	
+	toggle   = a
+	dynamic  = b
+	water    = c
+	unique = d
 	
 end
 
@@ -160,7 +241,7 @@ end
 function events.TICK()
 	
 	if world.getTime() % 200 == 0 then
-		pings.syncGlow(toggle, dynamic, water)
+		pings.syncGlow(toggle, dynamic, water, unique)
 	end
 	
 end
@@ -184,6 +265,12 @@ t.waterPage = action_wheel:newAction()
 	:toggleItem(itemCheck("water_bucket"))
 	:onToggle(pings.setGlowWater)
 	:toggled(water)
+
+t.uniquePage = action_wheel:newAction()
+	:item(itemCheck("prismarine_shard"))
+	:toggleItem(itemCheck("prismarine_crystals"))
+	:onToggle(pings.setGlowUnique)
+	:toggled(unique)
 
 -- Update actions
 function events.RENDER(delta, context)
@@ -212,6 +299,13 @@ function events.RENDER(delta, context)
 				{"",
 				{text = "Toggle Water Glowing\n\n", bold = true, color = color.primary},
 				{text = "Toggles the glowing sensitivity to water.\nAny water will cause your tail to glow.", color = color.secondary}}
+			)
+		
+		t.uniquePage
+			:title(toJson
+				{"",
+				{text = "Toggle Unique Glowing\n\n", bold = true, color = color.primary},
+				{text = "Toggles the individual glowing of each part.\nThis relies on the other settings to be noticeable.", color = color.secondary}}
 			)
 		
 		for _, page in pairs(t) do

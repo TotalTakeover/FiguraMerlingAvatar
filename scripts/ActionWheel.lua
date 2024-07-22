@@ -214,6 +214,7 @@ pages.glow
 	:action( -1, glow.togglePage)
 	:action( -1, glow.dynamicPage)
 	:action( -1, glow.waterPage)
+	:action( -1, glow.uniquePage)
 	:action( -1, pageActions.eyes)
 	:action( -1, backAction)
 
