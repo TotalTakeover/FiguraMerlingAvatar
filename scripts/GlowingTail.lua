@@ -14,10 +14,6 @@ local glowingParts = {
 	
 	merlingParts.LeftEar.Ear,
 	merlingParts.RightEar.Ear,
-	
-	merlingParts.LeftEarSkull.Ear,
-	merlingParts.RightEarSkull.Ear,
-	
 	merlingParts.Tail1.Segment,
 	merlingParts.Tail2.Segment,
 	merlingParts.Tail2LeftFin.Fin,
