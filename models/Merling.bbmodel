@@ -700,7 +700,6 @@
 			"autouv": 0,
 			"color": 7,
 			"shade": false,
-			"rotation": [0, 0, 0],
 			"origin": [0, 0, 0],
 			"uv_offset": [24, 64],
 			"faces": {
@@ -743,7 +742,6 @@
 			"to": [-3, 30, 6],
 			"autouv": 0,
 			"color": 7,
-			"rotation": [0, 0, 0],
 			"origin": [0, 0, 0],
 			"uv_offset": [24, 64],
 			"faces": {
@@ -1259,7 +1257,6 @@
 			"color": 7,
 			"visibility": false,
 			"shade": false,
-			"rotation": [0, 0, 0],
 			"origin": [0, 0, 0],
 			"uv_offset": [24, 64],
 			"faces": {
@@ -1303,7 +1300,6 @@
 			"autouv": 0,
 			"color": 7,
 			"visibility": false,
-			"rotation": [0, 0, 0],
 			"origin": [0, 0, 0],
 			"uv_offset": [24, 64],
 			"faces": {
