@@ -183,9 +183,6 @@ function pings.setGlowUnique(boolean)
 	
 	unique = boolean
 	config:save("GlowUnique", unique)
-	if host:isHost() and player:isLoaded() and unique then
-		sounds:playSound("ambient.underwater.enter", player:getPos(), 0.35)
-	end
 	
 end
 
