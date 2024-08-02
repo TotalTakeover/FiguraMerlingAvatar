@@ -42,7 +42,7 @@ function events.ENTITY_INIT()
 end
 
 -- Misc tick required events
-function events.TICK()
+function events.RENDER(delta, context)
 	
 	-- Model shape
 	local slimShape = (vanillaSkin and vanillaAvatarType == "SLIM") or (slim and not vanillaSkin)

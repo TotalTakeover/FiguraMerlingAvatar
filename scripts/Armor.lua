@@ -157,7 +157,7 @@ local bootsGroups = {
 	
 }
 
-function events.TICK()
+function events.RENDER(delta, context)
 	
 	-- Apply
 	for _, part in ipairs(helmetGroups) do
