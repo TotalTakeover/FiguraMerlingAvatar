@@ -1,11 +1,11 @@
 -- Required scripts
 require("lib.GSAnimBlend")
-local merlingParts = require("lib.GroupIndex")(models.models.Merling)
-local ground       = require("lib.GroundCheck")
-local average      = require("lib.Average")
-local waterTicks   = require("scripts.WaterTicks")
-local pose         = require("scripts.Posing")
-local effects      = require("scripts.SyncedVariables")
+local parts      = require("lib.PartsAPI")
+local ground     = require("lib.GroundCheck")
+local average    = require("lib.Average")
+local waterTicks = require("scripts.WaterTicks")
+local pose       = require("scripts.Posing")
+local effects    = require("scripts.SyncedVariables")
 
 -- Animations setup
 local anims = animations["models.Merling"]
@@ -123,7 +123,7 @@ function events.TICK()
 	local onGround = ground()
 	
 	-- Animation variables
-	local largeTail  = average(merlingParts.Tail1:getScale():unpack()) >= 0.75
+	local largeTail  = average(parts.group.Tail1:getScale():unpack()) >= 0.75
 	local groundAnim = (onGround or waterTicks.water >= 20) and not (pose.climb or pose.swim or pose.crawl) and not pose.elytra and not pose.sleep and not player:getVehicle() and not effects.cF
 	
 	-- Directional velocity
@@ -253,7 +253,7 @@ function events.TICK()
 	
 	-- Spawns notes around head while singing
 	if isSing and world.getTime() % 5 == 0 then
-		notes(merlingParts.Head, 1)
+		notes(parts.group.Head, 1)
 	end
 	
 	-- Determins when to stop twirl animaton
@@ -311,7 +311,7 @@ function events.RENDER(delta, context)
 	
 	local rot = vanilla_model.HEAD:getOriginRot()
 	rot.x = math.clamp(rot.x, -90, 30)
-	merlingParts.Spyglass:rot(rot)
+	parts.group.Spyglass:rot(rot)
 		:pos(pose.crouch and vec(0, -4, 0) or nil)
 	
 end

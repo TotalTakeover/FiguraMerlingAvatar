@@ -1,7 +1,7 @@
 -- Required scripts
-local merlingParts = require("lib.GroupIndex")(models.models.Merling)
-local origins      = require("lib.OriginsAPI")
-local effects      = require("scripts.SyncedVariables")
+local parts   = require("lib.PartsAPI")
+local origins = require("lib.OriginsAPI")
+local effects = require("scripts.SyncedVariables")
 
 -- Config setup
 config:name("Merling")
@@ -9,6 +9,9 @@ local toggle      = config:load("EyesToggle") or false
 local power       = config:load("EyesPower") or false
 local nightVision = config:load("EyesNightVision") or false
 local water       = config:load("EyesWater") or false
+
+-- Glowing parts
+local glowingParts = parts:createTable(function(part) return part:getName():find("_EyeGlow") end)
 
 -- Lerp eyes table
 local eyes = {
@@ -73,9 +76,12 @@ function events.RENDER(delta, context)
 	eyes.currentPos = math.lerp(eyes.current, eyes.nextTick, delta)
 	
 	-- Apply
-	merlingParts.Head.Eyes
-		:secondaryColor(eyes.currentPos)
-		:secondaryRenderType(context == "RENDER" and "EMISSIVE" or "EYES")
+	local renderType = context == "RENDER" and "EMISSIVE" or "EYES"
+	for _, part in ipairs(glowingParts) do
+		part
+			:secondaryColor(eyes.currentPos)
+			:secondaryRenderType(renderType)
+	end
 	
 end
 

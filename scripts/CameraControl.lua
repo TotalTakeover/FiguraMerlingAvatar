@@ -1,6 +1,6 @@
 -- Required scripts
-local merlingParts = require("lib.GroupIndex")(models.models.Merling)
-local pose         = require("scripts.Posing")
+local parts = require("lib.PartsAPI")
+local pose  = require("scripts.Posing")
 
 -- Config setup
 config:name("Merling")
@@ -16,7 +16,7 @@ savedServers[serverId] = savedServers[serverId] or false
 local eyePos = savedServers[serverId]
 
 -- Variable setup
-local head = merlingParts.Head
+local head = parts.group.Head
 
 -- Sleep rotations
 local dirRot = {
@@ -116,7 +116,7 @@ function events.RENDER(delta, context)
 		
 		-- Check for block obstruction
 		local obstructed = false
-		local cameraPos = merlingParts.Body:partToWorldMatrix():apply() + vec(0, 0.2, 0) + client:getCameraDir() * 0.1
+		local cameraPos = parts.group.Body:partToWorldMatrix():apply() + vec(0, 0.2, 0) + client:getCameraDir() * 0.1
 		local blockPos = cameraPos:copy():floor()
 		local block = world.getBlockState(blockPos)
 		local boxes = block:getCollisionShape()

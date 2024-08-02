@@ -1,9 +1,9 @@
 -- Required scripts
-local merlingParts = require("lib.GroupIndex")(models.models.Merling)
-local squapi       = require("lib.SquAPI")
-local average      = require("lib.Average")
-local waterTicks   = require("scripts.WaterTicks")
-local effects      = require("scripts.SyncedVariables")
+local parts      = require("lib.PartsAPI")
+local squapi     = require("lib.SquAPI")
+local average    = require("lib.Average")
+local waterTicks = require("scripts.WaterTicks")
+local effects    = require("scripts.SyncedVariables")
 
 -- Animation setup
 local anims = animations["models.Merling"]
@@ -43,8 +43,8 @@ end
 
 -- Squishy ears
 local ears = squapi.ear:new(
-	merlingParts.LeftEar,
-	merlingParts.RightEar,
+	parts.group.LeftEar,
+	parts.group.RightEar,
 	0.35,  -- Range Multiplier (0.35)
 	true,  -- Horizontal (true)
 	1,     -- Bend Strength (1)
@@ -57,11 +57,11 @@ local ears = squapi.ear:new(
 -- Tails table
 local tailParts = {
 	
-	merlingParts.Tail1,
-	merlingParts.Tail2,
-	merlingParts.Tail3,
-	merlingParts.Tail4,
-	merlingParts.Fluke
+	parts.group.Tail1,
+	parts.group.Tail2,
+	parts.group.Tail3,
+	parts.group.Tail4,
+	parts.group.Fluke
 	
 }
 
@@ -89,14 +89,14 @@ local tailFlyOffset = tail.flyingOffset
 
 -- Squishy vanilla arms
 local leftArm = squapi.arm:new(
-	merlingParts.LeftArm,
+	parts.group.LeftArm,
 	1,     -- Strength (1)
 	false, -- Right Arm (false)
 	true   -- Keep Position (false)
 )
 
 local rightArm = squapi.arm:new(
-	merlingParts.RightArm,
+	parts.group.RightArm,
 	1,    -- Strength (1)
 	true, -- Right Arm (true)
 	true  -- Keep Position (false)
@@ -125,7 +125,7 @@ function events.TICK()
 	local crossR      = rightItem.tag and rightItem.tag["Charged"] == 1
 	
 	-- Arm movement overrides
-	local armShouldMove = (waterTicks.under >= 20 and not effects.cF) or average(merlingParts.Tail1:getScale():unpack()) <= 0.6 or anims.crawl:isPlaying()
+	local armShouldMove = (waterTicks.under >= 20 and not effects.cF) or average(parts.group.Tail1:getScale():unpack()) <= 0.6 or anims.crawl:isPlaying()
 	
 	-- Control targets based on variables
 	leftArmLerp.target  = (armsMove or armShouldMove or leftSwing  or bow or ((crossL or crossR) or (using and usingL ~= "NONE"))) and 1 or 0
@@ -138,7 +138,7 @@ function events.TICK()
 	rightArmLerp.nextTick = math.lerp(rightArmLerp.nextTick, rightArmLerp.target, 0.5)
 	
 	-- Control the intensity of the tail function based on its scale
-	local scale = (-math.abs(average(merlingParts.Tail1:getScale():unpack()) - 0.5) + 0.5) * 2
+	local scale = (-math.abs(average(parts.group.Tail1:getScale():unpack()) - 0.5) + 0.5) * 2
 	tail.bendStrength = scale * tailStrength
 	tail.flyingOffset = scale * tailFlyOffset
 	
@@ -160,27 +160,27 @@ function events.RENDER(delta, context)
 	rightArm.strength = rightArmStrength * rightArmLerp.currentPos
 	
 	-- Adjust arm characteristics after applied by squapi
-	merlingParts.LeftArm
+	parts.group.LeftArm
 		:offsetRot(
-			merlingParts.LeftArm:getOffsetRot()
+			parts.group.LeftArm:getOffsetRot()
 			+ ((-idleRot + (vanilla_model.BODY:getOriginRot() * 0.75)) * math.map(leftArmLerp.currentPos, 0, 1, 1, 0))
-			+ (merlingParts.LeftArm:getAnimRot() * math.map(leftArmLerp.currentPos, 0, 1, 0, -2))
+			+ (parts.group.LeftArm:getAnimRot() * math.map(leftArmLerp.currentPos, 0, 1, 0, -2))
 		)
-		:pos(merlingParts.LeftArm:getPos() * vec(1, 1, -1))
+		:pos(parts.group.LeftArm:getPos() * vec(1, 1, -1))
 		:visible(not firstPerson)
 	
-	merlingParts.RightArm
+	parts.group.RightArm
 		:offsetRot(
-			merlingParts.RightArm:getOffsetRot()
+			parts.group.RightArm:getOffsetRot()
 			+ ((idleRot + (vanilla_model.BODY:getOriginRot() * 0.75)) * math.map(rightArmLerp.currentPos, 0, 1, 1, 0))
-			+ (merlingParts.RightArm:getAnimRot() * math.map(rightArmLerp.currentPos, 0, 1, 0, -2))
+			+ (parts.group.RightArm:getAnimRot() * math.map(rightArmLerp.currentPos, 0, 1, 0, -2))
 		)
-		:pos(merlingParts.RightArm:getPos() * vec(1, 1, -1))
+		:pos(parts.group.RightArm:getPos() * vec(1, 1, -1))
 		:visible(not firstPerson)
 	
 	-- Set visible if in first person
-	merlingParts.LeftArmFP:visible(firstPerson)
-	merlingParts.RightArmFP:visible(firstPerson)
+	parts.group.LeftArmFP:visible(firstPerson)
+	parts.group.RightArmFP:visible(firstPerson)
 	
 end
 

@@ -1,6 +1,6 @@
 -- Required scripts
-local merlingParts = require("lib.GroupIndex")(models.models.Merling)
-local kattArmor    = require("lib.KattArmor")()
+local parts     = require("lib.PartsAPI")
+local kattArmor = require("lib.KattArmor")()
 
 -- Setting the leggings to layer 1
 kattArmor.Armor.Leggings:setLayer(1)
@@ -8,36 +8,27 @@ kattArmor.Armor.Leggings:setLayer(1)
 -- Armor parts
 kattArmor.Armor.Leggings
 	:addParts(
-		merlingParts.Tail1ArmorLeggings.Leggings,
-		merlingParts.Tail1ArmorLeggings.BrimLeggings,
-		merlingParts.Tail2ArmorLeggings.Leggings
+		table.unpack(parts:createTable(function(part) return part:getName() == "Leggings" end))
 	)
 	:addTrimParts(
-		merlingParts.Tail1ArmorLeggings.Trim,
-		merlingParts.Tail1ArmorLeggings.BrimTrim,
-		merlingParts.Tail2ArmorLeggings.Trim
+		table.unpack(parts:createTable(function(part) return part:getName() == "LeggingsTrim" end))
 	)
 kattArmor.Armor.Boots
 	:addParts(
-		merlingParts.Tail3ArmorBoots.Boots,
-		merlingParts.Tail4ArmorBoots.Boots
+		table.unpack(parts:createTable(function(part) return part:getName() == "Boots" end))
 	)
 	:addTrimParts(
-		merlingParts.Tail3ArmorBoots.Trim,
-		merlingParts.Tail4ArmorBoots.Trim
+		table.unpack(parts:createTable(function(part) return part:getName() == "BootsTrim" end))
 	)
 
 -- Leather armor
 kattArmor.Materials.leather
 	:setTexture(textures["textures.armor.leatherArmor"] or textures["models.Merling.leatherArmor"])
 	:addParts(kattArmor.Armor.Leggings,
-		merlingParts.Tail1ArmorLeggings.Leather,
-		merlingParts.Tail1ArmorLeggings.BrimLeather,
-		merlingParts.Tail2ArmorLeggings.Leather
+		table.unpack(parts:createTable(function(part) return part:getName() == "LeggingsLeather" end))
 	)
 	:addParts(kattArmor.Armor.Boots,
-		merlingParts.Tail3ArmorBoots.Leather,
-		merlingParts.Tail4ArmorBoots.Leather
+		table.unpack(parts:createTable(function(part) return part:getName() == "BootsLeather" end))
 	)
 
 -- Chainmail armor
@@ -154,9 +145,7 @@ local chestplateGroups = {
 local leggingsGroups = {
 	
 	vanilla_model.LEGGINGS,
-	
-	merlingParts.Tail1ArmorLeggings,
-	merlingParts.Tail2ArmorLeggings
+	table.unpack(parts:createTable(function(part) return part:getName():find("ArmorLeggings") end))
 	
 }
 
@@ -164,9 +153,7 @@ local leggingsGroups = {
 local bootsGroups = {
 	
 	vanilla_model.BOOTS,
-	
-	merlingParts.Tail3ArmorBoots,
-	merlingParts.Tail4ArmorBoots
+	table.unpack(parts:createTable(function(part) return part:getName():find("ArmorBoots") end))
 	
 }
 

@@ -1,5 +1,5 @@
 -- Required script
-local merlingParts = require("lib.GroupIndex")(models.models.Merling)
+local parts = require("lib.PartsAPI")
 
 -- Config setup
 config:name("Merling")
@@ -10,19 +10,7 @@ local unique  = config:load("GlowUnique") or false
 if toggle == nil then toggle = true end
 
 -- Glowing parts
-local glowingParts = {
-	
-	merlingParts.LeftEar.Ear,
-	merlingParts.RightEar.Ear,
-	merlingParts.Tail1.Segment,
-	merlingParts.Tail2.Segment,
-	merlingParts.Tail2LeftFin.Fin,
-	merlingParts.Tail2RightFin.Fin,
-	merlingParts.Tail3.Segment,
-	merlingParts.Tail4.Segment,
-	merlingParts.Fluke
-	
-}
+local glowingParts = parts:createTable(function(part) return part:getName():find("_Glow") end)
 
 for i, part in ipairs(glowingParts) do
 	

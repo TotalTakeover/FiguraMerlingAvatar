@@ -1,5 +1,5 @@
 -- Required script
-local merlingParts = require("lib.GroupIndex")(models.models.Merling)
+local parts = require("lib.PartsAPI")
 
 -- Config setup
 config:name("Merling")
@@ -7,113 +7,29 @@ local vanillaSkin = config:load("AvatarVanillaSkin")
 local slim        = config:load("AvatarSlim") or false
 if vanillaSkin == nil then vanillaSkin = true end
 
--- Set legs, skull, and portrait groups to visible (incase disabled in blockbench)
-merlingParts.LeftLeg :visible(true)
-merlingParts.RightLeg:visible(true)
-merlingParts.Skull   :visible(true)
-merlingParts.Portrait:visible(true)
+-- Reenabled parts
+parts.group.LeftLeg :visible(true)
+parts.group.RightLeg:visible(true)
+parts.group.Skull   :visible(true)
+parts.group.Portrait:visible(true)
+
+-- Arm parts
+local defaultParts = parts:createTable(function(part) return part:getName():find("ArmDefault") end)
+local slimParts    = parts:createTable(function(part) return part:getName():find("ArmSlim")    end)
 
 -- Vanilla skin parts
-local skin = {
-	
-	merlingParts.Head.Head,
-	merlingParts.Head.Layer,
-	
-	merlingParts.Body.Body,
-	merlingParts.Body.Layer,
-	
-	merlingParts.leftArmDefault,
-	merlingParts.leftArmSlim,
-	merlingParts.leftArmDefaultFP,
-	merlingParts.leftArmSlimFP,
-	
-	merlingParts.rightArmDefault,
-	merlingParts.rightArmSlim,
-	merlingParts.rightArmDefaultFP,
-	merlingParts.rightArmSlimFP,
-	
-	merlingParts.LeftLeg.Leg,
-	merlingParts.LeftLeg.Layer,
-	
-	merlingParts.RightLeg.Leg,
-	merlingParts.RightLeg.Layer,
-	
-	merlingParts.Portrait.Head,
-	merlingParts.Portrait.Layer,
-	
-	merlingParts.Skull.Head,
-	merlingParts.Skull.Layer
-	
-}
+local skinParts = parts:createTable(function(part) return part:getName():find("_Skin") end)
 
 -- Layer parts
-local layer = {
-	
-	HAT = {
-		merlingParts.Head.Layer
-	},
-	JACKET = {
-		merlingParts.Body.Layer
-	},
-	LEFT_SLEEVE = {
-		merlingParts.leftArmDefault.Layer,
-		merlingParts.leftArmSlim.Layer,
-		merlingParts.leftArmDefaultFP.Layer,
-		merlingParts.leftArmSlimFP.Layer
-	},
-	RIGHT_SLEEVE = {
-		merlingParts.rightArmDefault.Layer,
-		merlingParts.rightArmSlim.Layer,
-		merlingParts.rightArmDefaultFP.Layer,
-		merlingParts.rightArmSlimFP.Layer
-	},
-	LEFT_PANTS_LEG = {
-		merlingParts.LeftLeg.Layer
-	},
-	RIGHT_PANTS_LEG = {
-		merlingParts.RightLeg.Layer
-	},
-	CAPE = {
-		merlingParts.Cape
-	},
-	TAIL = {
-		merlingParts.Tail1.Layer,
-		merlingParts.Tail2.Layer,
-		merlingParts.Tail3.Layer,
-		merlingParts.Tail4.Layer
-	}
-	
-}
-
---[[
-	
-	Because flat parts in the model are 2 faces directly on top
-	of eachother, and have 0 inflate, the two faces will z-fight.
-	This prevents z-fighting, as well as z-fighting at a distance,
-	as well as translucent stacking.
-	
-	Please add plane/flat parts with 2 faces to the table below.
-	0.01 works, but this works much better :)
-	
---]]
-
--- Plane parts
-local planeParts = {
-	
-	merlingParts.LeftEar.Ear,
-	merlingParts.RightEar.Ear,
-	
-	merlingParts.LeftEarSkull.Ear,
-	merlingParts.RightEarSkull.Ear,
-	
-	merlingParts.Tail2LeftFin.Fin,
-	merlingParts.Tail2RightFin.Fin,
-	merlingParts.Fluke
-	
-}
+local layerTypes = {"HAT", "JACKET", "LEFT_SLEEVE", "RIGHT_SLEEVE", "LEFT_PANTS_LEG", "RIGHT_PANTS_LEG", "CAPE", "TAIL_LAYER"}
+local layerParts = {}
+for _, type in pairs(layerTypes) do
+	layerParts[type] = parts:createTable(function(part) return part:getName():find(type) end)
+end
 
 -- Apply translucent cull
-for _, part in ipairs(planeParts) do
+local flatParts = parts:createTable(function(part) return part:getName():find("_Flat") end)
+for _, part in ipairs(flatParts) do
 	part:primaryRenderType("TRANSLUCENT_CULL")
 end
 
@@ -130,30 +46,26 @@ function events.TICK()
 	
 	-- Model shape
 	local slimShape = (vanillaSkin and vanillaAvatarType == "SLIM") or (slim and not vanillaSkin)
-	
-	merlingParts.leftArmDefault:visible(not slimShape)
-	merlingParts.rightArmDefault:visible(not slimShape)
-	merlingParts.leftArmDefaultFP:visible(not slimShape)
-	merlingParts.rightArmDefaultFP:visible(not slimShape)
-	
-	merlingParts.leftArmSlim:visible(slimShape)
-	merlingParts.rightArmSlim:visible(slimShape)
-	merlingParts.leftArmSlimFP:visible(slimShape)
-	merlingParts.rightArmSlimFP:visible(slimShape)
+	for _, part in ipairs(defaultParts) do
+		part:visible(not slimShape)
+	end
+	for _, part in ipairs(slimParts) do
+		part:visible(slimShape)
+	end
 	
 	-- Skin textures
 	local skinType = vanillaSkin and "SKIN" or "PRIMARY"
-	for _, part in ipairs(skin) do
+	for _, part in ipairs(skinParts) do
 		part:primaryTexture(skinType)
 	end
 	
 	-- Cape textures
-	merlingParts.Cape:primaryTexture(vanillaSkin and "CAPE" or "PRIMARY")
+	parts.group.Cape:primaryTexture(vanillaSkin and "CAPE" or "PRIMARY")
 	
 	-- Layer toggling
-	for layerType, parts in pairs(layer) do
-		local enabled = enabled
-		if layerType == "TAIL" then
+	for layerType, parts in pairs(layerParts) do
+		local enabled
+		if layerType == "TAIL_LAYER" then
 			enabled = player:isSkinLayerVisible("RIGHT_PANTS_LEG") or player:isSkinLayerVisible("LEFT_PANTS_LEG")
 		else
 			enabled = player:isSkinLayerVisible(layerType)

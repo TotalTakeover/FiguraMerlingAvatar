@@ -15,7 +15,7 @@
 	},
 	"elements": [
 		{
-			"name": "Head",
+			"name": "Head_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -56,7 +56,7 @@
 			"uuid": "7358645c-ceef-4566-8f98-536ec44aac67"
 		},
 		{
-			"name": "Layer",
+			"name": "HAT_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -99,7 +99,7 @@
 			"uuid": "12d59542-de15-4114-abe8-54c41bc94b81"
 		},
 		{
-			"name": "Body",
+			"name": "Body_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -140,7 +140,7 @@
 			"uuid": "c6b595ec-e526-4b2b-a9c6-cf8674ac39a7"
 		},
 		{
-			"name": "Layer",
+			"name": "JACKET_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -183,7 +183,7 @@
 			"uuid": "83b93389-d01b-4574-805a-56c1a9cfaf2c"
 		},
 		{
-			"name": "Arm",
+			"name": "Arm_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -224,7 +224,7 @@
 			"uuid": "30e4fc93-ccdd-4776-8a29-b26561eb0739"
 		},
 		{
-			"name": "Layer",
+			"name": "LEFT_SLEEVE_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -267,7 +267,7 @@
 			"uuid": "e3f0af9b-fadb-4db5-8b16-d84434c5a2cb"
 		},
 		{
-			"name": "Arm",
+			"name": "Arm_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -308,7 +308,7 @@
 			"uuid": "d0c315f6-e648-4abd-9449-51ffd38d4618"
 		},
 		{
-			"name": "Layer",
+			"name": "RIGHT_SLEEVE_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -351,7 +351,7 @@
 			"uuid": "51eb2ac8-7bfb-488c-b8ac-06e01e448191"
 		},
 		{
-			"name": "Leg",
+			"name": "Leg_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -393,7 +393,7 @@
 			"uuid": "61fb2d76-b07f-4d1b-823e-7ef502cb5d48"
 		},
 		{
-			"name": "Layer",
+			"name": "LEFT_PANTS_LEG_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -436,7 +436,7 @@
 			"uuid": "4be53b92-5d26-44ee-b350-46bc5e0b348b"
 		},
 		{
-			"name": "Leg",
+			"name": "Leg_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -478,7 +478,7 @@
 			"uuid": "986b89c7-569f-4cba-8789-5e34c4bc92c4"
 		},
 		{
-			"name": "Layer",
+			"name": "RIGHT_PANTS_LEG_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -521,7 +521,7 @@
 			"uuid": "a9428a99-4563-4091-b8c9-4ba5df0fa927"
 		},
 		{
-			"name": "Arm",
+			"name": "Arm_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -562,7 +562,7 @@
 			"uuid": "025dd27f-49c0-8ccf-bb97-30981fb40355"
 		},
 		{
-			"name": "Layer",
+			"name": "LEFT_SLEEVE_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -605,7 +605,7 @@
 			"uuid": "4c09743e-7e53-c18c-974b-13b1953d49bc"
 		},
 		{
-			"name": "Arm",
+			"name": "Arm_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -646,7 +646,7 @@
 			"uuid": "48c0e78b-c3a6-0885-7cc5-9735827d42c7"
 		},
 		{
-			"name": "Layer",
+			"name": "RIGHT_SLEEVE_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -689,7 +689,7 @@
 			"uuid": "2bce3feb-25bc-f13b-5b28-cdaaed7ca966"
 		},
 		{
-			"name": "Ear",
+			"name": "Ear_Glow_Flat",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -732,7 +732,7 @@
 			"uuid": "12fb0b75-add5-c272-b94c-f054ce80a03c"
 		},
 		{
-			"name": "Ear",
+			"name": "Ear_Glow_Flat",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -774,7 +774,7 @@
 			"uuid": "a8b572c0-3cfb-7fea-00f0-b06ee0d49a1f"
 		},
 		{
-			"name": "Segment",
+			"name": "Segment_Glow",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -816,7 +816,7 @@
 			"uuid": "1d73cb2d-adfd-a761-d5f6-326077696f78"
 		},
 		{
-			"name": "Layer",
+			"name": "TAIL_LAYER",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -860,7 +860,7 @@
 			"uuid": "edd7e072-6596-f3be-5a2c-e91cf63c9e48"
 		},
 		{
-			"name": "Segment",
+			"name": "Segment_Glow",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -902,7 +902,7 @@
 			"uuid": "ecae252c-1665-e66d-3c7e-368e09e06955"
 		},
 		{
-			"name": "Layer",
+			"name": "TAIL_LAYER",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -946,7 +946,7 @@
 			"uuid": "d49ba810-b3c3-88bd-ac2d-41a82cd36827"
 		},
 		{
-			"name": "Segment",
+			"name": "Segment_Glow",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -988,7 +988,7 @@
 			"uuid": "45b43f88-8c29-2ae0-de44-7e1070263ba9"
 		},
 		{
-			"name": "Layer",
+			"name": "TAIL_LAYER",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -1032,7 +1032,7 @@
 			"uuid": "a058689c-a87d-6578-75d0-d28ee1a7a2a0"
 		},
 		{
-			"name": "Segment",
+			"name": "Segment_Glow",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -1074,7 +1074,7 @@
 			"uuid": "a61a6d22-451e-a860-b235-ca0c8c8b6660"
 		},
 		{
-			"name": "Layer",
+			"name": "TAIL_LAYER",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -1118,7 +1118,7 @@
 			"uuid": "031703b5-0ed6-ac02-d9f6-374423cf9c73"
 		},
 		{
-			"name": "Fluke",
+			"name": "Fluke_Glow_Flat",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -1159,7 +1159,7 @@
 			"uuid": "95bca110-73d0-e14c-71c5-234ba7476418"
 		},
 		{
-			"name": "Head",
+			"name": "Head_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -1201,7 +1201,7 @@
 			"uuid": "a84ec2f0-5a23-fa27-9d40-d739a2079505"
 		},
 		{
-			"name": "Layer",
+			"name": "HAT_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -1245,7 +1245,7 @@
 			"uuid": "6d27071e-6d33-1eae-1fd8-8805ec8b1396"
 		},
 		{
-			"name": "Ear",
+			"name": "Ear_Flat",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -1289,7 +1289,7 @@
 			"uuid": "e756f2df-f33b-9198-9705-078b3b8f3483"
 		},
 		{
-			"name": "Ear",
+			"name": "Ear_Flat",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -1373,7 +1373,7 @@
 			"uuid": "8b6d2a08-3ba4-44f3-7e44-9996bba73279"
 		},
 		{
-			"name": "Head",
+			"name": "Head_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -1415,7 +1415,7 @@
 			"uuid": "6e280720-60ef-ac1e-7b45-82baeb362044"
 		},
 		{
-			"name": "Layer",
+			"name": "HAT_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -1459,7 +1459,7 @@
 			"uuid": "9b341ec4-6c9b-5b98-3b59-762e47976542"
 		},
 		{
-			"name": "Eyes",
+			"name": "Eyes_EyeGlow",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -1500,7 +1500,7 @@
 			"uuid": "33fc311d-5832-cc27-e7e3-c35f9d5716f1"
 		},
 		{
-			"name": "Fin",
+			"name": "Fin_Glow_Flat",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -1542,7 +1542,7 @@
 			"uuid": "c84d3858-102b-716d-680c-40dea3bf0886"
 		},
 		{
-			"name": "Fin",
+			"name": "Fin_Glow_Flat",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -1760,7 +1760,7 @@
 			"uuid": "96cbada9-77f2-de1b-2d90-40d1af7547f9"
 		},
 		{
-			"name": "BrimLeggings",
+			"name": "Leggings",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -1804,7 +1804,7 @@
 			"uuid": "40f3e8e1-076c-e2ad-e5a7-ef9ec33afd44"
 		},
 		{
-			"name": "Leather",
+			"name": "BootsLeather",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -1848,7 +1848,7 @@
 			"uuid": "c1ad092f-0882-6b69-70e3-028791ceb444"
 		},
 		{
-			"name": "Trim",
+			"name": "LeggingsTrim",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -1892,7 +1892,7 @@
 			"uuid": "b57dd81c-f0af-c00c-70ba-d0b5081c7bb5"
 		},
 		{
-			"name": "BrimTrim",
+			"name": "LeggingsTrim",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -1936,7 +1936,7 @@
 			"uuid": "ff6bcda9-e142-9e25-d554-4bd5cc2e6c26"
 		},
 		{
-			"name": "Trim",
+			"name": "LeggingsTrim",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -1980,7 +1980,7 @@
 			"uuid": "cdff0468-fd8c-5bc1-9775-95ec34e1cc8b"
 		},
 		{
-			"name": "Leather",
+			"name": "BootsLeather",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -2024,7 +2024,7 @@
 			"uuid": "73a09b04-7ca3-65b1-196d-04463fda17f7"
 		},
 		{
-			"name": "Trim",
+			"name": "BootsTrim",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -2068,7 +2068,7 @@
 			"uuid": "35460729-ab55-285f-b0ee-a4c94f545a2d"
 		},
 		{
-			"name": "Trim",
+			"name": "BootsTrim",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -2112,7 +2112,7 @@
 			"uuid": "861b9a2d-2dfc-9f95-ded3-23d5f169d380"
 		},
 		{
-			"name": "Leather",
+			"name": "LeggingsLeather",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -2156,7 +2156,7 @@
 			"uuid": "1cf702ba-0ca5-eff1-2d30-5562e4afb425"
 		},
 		{
-			"name": "BrimLeather",
+			"name": "LeggingsLeather",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -2200,7 +2200,7 @@
 			"uuid": "2d717f6c-2478-e235-3ee2-ff0721f87d3a"
 		},
 		{
-			"name": "Leather",
+			"name": "LeggingsLeather",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -2244,7 +2244,7 @@
 			"uuid": "565fdeec-1335-59c1-8ef4-a7ec44a46cea"
 		},
 		{
-			"name": "Arm",
+			"name": "Arm_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -2287,7 +2287,7 @@
 			"uuid": "22258bf4-94d9-77ee-4f7a-e9c471562221"
 		},
 		{
-			"name": "Layer",
+			"name": "LEFT_SLEEVE_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -2331,7 +2331,7 @@
 			"uuid": "e31b2007-61db-8b57-0a8d-d5493fef4cf8"
 		},
 		{
-			"name": "Arm",
+			"name": "Arm_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -2374,7 +2374,7 @@
 			"uuid": "7f7ccb33-485e-1aac-3a45-a0d8b90739a8"
 		},
 		{
-			"name": "Layer",
+			"name": "LEFT_SLEEVE_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -2418,7 +2418,7 @@
 			"uuid": "17dd52e1-5952-4cd7-1a6c-2d33f1494429"
 		},
 		{
-			"name": "Arm",
+			"name": "Arm_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -2461,7 +2461,7 @@
 			"uuid": "31c93d11-7e21-b38f-03ba-a7e39b238bf3"
 		},
 		{
-			"name": "Layer",
+			"name": "RIGHT_SLEEVE_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -2505,7 +2505,7 @@
 			"uuid": "8be1adf5-b785-335f-6505-e87805e28df7"
 		},
 		{
-			"name": "Arm",
+			"name": "Arm_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -2548,7 +2548,7 @@
 			"uuid": "1b3a6862-2025-ef8c-9f93-9d75ad8ec2e6"
 		},
 		{
-			"name": "Layer",
+			"name": "RIGHT_SLEEVE_Skin",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -4349,7 +4349,7 @@
 			"override": false,
 			"length": 0,
 			"snapping": 24,
-			"selected": false,
+			"selected": true,
 			"anim_time_update": "",
 			"blend_weight": "",
 			"start_delay": "",

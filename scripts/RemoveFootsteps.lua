@@ -1,6 +1,6 @@
 -- Required scripts
-local merlingParts = require("lib.GroupIndex")(models.models.Merling)
-local average      = require("lib.Average")
+local parts   = require("lib.PartsAPI")
+local average = require("lib.Average")
 
 function events.ON_PLAY_SOUND(id, pos, vol, pitch, loop, cat, path)
 	
@@ -14,6 +14,6 @@ function events.ON_PLAY_SOUND(id, pos, vol, pitch, loop, cat, path)
 	if (player:getPos() - pos):length() > 0.05 then return end
 	
 	-- If sound contains ".step", and the user's merling is above the 0.75 scale threshold, stop the sound
-	if id:find(".step") and average(merlingParts.Tail1:getScale():unpack()) >= 0.75 then return true end
+	if id:find(".step") and average(parts.group.Tail1:getScale():unpack()) >= 0.75 then return true end
 	
 end
