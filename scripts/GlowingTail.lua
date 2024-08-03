@@ -20,6 +20,7 @@ for i, part in ipairs(glowingParts) do
 		part   = part,
 		splash = false,
 		timer  = 0,
+		dry    = tail.dry,
 		glow   = {
 			current    = apply,
 			nextTick   = apply,
@@ -105,10 +106,15 @@ function events.TICK()
 				end
 				
 				-- Adjust timer
-				index.timer = wet and tail.dry or math.max(index.timer - 1, 0)
+				if wet then
+					index.timer = tail.dry
+					index.dry   = tail.dry
+				else
+					index.timer = math.max(index.timer - 1, 0)
+				end
 				
 				-- Apply
-				index.glow.target = index.glow.target * (index.timer / tail.dry)
+				index.glow.target = index.glow.target * (index.timer / index.dry)
 				
 			end
 			
