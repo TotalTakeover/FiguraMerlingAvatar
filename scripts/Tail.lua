@@ -181,7 +181,7 @@ end
 -- Set timer
 local function setDryTimer(x)
 	
-	dryTimer = math.clamp(dryTimer + (x * 20), 100, 6000)
+	dryTimer = math.clamp(dryTimer + (x * 20), 20, 6000)
 	config:save("TailDryTimer", dryTimer)
 	
 end
