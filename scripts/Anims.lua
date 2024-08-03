@@ -2,7 +2,7 @@
 require("lib.GSAnimBlend")
 local parts      = require("lib.PartsAPI")
 local ground     = require("lib.GroundCheck")
-local average    = require("lib.Average")
+local tail       = require("scripts.Tail")
 local waterTicks = require("scripts.WaterTicks")
 local pose       = require("scripts.Posing")
 local effects    = require("scripts.SyncedVariables")
@@ -123,7 +123,8 @@ function events.TICK()
 	local onGround = ground()
 	
 	-- Animation variables
-	local largeTail  = average(parts.group.Tail1:getScale():unpack()) >= 0.75
+	local largeTail  = tail.large >= 0.5
+	local smallTail  = tail.small >= 0.5
 	local groundAnim = (onGround or waterTicks.water >= 20) and not (pose.climb or pose.swim or pose.crawl) and not pose.elytra and not pose.sleep and not player:getVehicle() and not effects.cF
 	
 	-- Directional velocity
@@ -233,7 +234,7 @@ function events.TICK()
 	local swim      = largeTail and ((not onGround and waterTicks.water < 20) or (pose.climb or pose.swim or pose.crawl or pose.elytra or player:getVehicle()) or effects.cF) and not pose.sleep
 	local stand     = largeTail and not isCrawl and groundAnim
 	local crawl     = largeTail and     isCrawl and groundAnim
-	local small     = not largeTail
+	local small     = smallTail and not largeTail
 	local mountUp   = largeTail and player:getVehicle() and mountDir
 	local mountDown = largeTail and player:getVehicle() and not mountDir
 	local sleep     = pose.sleep

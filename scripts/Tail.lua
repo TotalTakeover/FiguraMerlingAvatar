@@ -44,6 +44,12 @@ local earsScale = {
 	currentPos = 0
 }
 
+-- Data sent to other scripts
+local tailData = {
+	large = scale.currentPos,
+	small = smallScale.currentPos,
+}
+
 -- Set lerp start on init
 function events.ENTITY_INIT()
 	
@@ -99,6 +105,10 @@ function events.TICK()
 		end
 	end
 	wasInAir = not ground()
+	
+	-- Update tail data
+	tailData.large = scale.currentPos
+	tailData.small = smallScale.currentPos
 	
 end
 
@@ -197,8 +207,8 @@ function pings.syncTail(a, b, c, d, e, f)
 	
 end
 
--- Host only instructions
-if not host:isHost() then return end
+-- Host only instructions, return tail data
+if not host:isHost() then return tailData end
 
 -- Required scripts
 local itemCheck = require("lib.ItemCheck")
@@ -365,5 +375,5 @@ function events.RENDER(delta, context)
 	
 end
 
--- Return actions
-return t
+-- Return tail data and actions
+return tailData, t

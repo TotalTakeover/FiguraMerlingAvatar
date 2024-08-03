@@ -1,7 +1,7 @@
 -- Required scripts
 local parts      = require("lib.PartsAPI")
 local squapi     = require("lib.SquAPI")
-local average    = require("lib.Average")
+local tailScale  = require("scripts.Tail")
 local waterTicks = require("scripts.WaterTicks")
 local effects    = require("scripts.SyncedVariables")
 
@@ -125,7 +125,7 @@ function events.TICK()
 	local crossR      = rightItem.tag and rightItem.tag["Charged"] == 1
 	
 	-- Arm movement overrides
-	local armShouldMove = (waterTicks.under >= 20 and not effects.cF) or average(parts.group.Tail1:getScale():unpack()) <= 0.6 or anims.crawl:isPlaying()
+	local armShouldMove = (waterTicks.under >= 20 and not effects.cF) or tailScale.large <= 0.5 or anims.crawl:isPlaying()
 	
 	-- Control targets based on variables
 	leftArmLerp.target  = (armsMove or armShouldMove or leftSwing  or bow or ((crossL or crossR) or (using and usingL ~= "NONE"))) and 1 or 0
@@ -138,7 +138,7 @@ function events.TICK()
 	rightArmLerp.nextTick = math.lerp(rightArmLerp.nextTick, rightArmLerp.target, 0.5)
 	
 	-- Control the intensity of the tail function based on its scale
-	local scale = (-math.abs(average(parts.group.Tail1:getScale():unpack()) - 0.5) + 0.5) * 2
+	local scale = tailScale.small * math.map(tailScale.large, 0, 1, 1, 0)
 	tail.bendStrength = scale * tailStrength
 	tail.flyingOffset = scale * tailFlyOffset
 	
