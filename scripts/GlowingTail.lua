@@ -1,5 +1,6 @@
--- Required script
+-- Required scripts
 local parts = require("lib.PartsAPI")
+local tail  = require("scripts.Tail")
 
 -- Config setup
 config:name("Merling")
@@ -104,10 +105,10 @@ function events.TICK()
 				end
 				
 				-- Adjust timer
-				index.timer = wet and 100 or math.max(index.timer - 1, 0)
+				index.timer = wet and tail.dry or math.max(index.timer - 1, 0)
 				
 				-- Apply
-				index.glow.target = index.glow.target * math.map(index.timer, 0, 100, 0, 1)
+				index.glow.target = index.glow.target * (index.timer / tail.dry)
 				
 			end
 			

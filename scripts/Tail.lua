@@ -48,6 +48,7 @@ local earsScale = {
 local tailData = {
 	large = scale.currentPos,
 	small = smallScale.currentPos,
+	dry   = canDry and dryTimer or 20
 }
 
 -- Set lerp start on init
@@ -109,6 +110,7 @@ function events.TICK()
 	-- Update tail data
 	tailData.large = scale.currentPos
 	tailData.small = smallScale.currentPos
+	tailData.dry   = canDry and dryTimer or 20
 	
 end
 
