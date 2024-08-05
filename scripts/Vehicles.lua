@@ -23,7 +23,7 @@ carrier.vehicle.newSeat("Seat1", parts.group.Seat1, {
 function events.TICK()
 	
 	-- Change position of seat
-	local swim = pose.swim or pose.crawl or animations["models.Merling"].crawl:isPlaying()
+	local swim = pose.swim or pose.crawl or animations.Merling.crawl:isPlaying()
 	parts.group.Seat1:pos(swim and vec(0, 0, -4) or nil)
 	
 end

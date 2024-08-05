@@ -8,7 +8,7 @@ local pose       = require("scripts.Posing")
 local effects    = require("scripts.SyncedVariables")
 
 -- Animations setup
-local anims = animations["models.Merling"]
+local anims = animations.Merling
 
 -- Config setup
 config:name("Merling")

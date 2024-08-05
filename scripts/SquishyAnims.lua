@@ -6,7 +6,7 @@ local waterTicks = require("scripts.WaterTicks")
 local effects    = require("scripts.SyncedVariables")
 
 -- Animation setup
-local anims = animations["models.Merling"]
+local anims = animations.Merling
 
 -- Config setup
 config:name("Merling")
