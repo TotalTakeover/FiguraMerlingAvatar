@@ -4,6 +4,7 @@ local squapi     = require("lib.SquAPI")
 local tailScale  = require("scripts.Tail")
 local waterTicks = require("scripts.WaterTicks")
 local effects    = require("scripts.SyncedVariables")
+local lerp      = require("lib.LerpAPI")
 
 -- Animation setup
 local anims = animations.Merling
@@ -12,34 +13,9 @@ local anims = animations.Merling
 config:name("Merling")
 local armsMove = config:load("SquapiArmsMove") or false
 
--- Lerp left arm table
-local leftArmLerp = {
-	current    = 0,
-	nextTick   = 0,
-	target     = 0,
-	currentPos = 0
-}
-
--- Lerp right arm table
-local rightArmLerp = {
-	current    = 0,
-	nextTick   = 0,
-	target     = 0,
-	currentPos = 0
-}
-
--- Set lerp starts on init
-function events.ENTITY_INIT()
-	
-	local apply = armsMove and 1 or 0
-	for k, v in pairs(leftArmLerp) do
-		leftArmLerp[k] = apply
-	end
-	for k, v in pairs(rightArmLerp) do
-		rightArmLerp[k] = apply
-	end
-	
-end
+-- Lerp tables
+local leftArmLerp  = lerp:new(0.5, armsMove and 1 or 0)
+local rightArmLerp = lerp:new(0.5, armsMove and 1 or 0)
 
 -- Squishy ears
 local ears = squapi.ear:new(
@@ -131,12 +107,6 @@ function events.TICK()
 	leftArmLerp.target  = (armsMove or armShouldMove or leftSwing  or bow or ((crossL or crossR) or (using and usingL ~= "NONE"))) and 1 or 0
 	rightArmLerp.target = (armsMove or armShouldMove or rightSwing or bow or ((crossL or crossR) or (using and usingR ~= "NONE"))) and 1 or 0
 	
-	-- Tick lerp
-	leftArmLerp.current   = leftArmLerp.nextTick
-	rightArmLerp.current  = rightArmLerp.nextTick
-	leftArmLerp.nextTick  = math.lerp(leftArmLerp.nextTick,  leftArmLerp.target,  0.5)
-	rightArmLerp.nextTick = math.lerp(rightArmLerp.nextTick, rightArmLerp.target, 0.5)
-	
 	-- Control the intensity of the tail function based on its scale
 	local scale = tailScale.small * math.map(tailScale.large, 0, 1, 1, 0)
 	tail.bendStrength = scale * tailStrength
@@ -151,20 +121,16 @@ function events.RENDER(delta, context)
 	local idleRot     = vec(math.deg(math.sin(idleTimer * 0.067) * 0.05), 0, math.deg(math.cos(idleTimer * 0.09) * 0.05 + 0.05))
 	local firstPerson = context == "FIRST_PERSON"
 	
-	-- Render lerp
-	leftArmLerp.currentPos  = math.lerp(leftArmLerp.current,  leftArmLerp.nextTick,  delta)
-	rightArmLerp.currentPos = math.lerp(rightArmLerp.current, rightArmLerp.nextTick, delta)
-	
 	-- Adjust arm strengths
-	leftArm.strength  = leftArmStrength  * leftArmLerp.currentPos
-	rightArm.strength = rightArmStrength * rightArmLerp.currentPos
+	leftArm.strength  = leftArmStrength  * leftArmLerp.currPos
+	rightArm.strength = rightArmStrength * rightArmLerp.currPos
 	
 	-- Adjust arm characteristics after applied by squapi
 	parts.group.LeftArm
 		:offsetRot(
 			parts.group.LeftArm:getOffsetRot()
-			+ ((-idleRot + (vanilla_model.BODY:getOriginRot() * 0.75)) * math.map(leftArmLerp.currentPos, 0, 1, 1, 0))
-			+ (parts.group.LeftArm:getAnimRot() * math.map(leftArmLerp.currentPos, 0, 1, 0, -2))
+			+ ((-idleRot + (vanilla_model.BODY:getOriginRot() * 0.75)) * math.map(leftArmLerp.currPos, 0, 1, 1, 0))
+			+ (parts.group.LeftArm:getAnimRot() * math.map(leftArmLerp.currPos, 0, 1, 0, -2))
 		)
 		:pos(parts.group.LeftArm:getPos() * vec(1, 1, -1))
 		:visible(not firstPerson)
@@ -172,8 +138,8 @@ function events.RENDER(delta, context)
 	parts.group.RightArm
 		:offsetRot(
 			parts.group.RightArm:getOffsetRot()
-			+ ((idleRot + (vanilla_model.BODY:getOriginRot() * 0.75)) * math.map(rightArmLerp.currentPos, 0, 1, 1, 0))
-			+ (parts.group.RightArm:getAnimRot() * math.map(rightArmLerp.currentPos, 0, 1, 0, -2))
+			+ ((idleRot + (vanilla_model.BODY:getOriginRot() * 0.75)) * math.map(rightArmLerp.currPos, 0, 1, 1, 0))
+			+ (parts.group.RightArm:getAnimRot() * math.map(rightArmLerp.currPos, 0, 1, 0, -2))
 		)
 		:pos(parts.group.RightArm:getPos() * vec(1, 1, -1))
 		:visible(not firstPerson)

@@ -1,5 +1,6 @@
 -- Required scripts
 local parts = require("lib.PartsAPI")
+local lerp  = require("lib.LerpAPI")
 local tail  = require("scripts.Tail")
 
 -- Config setup
@@ -21,12 +22,7 @@ for i, part in ipairs(glowingParts) do
 		splash = false,
 		timer  = 0,
 		dry    = tail.dry,
-		glow   = {
-			current    = apply,
-			nextTick   = apply,
-			target     = apply,
-			currentPos = apply
-		}
+		glow   = lerp:new(0.2, toggle and 1 or 0)
 	}
 	
 end
@@ -125,10 +121,6 @@ function events.TICK()
 			
 		end
 		
-		-- Tick lerp
-		index.glow.current = index.glow.nextTick
-		index.glow.nextTick = math.lerp(index.glow.nextTick, index.glow.target, 0.05)
-		
 	end
 	
 end
@@ -140,12 +132,9 @@ function events.RENDER(delta, context)
 	
 	for _, index in ipairs(glowingParts) do
 		
-		-- Render lerp
-		index.glow.currentPos = math.lerp(index.glow.current, index.glow.nextTick, delta)
-		
 		-- Apply
 		index.part
-			:secondaryColor(index.glow.currentPos)
+			:secondaryColor(index.glow.currPos)
 			:secondaryRenderType(renderType)
 		
 	end

@@ -1,5 +1,6 @@
 -- Required scripts
 local parts   = require("lib.PartsAPI")
+local lerp    = require("lib.LerpAPI")
 local origins = require("lib.OriginsAPI")
 local effects = require("scripts.SyncedVariables")
 
@@ -14,22 +15,7 @@ local water       = config:load("EyesWater") or false
 local glowingParts = parts:createTable(function(part) return part:getName():find("_EyeGlow") end)
 
 -- Lerp eyes table
-local eyes = {
-	current    = 0,
-	nextTick   = 0,
-	target     = 0,
-	currentPos = 0
-}
-
--- Set lerp start on init
-function events.ENTITY_INIT()
-	
-	local apply = toggle and 1 or 0
-	for k in pairs(eyes) do
-		eyes[k] = apply
-	end
-	
-end
+local eyes = lerp:new(0.2, toggle and 1 or 0)
 
 function events.TICK()
 	
@@ -64,22 +50,15 @@ function events.TICK()
 		
 	end
 	
-	-- Tick lerp
-	eyes.current = eyes.nextTick
-	eyes.nextTick = math.lerp(eyes.nextTick, eyes.target, 0.2)
-	
 end
 
 function events.RENDER(delta, context)
-	
-	-- Render lerp
-	eyes.currentPos = math.lerp(eyes.current, eyes.nextTick, delta)
 	
 	-- Apply
 	local renderType = context == "RENDER" and "EMISSIVE" or "EYES"
 	for _, part in ipairs(glowingParts) do
 		part
-			:secondaryColor(eyes.currentPos)
+			:secondaryColor(eyes.currPos)
 			:secondaryRenderType(renderType)
 	end
 	

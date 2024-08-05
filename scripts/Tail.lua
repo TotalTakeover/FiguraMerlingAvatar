@@ -3,6 +3,7 @@ local parts      = require("lib.PartsAPI")
 local ground     = require("lib.GroundCheck")
 local waterTicks = require("scripts.WaterTicks")
 local effects    = require("scripts.SyncedVariables")
+local lerp      = require("lib.LerpAPI")
 
 -- Config setup
 config:name("Merling")
@@ -20,56 +21,18 @@ if fallSound == nil then fallSound = true end
 -- Variables setup
 local wasInAir = false
 
--- Lerp scale table
-local scale = {
-	current    = 0,
-	nextTick   = 0,
-	target     = 0,
-	currentPos = 0
-}
-
--- Lerp small table
-local smallScale = {
-	current    = 0,
-	nextTick   = 0,
-	target     = 0,
-	currentPos = 0
-}
-
--- Lerp ears table
-local earsScale = {
-	current    = 0,
-	nextTick   = 0,
-	target     = 0,
-	currentPos = 0
-}
+-- Lerp variables
+local scale      = lerp:new(0.2, water == 5 and 1 or 0)
+local legsScale  = lerp:new(0.2, water ~= 5 and 1 or 0)
+local smallScale = lerp:new(0.2, small and 1 or 0)
+local earsScale  = lerp:new(0.2, ears and 1 or 0)
 
 -- Data sent to other scripts
 local tailData = {
-	large = scale.currentPos,
-	small = smallScale.currentPos,
 	dry   = canDry and dryTimer or 20
+	large = scale.currPos,
+	small = smallScale.currPos,
 }
-
--- Set lerp start on init
-function events.ENTITY_INIT()
-	
-	local apply = water == 5 and 1 or 0
-	for k in pairs(scale) do
-		scale[k] = apply
-	end
-	
-	local apply = small and 1 or 0
-	for k in pairs(smallScale) do
-		smallScale[k] = apply
-	end
-	
-	local apply = ears and 1 or 0
-	for k in pairs(earsScale) do
-		earsScale[k] = apply
-	end
-	
-end
 
 function events.TICK()
 	
@@ -87,16 +50,8 @@ function events.TICK()
 	smallScale.target = small and 1 or 0
 	earsScale.target  = ears and 1 or 0
 	
-	-- Tick lerp
-	scale.current       = scale.nextTick
-	smallScale.current  = smallScale.nextTick
-	earsScale.current   = earsScale.nextTick
-	scale.nextTick      = math.lerp(scale.nextTick,      scale.target,      0.2)
-	smallScale.nextTick = math.lerp(smallScale.nextTick, smallScale.target, 0.2)
-	earsScale.nextTick  = math.lerp(earsScale.nextTick,  earsScale.target,  0.2)
-	
 	-- Play sound if conditions are met
-	if fallSound and wasInAir and ground() and scale.currentPos >= 0.75 and not player:getVehicle() and not player:isInWater() and not effects.cF then
+	if fallSound and wasInAir and ground() and scale.currPos >= legsForm and not player:getVehicle() and not player:isInWater() and not effects.cF then
 		local vel    = math.abs(-player:getVelocity().y + 1)
 		local dry    = canDry and (dryTimer - waterState[water]) / dryTimer or 1
 		local volume = math.clamp((vel * dry) / 2, 0, 1)
@@ -108,23 +63,18 @@ function events.TICK()
 	wasInAir = not ground()
 	
 	-- Update tail data
-	tailData.large = scale.currentPos
-	tailData.small = smallScale.currentPos
 	tailData.dry   = canDry and dryTimer or 20
+	tailData.large = scale.currPos
+	tailData.small = smallScale.currPos
 	
 end
 
 function events.RENDER(delta, context)
 	
-	-- Render lerp
-	scale.currentPos      = math.lerp(scale.current,      scale.nextTick,      delta)
-	smallScale.currentPos = math.lerp(smallScale.current, smallScale.nextTick, delta)
-	earsScale.currentPos  = math.lerp(earsScale.current,  earsScale.nextTick,  delta)
-	
 	-- Variables
-	local tailScale = (scale.currentPos * math.map(smallScale.currentPos, 0, 1, 1, 0.5)) + (smallScale.currentPos * 0.5)
-	local legScale  = math.map(scale.currentPos, 1, 0, 0, 1)
-	local earScale  = earsScale.currentPos
+	local tailScale = (scale.currPos * math.map(smallScale.currPos, 0, 1, 1, 0.5)) + (smallScale.currPos * 0.5)
+	local legScale  = legsScale.currPos
+	local earScale  = earsScale.currPos
 	
 	-- Apply tail
 	parts.group.Tail1:scale(tailScale)
