@@ -21,8 +21,8 @@ local timer = 0
 local wasInAir = false
 
 -- Lerp variables
-local scale      = lerp:new(0.2, water == 5 and 1 or 0)
-local legsScale  = lerp:new(0.2, water ~= 5 and 1 or 0)
+local scale      = lerp:new(0.2, waterType == 5 and 1 or 0)
+local legsScale  = lerp:new(0.2, waterType ~= 5 and 1 or 0)
 local smallScale = lerp:new(0.2, small and 1 or 0)
 local earsScale  = lerp:new(0.2, ears and 1 or 0)
 
