@@ -16,12 +16,10 @@ local glowingParts = parts:createTable(function(part) return part:getName():find
 
 for i, part in ipairs(glowingParts) do
 	
-	local apply = toggle and 1 or 0
 	glowingParts[i] = {
 		part   = part,
 		splash = false,
 		timer  = 0,
-		dry    = tail.dry,
 		glow   = lerp:new(0.2, toggle and 1 or 0)
 	}
 	
@@ -43,6 +41,17 @@ end
 
 -- Gradual values
 function events.TICK()
+	
+	-- Arm variables
+	local handedness  = player:isLeftHanded()
+	local activeness  = player:getActiveHand()
+	local leftActive  = not handedness and "OFF_HAND" or "MAIN_HAND"
+	local rightActive = handedness and "OFF_HAND" or "MAIN_HAND"
+	local leftItem    = player:getHeldItem(not handedness)
+	local rightItem   = player:getHeldItem(handedness)
+	local using       = player:isUsingItem()
+	local drinkingL   = activeness == leftActive and using and leftItem:getUseAction() == "DRINK"
+	local drinkingR   = activeness == rightActive and using and rightItem:getUseAction() == "DRINK"
 	
 	-- Set glow target
 	-- Toggle check
@@ -78,39 +87,42 @@ function events.TICK()
 					-- Check fluid tags
 					local block = world.getBlockState(pos)
 					for _, tag in ipairs(block:getFluidTags()) do
-						if tag:find("water") then
+						if tag then
 							wet = true
 							break
 						end
 					end
 					
-					-- Check rain
-					if world.getRainGradient() > 0.2 and world.isOpenSky(pos) and world.getBiome(pos):getPrecipitation() == "RAIN" then
+					-- Check drinking water
+					if (drinkingL or drinkingR) and player:getActiveItemTime() > 20
+						or world.getRainGradient() > 0.2 and world.isOpenSky(pos) and world.getBiome(pos):getPrecipitation() == "RAIN"
+						or index.splash then
+						
 						wet = true
-					end
-					
-					-- Check splash
-					if index.splash then
 						index.splash = false
-						wet = true
+						
 					end
 					
 				else
 					
-					wet = player:isWet()
+					wet = player:isWet() or (drinkingL or drinkingR) and player:getActiveItemTime() > 20
 					
 				end
 				
 				-- Adjust timer
 				if wet then
 					index.timer = tail.dry
-					index.dry   = tail.dry
 				else
 					index.timer = math.max(index.timer - 1, 0)
 				end
 				
+				-- Timer should not exceed the max default timer
+				if index.timer > tail.dry then
+					index.timer = tail.dry
+				end
+				
 				-- Apply
-				index.glow.target = index.glow.target * (index.timer / index.dry)
+				index.glow.target = index.glow.target * (index.timer / tail.dry)
 				
 			end
 			
@@ -185,10 +197,10 @@ end
 -- Sync variables
 function pings.syncGlow(a, b, c, d)
 	
-	toggle   = a
-	dynamic  = b
-	water    = c
-	unique = d
+	toggle  = a
+	dynamic = b
+	water   = c
+	unique  = d
 	
 end
 

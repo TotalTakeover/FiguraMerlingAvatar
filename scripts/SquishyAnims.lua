@@ -1,10 +1,9 @@
 -- Required scripts
-local parts      = require("lib.PartsAPI")
-local squapi     = require("lib.SquAPI")
-local tailScale  = require("scripts.Tail")
-local waterTicks = require("scripts.WaterTicks")
-local effects    = require("scripts.SyncedVariables")
+local parts     = require("lib.PartsAPI")
+local squapi    = require("lib.SquAPI")
 local lerp      = require("lib.LerpAPI")
+local tailScale = require("scripts.Tail")
+local effects   = require("scripts.SyncedVariables")
 
 -- Animation setup
 local anims = animations.Merling
@@ -101,7 +100,7 @@ function events.TICK()
 	local crossR      = rightItem.tag and rightItem.tag["Charged"] == 1
 	
 	-- Arm movement overrides
-	local armShouldMove = (waterTicks.under >= 20 and not effects.cF) or tailScale.large <= 0.5 or anims.crawl:isPlaying()
+	local armShouldMove = ((player:isUnderwater() or player:isInLava()) and not effects.cF) or tailScale.large <= tailScale.swap or anims.crawl:isPlaying()
 	
 	-- Control targets based on variables
 	leftArmLerp.target  = (armsMove or armShouldMove or leftSwing  or bow or ((crossL or crossR) or (using and usingL ~= "NONE"))) and 1 or 0

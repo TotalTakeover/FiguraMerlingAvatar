@@ -1,11 +1,11 @@
 -- Required scripts
 require("lib.GSAnimBlend")
-local parts      = require("lib.PartsAPI")
-local ground     = require("lib.GroundCheck")
-local tail       = require("scripts.Tail")
-local waterTicks = require("scripts.WaterTicks")
-local pose       = require("scripts.Posing")
-local effects    = require("scripts.SyncedVariables")
+local parts   = require("lib.PartsAPI")
+local lerp    = require("lib.LerpAPI")
+local ground  = require("lib.GroundCheck")
+local tail    = require("scripts.Tail")
+local pose    = require("scripts.Posing")
+local effects = require("scripts.SyncedVariables")
 
 -- Animations setup
 local anims = animations.Merling
@@ -25,74 +25,30 @@ a.time     = 0
 a.strength = 1
 
 -- Axis variables
-a.pitch    = 0
-a.yaw      = 0
-a.roll     = 0
-a.headY    = 0
+a.pitch = 0
+a.yaw   = 0
+a.roll  = 0
+a.headY = 0
 
 -- Animation types
 a.normal = isShark and 0 or 1
 a.shark  = isShark and 1 or 0
 
 -- Variables
+local waterTimer = 0
 local canTwirl = false
 local isSing   = false
 
 -- Lerps
-local time = {
-	prev = 0,
-	next = 0
-}
+local time     = lerp:new(1)
+local strength = lerp:new(1)
 
-local strength = {
-	prev = 1,
-	next = 1
-}
+local pitch = lerp:new(0.1)
+local yaw   = lerp:new(1)
+local roll  = lerp:new(0.1)
 
-local pitch = {
-	current  = 0,
-	nextTick = 0,
-	target   = 0
-}
-
-local yaw = {
-	current  = 0,
-	nextTick = 0,
-	target   = 0
-}
-
-local roll = {
-	current  = 0,
-	nextTick = 0,
-	target   = 0
-}
-
-local shark = {
-	current  = 0,
-	nextTick = 0,
-	target   = 0
-}
-
-local mountFlipLerp = {
-	current    = 1,
-	nextTick   = 1,
-	target     = 1,
-	currentPos = 1
-}
-
--- Set lerp start on init
-function events.ENTITY_INIT()
-	
-	local apply = isShark and 1 or 0
-	for k in pairs(shark) do
-		shark[k] = apply
-	end
-	local apply = mountFlip and 1 or 0
-	for k in pairs(mountFlipLerp) do
-		mountFlipLerp[k] = apply
-	end
-	
-end
+local shark = lerp:new(0.25, isShark and 1 or 0)
+local mountFlipLerp = lerp:new(0.2, mountFlip and 1 or 0)
 
 -- Spawns notes around a model part
 local function notes(part, blocks)
@@ -122,10 +78,17 @@ function events.TICK()
 	local bodyYaw  = player:getBodyYaw()
 	local onGround = ground()
 	
+	-- Timer settings
+	if player:isInWater() or player:isInLava() then
+		waterTimer = 20
+	else
+		waterTimer = math.max(waterTimer - 1, 0)
+	end
+	
 	-- Animation variables
-	local largeTail  = tail.large >= 0.5
-	local smallTail  = tail.small >= 0.5
-	local groundAnim = (onGround or waterTicks.water >= 20) and not (pose.climb or pose.swim or pose.crawl) and not pose.elytra and not pose.sleep and not player:getVehicle() and not effects.cF
+	local largeTail  = tail.large >= tail.swap
+	local smallTail  = tail.small >= tail.swap or tail.large <= tail.swap
+	local groundAnim = (onGround or waterTimer == 0) and not (pose.climb or pose.swim or pose.crawl) and not pose.elytra and not pose.sleep and not player:getVehicle() and not effects.cF
 	
 	-- Directional velocity
 	local fbVel = player:getVelocity():dot((dir.x_z):normalize())
@@ -138,28 +101,24 @@ function events.TICK()
 	staticYaw = math.lerp(staticYaw, bodyYaw, onGround and math.clamp(vel:length(), 0, 1) or 0.25)
 	local yawDif = staticYaw - bodyYaw
 	
-	-- Store animation variables
-	time.prev     = time.next
-	strength.prev = strength.next
-	
 	-- Animation control
 	if player:getVehicle() then
 		
 		-- In vehicle
-		time.next = time.next + 0.0005
-		strength.next = 1
+		time.target = time.target + 0.0005
+		strength.target = 1
 		
-	elseif (waterTicks.water >= 20 or onGround) and largeTail and not effects.cF then
+	elseif (onGround or waterTimer == 0) and largeTail and not effects.cF then
 		
 		-- Above water or on ground
-		time.next = time.next + math.clamp(fbVel < -0.05 and math.min(fbVel, math.abs(lrVel)) * 0.005 - 0.0005 or math.max(fbVel, math.abs(lrVel)) * 0.005 + 0.0005, -0.0045, 0.0045)
-		strength.next = math.clamp(vel.xz:length() * 2 + 1, 1, 2)
+		time.target = time.target + math.clamp(fbVel < -0.05 and math.min(fbVel, math.abs(lrVel)) * 0.005 - 0.0005 or math.max(fbVel, math.abs(lrVel)) * 0.005 + 0.0005, -0.0045, 0.0045)
+		strength.target = math.clamp(vel.xz:length() * 2 + 1, 1, 2)
 		
 	else
 		
 		-- Assumed floating in water
-		time.next = time.next + math.clamp(vel:length() * 0.005 + 0.0005, -0.0045, 0.0045)
-		strength.next = math.clamp(vel:length() * 2 + 1, 1, 2)
+		time.target = time.target + math.clamp(vel:length() * 0.005 + 0.0005, -0.0045, 0.0045)
+		strength.target = math.clamp(vel:length() * 2 + 1, 1, 2)
 		
 	end
 	
@@ -175,7 +134,7 @@ function events.TICK()
 		-- Assumed climbing
 		pitch.target = 0
 		
-	elseif (pose.swim or waterTicks.water >= 20) and not effects.cF then
+	elseif (pose.swim or waterTimer == 0) and not effects.cF then
 		
 		-- While "swimming" or outside of water
 		pitch.target = math.clamp(-udVel * 40 * -(math.abs(player:getLookDir().y * 2) - 1), -20, 20)
@@ -211,27 +170,11 @@ function events.TICK()
 	-- Shark control
 	shark.target = isShark and 1 or 0
 	
-	-- Tick lerps
-	shark.current  = shark.nextTick
-	shark.nextTick = math.lerp(shark.nextTick, shark.target, 0.25)
-	
-	pitch.current = pitch.nextTick
-	yaw.current   = yaw.nextTick
-	roll.current  = roll.nextTick
-	
-	pitch.nextTick = math.lerp(pitch.nextTick, pitch.target, 0.1)
-	yaw.nextTick   = math.lerp(yaw.nextTick,   yaw.target,   1)
-	roll.nextTick  = math.lerp(roll.nextTick,  roll.target,  0.1)
-	
 	-- Mount rot target
 	mountFlipLerp.target = mountFlip and 1 or -1
 	
-	-- Tick lerp
-	mountFlipLerp.current  = mountFlipLerp.nextTick
-	mountFlipLerp.nextTick = math.lerp(mountFlipLerp.nextTick, mountFlipLerp.target, 0.2)
-	
 	-- Animation states
-	local swim      = largeTail and ((not onGround and waterTicks.water < 20) or (pose.climb or pose.swim or pose.crawl or pose.elytra or player:getVehicle()) or effects.cF) and not pose.sleep
+	local swim      = largeTail and ((not onGround and waterTimer ~= 0) or (pose.climb or pose.swim or pose.crawl or pose.elytra or player:getVehicle()) or effects.cF) and not pose.sleep
 	local stand     = largeTail and not isCrawl and groundAnim
 	local crawl     = largeTail and     isCrawl and groundAnim
 	local small     = smallTail and not largeTail
@@ -258,7 +201,7 @@ function events.TICK()
 	end
 	
 	-- Determins when to stop twirl animaton
-	canTwirl = largeTail and not onGround and waterTicks.water < 20 and not pose.sleep
+	canTwirl = largeTail and not onGround and (waterTimer ~= 0 or effects.cF) and not pose.sleep
 	if not canTwirl then
 		anims.twirl:stop()
 	end
@@ -267,25 +210,23 @@ end
 
 function events.RENDER(delta, context)
 	
-	-- Render lerps
-	a.time     = math.lerp(time.prev, time.next, delta)
-	a.strength = math.lerp(strength.prev, strength.next, delta)
+	-- Store animation variables
+	a.time     = time.currPos
+	a.strength = strength.currPos
 	
-	a.pitch = math.lerp(pitch.current, pitch.nextTick, delta)
-	a.yaw   = math.lerp(yaw.current, yaw.nextTick, delta)
-	a.roll  = math.lerp(roll.current, roll.nextTick, delta)
+	a.pitch = pitch.currPos
+	a.yaw   = yaw.currPos
+	a.roll  = roll.currPos
 	
-	a.shark  = math.lerp(shark.current, shark.nextTick, delta)
+	a.shark  = shark.currPos
 	a.normal = math.map(a.shark, 0, 1, 1 ,0)
-	
-	mountFlipLerp.currentPos = math.lerp(mountFlipLerp.current, mountFlipLerp.nextTick, delta)
 	
 	-- Head Y rot calc (for sleep offset)
 	a.headY = (vanilla_model.HEAD:getOriginRot().y + 180) % 360 - 180
 	
 	-- Animation blending
-	anims.mountUp:blend(mountFlipLerp.currentPos)
-	anims.mountDown:blend(mountFlipLerp.currentPos)
+	anims.mountUp:blend(mountFlipLerp.currPos)
+	anims.mountDown:blend(mountFlipLerp.currPos)
 	
 end
 

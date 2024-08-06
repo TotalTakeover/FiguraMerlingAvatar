@@ -13,6 +13,6 @@ function events.ON_PLAY_SOUND(id, pos, vol, pitch, loop, cat, path)
 	if (player:getPos() - pos):length() > 0.05 then return end
 	
 	-- If sound contains ".step", and the user's merling is above the 0.75 scale threshold, stop the sound
-	if id:find(".step") and tail.large >= 0.5 then return true end
+	if id:find(".step") and tail.large >= tail.swap then return true end
 	
 end

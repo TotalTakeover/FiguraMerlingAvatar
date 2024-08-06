@@ -1,24 +1,23 @@
 -- Required scripts
-local parts      = require("lib.PartsAPI")
-local ground     = require("lib.GroundCheck")
-local waterTicks = require("scripts.WaterTicks")
-local effects    = require("scripts.SyncedVariables")
-local lerp      = require("lib.LerpAPI")
+local parts   = require("lib.PartsAPI")
+local lerp    = require("lib.LerpAPI")
+local ground  = require("lib.GroundCheck")
+local effects = require("scripts.SyncedVariables")
 
 -- Config setup
 config:name("Merling")
-local water     = config:load("TailWater") or 4
+local waterType = config:load("TailWater") or 4
 local small     = config:load("TailSmall")
 local ears      = config:load("TailEars")
-local canDry    = config:load("TailDry")
 local dryTimer  = config:load("TailDryTimer") or 400
 local fallSound = config:load("TailFallSound")
 if small     == nil then small = true end
 if ears      == nil then ears = true end
-if canDry    == nil then canDry = true end
 if fallSound == nil then fallSound = true end
 
 -- Variables setup
+local legsForm = 0.75
+local timer = 0
 local wasInAir = false
 
 -- Lerp variables
@@ -29,31 +28,80 @@ local earsScale  = lerp:new(0.2, ears and 1 or 0)
 
 -- Data sent to other scripts
 local tailData = {
-	dry   = canDry and dryTimer or 20
 	large = scale.currPos,
 	small = smallScale.currPos,
+	dry   = dryTimer,
+	swap  = legsForm
 }
+
+-- Check if a splash potion is broken near the player
+local splash = false
+function events.ON_PLAY_SOUND(id, pos, vol, pitch, loop, category, path)
+	
+	if player:isLoaded() then
+		local atPos      = pos < player:getPos() + 2 and pos > player:getPos() - 2
+		local splashID   = id == "minecraft:entity.splash_potion.break" or id == "minecraft:entity.lingering_potion.break"
+		splash = atPos and splashID and path
+	end
+	
+end
 
 function events.TICK()
 	
+	-- Arm variables
+	local handedness  = player:isLeftHanded()
+	local activeness  = player:getActiveHand()
+	local leftActive  = not handedness and "OFF_HAND" or "MAIN_HAND"
+	local rightActive = handedness and "OFF_HAND" or "MAIN_HAND"
+	local leftItem    = player:getHeldItem(not handedness)
+	local rightItem   = player:getHeldItem(handedness)
+	local using       = player:isUsingItem()
+	local drinkingL   = activeness == leftActive and using and leftItem:getUseAction() == "DRINK"
+	local drinkingR   = activeness == rightActive and using and rightItem:getUseAction() == "DRINK"
+	
+	-- Check for if player has gone underwater
+	local under = player:isUnderwater() or player:isInLava()
+	
+	-- Check for if player is in liquid
+	local water = under or player:isInWater()
+	
+	-- Check for if player touches any liquid
+	local wet = water or player:isWet() or ((drinkingL or drinkingR) and player:getActiveItemTime() > 20) or splash
+	if wet then
+		splash = false
+	end
+	
 	-- Water state table
 	local waterState = {
-		dryTimer + 1,
-		waterTicks.under,
-		waterTicks.water,
-		waterTicks.wet,
-		0
+		false,
+		under,
+		water,
+		wet,
+		true
 	}
 	
+	-- Adjust timer based on state
+	if waterState[waterType] then
+		timer = dryTimer
+	else
+		timer = math.max(timer - 1, 0)
+	end
+	
+	-- Timer should not exceed the max default timer
+	if timer > dryTimer then
+		timer = dryTimer
+	end
+	
 	-- Target
-	scale.target      = waterState[water] <= (canDry and dryTimer or 20) and 1 or 0
+	scale.target      = timer / dryTimer
+	legsScale.target  = timer / dryTimer <= legsForm and 1 or 0
 	smallScale.target = small and 1 or 0
 	earsScale.target  = ears and 1 or 0
 	
 	-- Play sound if conditions are met
 	if fallSound and wasInAir and ground() and scale.currPos >= legsForm and not player:getVehicle() and not player:isInWater() and not effects.cF then
 		local vel    = math.abs(-player:getVelocity().y + 1)
-		local dry    = canDry and (dryTimer - waterState[water]) / dryTimer or 1
+		local dry    = scale.currPos
 		local volume = math.clamp((vel * dry) / 2, 0, 1)
 		
 		if volume ~= 0 then
@@ -63,9 +111,9 @@ function events.TICK()
 	wasInAir = not ground()
 	
 	-- Update tail data
-	tailData.dry   = canDry and dryTimer or 20
 	tailData.large = scale.currPos
 	tailData.small = smallScale.currPos
+	tailData.dry   = dryTimer
 	
 end
 
@@ -94,13 +142,13 @@ end
 -- Water sensitivity
 function pings.setTailWater(i)
 	
-	water = water + i
-	if water > 5 then water = 1 end
-	if water < 1 then water = 5 end
+	waterType = waterType + i
+	if waterType > 5 then waterType = 1 end
+	if waterType < 1 then waterType = 5 end
 	if player:isLoaded() and host:isHost() and i ~= 0 then
 		sounds:playSound("ambient.underwater.enter", player:getPos(), 0.35)
 	end
-	config:save("TailWater", water)
+	config:save("TailWater", waterType)
 	
 end
 
@@ -120,18 +168,10 @@ function pings.setTailEars(boolean)
 	
 end
 
--- Dry toggle
-function pings.setTailDry(boolean)
-	
-	canDry = boolean
-	config:save("TailDry", canDry)
-	
-end
-
 -- Set timer
 local function setDryTimer(x)
 	
-	dryTimer = math.clamp(dryTimer + (x * 20), 20, 6000)
+	dryTimer = math.clamp(dryTimer + (x * 20), 20, 72000)
 	config:save("TailDryTimer", dryTimer)
 	
 end
@@ -148,14 +188,13 @@ function pings.setTailFallSound(boolean)
 end
 
 -- Sync variables
-function pings.syncTail(a, b, c, d, e, f)
+function pings.syncTail(a, b, c, d, e)
 	
-	water     = a
+	waterType = a
 	small     = b
 	ears      = c
-	canDry    = d
-	dryTimer  = e
-	fallSound = f
+	dryTimer  = d
+	fallSound = e
 	
 end
 
@@ -203,7 +242,7 @@ end
 function events.TICK()
 	
 	if world.getTime() % 200 == 0 then
-		pings.syncTail(water, small, ears, canDry, dryTimer, fallSound)
+		pings.syncTail(waterType, small, ears, dryTimer, fallSound)
 	end
 	
 end
@@ -228,11 +267,8 @@ t.smallPage = action_wheel:newAction()
 
 t.dryPage = action_wheel:newAction()
 	:item(itemCheck("water_bucket"))
-	:toggleItem(itemCheck("leather"))
-	:onToggle(pings.setTailDry)
 	:onScroll(setDryTimer)
-	:onRightClick(function() dryTimer = 400 config:save("TailDryTimer", dryTimer) end)
-	:toggled(canDry)
+	:onLeftClick(function() dryTimer = 400 config:save("TailDryTimer", dryTimer) end)
 
 t.soundPage = action_wheel:newAction()
 	:item(itemCheck("sponge"))
@@ -269,6 +305,19 @@ local waterInfo = {
 	}
 }
 
+-- Creates a clock string
+local function timeStr(seconds)
+
+	local min = seconds >= 60
+		and ("%d Minute%s"):format(seconds / 60, seconds >= 120 and "s" or "")
+		or nil
+	
+	local sec = ("%d Second%s"):format(seconds % 60, seconds % 60 == 1 and "" or "s")
+	
+	return min and (min.." "..sec) or sec
+	
+end
+
 -- Update actions
 function events.RENDER(delta, context)
 	
@@ -279,12 +328,12 @@ function events.RENDER(delta, context)
 				{text = "Water Sensitivity\n\n", bold = true, color = color.primary},
 				{text = "Determines how your tail should form in contact with water.\n\n", color = color.secondary},
 				{text = "Current configuration: ", bold = true, color = color.secondary},
-				{text = waterInfo[water].title.label.text, color = waterInfo[water].title.label.color},
+				{text = waterInfo[waterType].title.label.text, color = waterInfo[waterType].title.label.color},
 				{text = " | "},
-				{text = waterInfo[water].title.text, color = color.secondary}}
+				{text = waterInfo[waterType].title.text, color = color.secondary}}
 			)
-			:color(vectors.hexToRGB(waterInfo[water].color))
-			:item(itemCheck(waterInfo[water].item.."{'CustomPotionColor':" .. tostring(0x0094FF) .. "}"))
+			:color(vectors.hexToRGB(waterInfo[waterType].color))
+			:item(itemCheck(waterInfo[waterType].item.."{'CustomPotionColor':" .. tostring(0x0094FF) .. "}"))
 		
 		t.earsPage
 			:title(toJson
@@ -302,14 +351,22 @@ function events.RENDER(delta, context)
 			)
 			:toggled(small)
 		
+		-- Timers
+		local setTimer  = timeStr(dryTimer / 20)
+		local legsTimer = timeStr(math.max(math.ceil((timer - (dryTimer * legsForm)) / 20), 0))
+		local fullTimer = timeStr(math.ceil(timer / 20))
+		
 		t.dryPage
 			:title(toJson
 				{"",
-				{text = "Toggle Drying/Timer\n\n", bold = true, color = color.primary},
-				{text = "Toggles the gradual drying of your tail until your legs form again.\n\n", color = color.secondary},
-				{text = "Current drying timer: ", bold = true, color = color.secondary},
-				{text = (canDry and ((dryTimer / 20).." Seconds") or "None").."\n\n"},
-				{text = "Scroll to adjust the timer.\nRight click resets timer to 20 seconds.", color = color.secondary}}
+				{text = "Set Drying Timer\n\n", bold = true, color = color.primary},
+				{text = "Scroll to adjust how long it takes for you to dry.\nLeft click resets timer to 20 seconds.\n\n", color = color.secondary},
+				{text = "Drying timer:\n", bold = true, color = color.secondary},
+				{text = setTimer.."\n\n"},
+				{text = "Time left until legs:\n", bold = true, color = color.secondary},
+				{text = legsTimer.."\n\n"},
+				{text = "Time left until fully dry:\n", bold = true, color = color.secondary},
+				{text = fullTimer}}
 			)
 		
 		t.soundPage
