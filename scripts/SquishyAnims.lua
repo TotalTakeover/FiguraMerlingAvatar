@@ -13,7 +13,6 @@ config:name("Merling")
 local armsMove = config:load("SquapiArmsMove") or false
 
 -- Lerp tables
-local tailLerp     = lerp:new(0.5, tailScale.scale)
 local leftArmLerp  = lerp:new(0.5, armsMove and 1 or 0)
 local rightArmLerp = lerp:new(0.5, armsMove and 1 or 0)
 
@@ -108,7 +107,9 @@ function events.TICK()
 	rightArmLerp.target = (armsMove or armShouldMove or rightSwing or bow or ((crossL or crossR) or (using and usingR ~= "NONE"))) and 1 or 0
 	
 	-- Control the intensity of the tail function based on its scale
-	tailLerp.target = tailScale.large <= tailScale.swap and 1 or 0
+	local scale = tailScale.small * math.map(tailScale.large, 0, 1, 1, 0)
+	tail.bendStrength = scale * tailStrength
+	tail.flyingOffset = scale * tailFlyOffset
 	
 end
 
@@ -145,10 +146,6 @@ function events.RENDER(delta, context)
 	-- Set visible if in first person
 	parts.group.LeftArmFP:visible(firstPerson)
 	parts.group.RightArmFP:visible(firstPerson)
-	
-	-- Control the intensity of the tail function based on its scale
-	tail.bendStrength = tailLerp.currPos * tailStrength
-	tail.flyingOffset = tailLerp.currPos * tailFlyOffset
 	
 end
 
