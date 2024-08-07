@@ -28,6 +28,7 @@ local earsScale  = lerp:new(0.2, ears and 1 or 0)
 
 -- Data sent to other scripts
 local tailData = {
+	scale = scale.target,
 	large = scale.currPos,
 	small = smallScale.currPos,
 	dry   = dryTimer,
@@ -110,11 +111,6 @@ function events.TICK()
 	end
 	wasInAir = not ground()
 	
-	-- Update tail data
-	tailData.large = scale.currPos
-	tailData.small = smallScale.currPos
-	tailData.dry   = dryTimer
-	
 end
 
 function events.RENDER(delta, context)
@@ -136,6 +132,12 @@ function events.RENDER(delta, context)
 	parts.group.RightEar:scale(earScale)
 	parts.group.LeftEarSkull:scale(earScale)
 	parts.group.RightEarSkull:scale(earScale)
+	
+	-- Update tail data
+	tailData.scale = tailScale
+	tailData.large = scale.currPos
+	tailData.small = smallScale.currPos
+	tailData.dry   = dryTimer
 	
 end
 

@@ -4520,7 +4520,7 @@
 							"data_points": [
 								{
 									"x": "0",
-									"y": "local t = require(\"scripts.Anims\") return\n0-math.abs(math.sin(t.time*180-45)*(t.strength-1)*1.5)\n",
+									"y": "local t = require(\"scripts.Anims\") return\n0-(t.scale*12)-math.abs(math.sin(t.time*180-45)*(t.strength-1)*1.5)\n",
 									"z": "0"
 								}
 							],

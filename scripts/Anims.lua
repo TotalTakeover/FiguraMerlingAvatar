@@ -29,6 +29,7 @@ a.pitch = 0
 a.yaw   = 0
 a.roll  = 0
 a.headY = 0
+a.scale = math.map(tail.scale, 0, 1, 1, 0)
 
 -- Animation types
 a.normal = isShark and 0 or 1
@@ -217,6 +218,7 @@ function events.RENDER(delta, context)
 	a.pitch = pitch.currPos
 	a.yaw   = yaw.currPos
 	a.roll  = roll.currPos
+	a.scale = math.map(tail.scale, 0, 1, 1, 0)
 	
 	a.shark  = shark.currPos
 	a.normal = math.map(a.shark, 0, 1, 1 ,0)
