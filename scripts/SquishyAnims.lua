@@ -107,7 +107,7 @@ function events.TICK()
 	rightArmLerp.target = (armsMove or armShouldMove or rightSwing or bow or ((crossL or crossR) or (using and usingR ~= "NONE"))) and 1 or 0
 	
 	-- Control the intensity of the tail function based on its scale
-	local scale = tailScale.small * math.map(tailScale.large, 0, 1, 1, 0)
+	local scale = tailScale.large <= tailScale.swap and 1 or 0
 	tail.bendStrength = scale * tailStrength
 	tail.flyingOffset = scale * tailFlyOffset
 	
