@@ -258,6 +258,7 @@ local t = {}
 t.waterPage = action_wheel:newAction()
 	:onLeftClick(function() pings.setTailWater(1)end)
 	:onRightClick(function() pings.setTailWater(-1) end)
+	:onScroll(pings.setTailWater)
 
 t.earsPage = action_wheel:newAction()
 	:item(itemCheck("prismarine_crystals"))
