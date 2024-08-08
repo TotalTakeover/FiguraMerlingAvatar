@@ -194,7 +194,7 @@ function events.RENDER(delta, context)
 			:title(toJson
 				{"",
 				{text = "Origins Power Toggle\n\n", bold = true, color = color.primary},
-				{text = "Toggles the glowing based on Origin's underwater sight power.\nThe eyes will only glow when this power is active.", color = color.secondary}}
+				{text = "Toggles the glowing based on Origin\'s underwater sight power.\nThe eyes will only glow when this power is active.", color = color.secondary}}
 			)
 		
 		t.nightVisionPage

@@ -100,8 +100,8 @@ function events.RENDER(delta, context)
 		t.dolphinsGracePage
 			:title(toJson
 				{"",
-				{text = "Dolphin's Grace Toggle\n\n", bold = true, color = color.primary},
-				{text = "Toggles the whirlpool based on having the Dolphin's Grace Effect.", color = color.secondary}}
+				{text = "Dolphin\'s Grace Toggle\n\n", bold = true, color = color.primary},
+				{text = "Toggles the whirlpool based on having the Dolphin\'s Grace Effect.", color = color.secondary}}
 			)
 		
 		for _, page in pairs(t) do
