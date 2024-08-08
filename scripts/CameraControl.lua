@@ -193,7 +193,7 @@ local t = {}
 -- Actions
 t.posPage = action_wheel:newAction()
 	:item(itemCheck("skeleton_skull"))
-	:toggleItem(itemCheck("player_head{'SkullOwner':'"..avatar:getEntityName().."'}"))
+	:toggleItem(itemCheck("player_head{SkullOwner:"..avatar:getEntityName().."}"))
 	:onToggle(pings.setCameraPos)
 	:toggled(camPos)
 

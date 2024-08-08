@@ -166,7 +166,7 @@ t.powerPage = action_wheel:newAction()
 
 t.nightVisionPage = action_wheel:newAction()
 	:item(itemCheck("glass_bottle"))
-	:toggleItem(itemCheck("potion{'CustomPotionColor':" .. tostring(0x96C54F) .. "}"))
+	:toggleItem(itemCheck("potion{CustomPotionColor:" .. tostring(0x96C54F) .. "}"))
 	:onToggle(pings.setEyesNightVision)
 	:toggled(nightVision)
 

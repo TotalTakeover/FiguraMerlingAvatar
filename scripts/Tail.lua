@@ -338,7 +338,7 @@ function events.RENDER(delta, context)
 				{text = waterInfo[waterType].title.text, color = color.secondary}}
 			)
 			:color(vectors.hexToRGB(waterInfo[waterType].color))
-			:item(itemCheck(waterInfo[waterType].item.."{'CustomPotionColor':" .. tostring(0x0094FF) .. "}"))
+			:item(itemCheck(waterInfo[waterType].item.."{CustomPotionColor:" .. tostring(0x0094FF) .. "}"))
 		
 		t.earsPage
 			:title(toJson
