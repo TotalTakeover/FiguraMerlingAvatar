@@ -256,7 +256,7 @@ local t = {}
 
 -- Actions
 t.waterPage = action_wheel:newAction()
-	:onLeftClick(function() pings.setTailWater(1)end)
+	:onLeftClick(function() pings.setTailWater(1) end)
 	:onRightClick(function() pings.setTailWater(-1) end)
 	:onScroll(pings.setTailWater)
 
