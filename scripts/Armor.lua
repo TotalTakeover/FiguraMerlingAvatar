@@ -7,29 +7,17 @@ kattArmor.Armor.Leggings:setLayer(1)
 
 -- Armor parts
 kattArmor.Armor.Leggings
-	:addParts(
-		table.unpack(parts:createTable(function(part) return part:getName() == "Leggings" end))
-	)
-	:addTrimParts(
-		table.unpack(parts:createTable(function(part) return part:getName() == "LeggingsTrim" end))
-	)
+	:addParts(table.unpack(parts:createTable(function(part) return part:getName() == "Leggings" end)))
+	:addTrimParts(table.unpack(parts:createTable(function(part) return part:getName() == "LeggingsTrim" end)))
 kattArmor.Armor.Boots
-	:addParts(
-		table.unpack(parts:createTable(function(part) return part:getName() == "Boots" end))
-	)
-	:addTrimParts(
-		table.unpack(parts:createTable(function(part) return part:getName() == "BootsTrim" end))
-	)
+	:addParts(table.unpack(parts:createTable(function(part) return part:getName() == "Boots" end)))
+	:addTrimParts(table.unpack(parts:createTable(function(part) return part:getName() == "BootsTrim" end)))
 
 -- Leather armor
 kattArmor.Materials.leather
 	:setTexture(textures["textures.armor.leatherArmor"] or textures["Merling.leatherArmor"])
-	:addParts(kattArmor.Armor.Leggings,
-		table.unpack(parts:createTable(function(part) return part:getName() == "LeggingsLeather" end))
-	)
-	:addParts(kattArmor.Armor.Boots,
-		table.unpack(parts:createTable(function(part) return part:getName() == "BootsLeather" end))
-	)
+	:addParts(kattArmor.Armor.Leggings,table.unpack(parts:createTable(function(part) return part:getName() == "LeggingsLeather" end)))
+	:addParts(kattArmor.Armor.Boots,table.unpack(parts:createTable(function(part) return part:getName() == "BootsLeather" end)))
 
 -- Chainmail armor
 kattArmor.Materials.chainmail
