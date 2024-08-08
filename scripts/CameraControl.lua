@@ -9,7 +9,7 @@ local savedServers = config:load("CameraServers") or {}
 
 -- Get server id
 local serverData = client:getServerData()
-local serverId   = serverData.ip and serverData.ip or serverData.name
+local serverId   = serverData.ip and serverData.ip or serverData.name or "none"
 
 -- Establish server, and set eyePos to server
 savedServers[serverId] = savedServers[serverId] or false
