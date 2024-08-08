@@ -28,7 +28,7 @@ local earsScale  = lerp:new(0.2, ears and 1 or 0)
 
 -- Data sent to other scripts
 local tailData = {
-	scale = (scale.currPos * math.map(smallScale.currPos, 0, 1, 1, 0.5)) + (smallScale.currPos * 0.5),
+	scale = scale.currPos * math.map(smallScale.currPos, 0, 1, 1, 0.5) + smallScale.currPos * 0.5,
 	large = scale.currPos,
 	small = smallScale.currPos,
 	legs  = legsScale.currPos,
@@ -117,7 +117,7 @@ end
 function events.RENDER(delta, context)
 	
 	-- Variables
-	local tailScale = (scale.currPos * math.map(smallScale.currPos, 0, 1, 1, 0.5)) + (smallScale.currPos * 0.5)
+	local tailScale = scale.currPos * math.map(smallScale.currPos, 0, 1, 1, 0.5) + smallScale.currPos * 0.5
 	local legScale  = legsScale.currPos
 	local earScale  = earsScale.currPos
 	
