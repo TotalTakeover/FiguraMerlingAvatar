@@ -89,7 +89,7 @@ function events.TICK()
 	-- Animation variables
 	local largeTail  = tail.large >= tail.swap
 	local smallTail  = tail.small >= tail.swap or tail.large <= tail.swap
-	local groundAnim = (onGround or waterTimer == 0) and not (pose.climb or pose.swim or pose.crawl) and not pose.elytra and not pose.sleep and not player:getVehicle() and not effects.cF
+	local groundAnim = (onGround or waterTimer == 0) and not (pose.climb or pose.swim or pose.crawl or pose.spin) and not pose.elytra and not pose.sleep and not player:getVehicle() and not effects.cF
 	
 	-- Directional velocity
 	local fbVel = player:getVelocity():dot((dir.x_z):normalize())
@@ -130,7 +130,7 @@ function events.TICK()
 		-- When using elytra
 		pitch.target = math.clamp(-udVel * 20 * (-math.abs(player:getLookDir().y) + 1), -20, 20)
 		
-	elseif pose.climb or not largeTail then
+	elseif pose.climb or not largeTail or pose.spin then
 		
 		-- Assumed climbing
 		pitch.target = 0
