@@ -2,17 +2,19 @@
 	"name": "Merling",
 	"description": "\"Splish splash, I was taking a bath.\"",
 	"authors": [
-		"\nDetrilogue (Original avatar maker)\n",
-		"FlossenMonster (Template Designer, Support)\n",
-		"Snqwblind (Twirl & Sing Anims)\n",
-		"Katt (Updated scripts, APIs)\n",
-		"Grandpa Scout (APIs)\n",
-		"Jimmy (QA, Animation code)\n",
-		"Squishy (APIs)\n",
-		"4P5 (APIs, Better Action Wheel)\n",
-		"PoolloverNathan (JSONs)\n",
-		"Dragonearuss (Support)\n",
-		"Total (Avatar Maker)\n"
+		"Detrilogue",
+		"FlossenMonster",
+		"Total",
+		"§f§nCredits§r",
+		"Snqwblind",
+		"Dragonearuss",
+		"Jimmy",
+		"PoolloverNathan",
+		"§f§nLibraries§r",
+		"Grandpa Scout (GSAnimBlend, GSCarrier)",
+		"Squishy (SquAPI)",
+		"Katt (OriginsAPI, KattArmor, DynamicCrosshair)",
+		"4P5 (GroundCheck)"
 	],
 	"version": "0.1.4"
 }

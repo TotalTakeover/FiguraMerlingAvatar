@@ -3,17 +3,21 @@
 This Figura avatar is a template designed around giving the user a customizable merfolk tail.
 
 ### Authors:
-- Detrilogue (Original avatar maker)
-- FlossenMonster (Template Designer, Support)
-- Snqwblind (Twirl & Sing Anims)
-- Katt (Updated scripts, APIs)
-- Grandpa Scout (APIs)
-- Jimmy (QA, Animation code)
-- Squishy (APIs)
-- 4P5 (APIs, Better Action Wheel)
-- PoolloverNathan (JSONs)
-- Dragonearuss (Support)
-- Total (Avatar Maker)
+- Detrilogue
+- FlossenMonster
+- Total
+
+### Credits:
+- Snqwblind
+- Dragonearuss
+- Jimmy
+- PoolloverNathan
+
+### Libraries:
+- Grandpa Scout (GSAnimBlend, GSCarrier)
+- Squishy (SquAPI)
+- Katt (OriginsAPI, KattArmor, DynamicCrosshair)
+- 4P5 (GroundCheck)
 
 ## Features
 Below is a list of all features this Avatar contains, but you could always watch instead of read: 
