@@ -751,10 +751,11 @@ function squapi.arm:new(element, strength, isRight, keepPosition)
     function self:getVanilla()
         if self.isRight then 
             self.rot = vanilla_model.RIGHT_ARM:getOriginRot()
+		    self.pos = -vanilla_model.RIGHT_ARM:getOriginPos()
         else
             self.rot = vanilla_model.LEFT_ARM:getOriginRot()
+		    self.pos = -vanilla_model.LEFT_ARM:getOriginPos()
         end
-        self.pos = -vanilla_model.LEFT_ARM:getOriginPos()
         return self.rot, self.pos
     end
 

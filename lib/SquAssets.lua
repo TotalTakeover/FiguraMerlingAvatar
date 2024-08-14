@@ -316,7 +316,7 @@ function squassets.vanillaElement:new(element, strength, keepPosition)
     function self:render(dt, context)
         if self.enabled then
             local rot, pos = self:getVanilla()
-            self.element:setOffsetRot(rot*self.strength)
+            self.element:setOffsetRot(((rot+180)%360-180)*self.strength)
 			if self.keepPosition then
 				self.element:setPos(pos)
 			end
