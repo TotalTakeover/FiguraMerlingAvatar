@@ -49,7 +49,7 @@ local pages = {
 }
 
 -- Page actions
-local pageActions = {
+local pageActs = {
 	
 	avatar = action_wheel:newAction()
 		:item(itemCheck("armor_stand"))
@@ -93,52 +93,52 @@ local pageActions = {
 function events.RENDER(delta, context)
 	
 	if action_wheel:isEnabled() then
-		pageActions.avatar
+		pageActs.avatar
 			:title(toJson
 				{text = "Avatar Settings", bold = true, color = color.primary}
 			)
 		
-		pageActions.tail
+		pageActs.tail
 			:title(toJson
 				{text = "Merling Settings", bold = true, color = color.primary}
 			)
 		
-		pageActions.glow
+		pageActs.glow
 			:title(toJson
 				{text = "Glowing Settings", bold = true, color = color.primary}
 			)
 		
-		pageActions.anims
+		pageActs.anims
 			:title(toJson
 				{text = "Animations", bold = true, color = color.primary}
 			)
 		
-		pageActions.armor
+		pageActs.armor
 			:title(toJson
 				{text = "Armor Settings", bold = true, color = color.primary}
 			)
 		
-		pageActions.camera
+		pageActs.camera
 			:title(toJson
 				{text = "Camera Settings", bold = true, color = color.primary}
 			)
 		
-		pageActions.dry
+		pageActs.dry
 			:title(toJson
 				{text = "Drying Settings", bold = true, color = color.primary}
 			)
 		
-		pageActions.whirlpool
+		pageActs.whirlpool
 			:title(toJson
 				{text = "Whirlpool Settings", bold = true, color = color.primary}
 			)
 		
-		pageActions.eyes
+		pageActs.eyes
 			:title(toJson
 				{text = "Glowing Eyes Settings", bold = true, color = color.primary}
 			)
 		
-		for _, page in pairs(pageActions) do
+		for _, page in pairs(pageActs) do
 			page:hoverColor(color.hover)
 		end
 		
@@ -160,17 +160,17 @@ action_wheel:setPage(pages.main)
 
 -- Main actions
 pages.main
-	:action( -1, pageActions.avatar)
-	:action( -1, pageActions.tail)
-	:action( -1, pageActions.glow)
-	:action( -1, pageActions.anims)
+	:action( -1, pageActs.avatar)
+	:action( -1, pageActs.tail)
+	:action( -1, pageActs.glow)
+	:action( -1, pageActs.anims)
 
 -- Avatar actions
 pages.avatar
-	:action( -1, pageActions.armor)
-	:action( -1, pageActions.camera)
 	:action( -1, avatar.vanillaSkinAct)
 	:action( -1, avatar.modelAct)
+	:action( -1, pageActs.armor)
+	:action( -1, pageActs.camera)
 	:action( -1, backAct)
 
 -- Armor actions
@@ -190,11 +190,11 @@ pages.camera
 
 -- Tail actions
 pages.tail
-	:action( -1, pageActions.dry)
-	:action( -1, pageActions.whirlpool)
 	:action( -1, tail.waterAct)
 	:action( -1, tail.smallAct)
 	:action( -1, tail.earsAct)
+	:action( -1, pageActs.dry)
+	:action( -1, pageActs.whirlpool)
 	:action( -1, backAct)
 
 -- Dry actions
@@ -211,11 +211,11 @@ pages.whirlpool
 
 -- Glowing actions
 pages.glow
-	:action( -1, pageActions.eyes)
 	:action( -1, glow.toggleAct)
 	:action( -1, glow.dynamicAct)
 	:action( -1, glow.waterAct)
 	:action( -1, glow.uniqueAct)
+	:action( -1, pageActs.eyes)
 	:action( -1, backAct)
 
 -- Eye glow actions
