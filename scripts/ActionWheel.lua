@@ -147,7 +147,7 @@ function events.RENDER(delta, context)
 end
 
 -- Action back to previous page
-local backAction = action_wheel:newAction()
+local backAct = action_wheel:newAction()
 	:title(toJson
 		{text = "Go Back?", bold = true, color = "red"}
 	)
@@ -169,68 +169,69 @@ pages.main
 pages.avatar
 	:action( -1, pageActions.armor)
 	:action( -1, pageActions.camera)
-	:action( -1, backAction)
 	:action( -1, avatar.vanillaSkinAct)
 	:action( -1, avatar.modelAct)
+	:action( -1, backAct)
 
 -- Armor actions
 pages.armor
-	:action( -1, backAction)
 	:action( -1, armor.allAct)
 	:action( -1, armor.bootsAct)
 	:action( -1, armor.leggingsAct)
 	:action( -1, armor.chestplateAct)
 	:action( -1, armor.helmetAct)
+	:action( -1, backAct)
 
 -- Camera actions
 pages.camera
-	:action( -1, backAction)
 	:action( -1, camera.posAct)
 	:action( -1, camera.eyeAct)
+	:action( -1, backAct)
 
 -- Tail actions
 pages.tail
 	:action( -1, pageActions.dry)
 	:action( -1, pageActions.whirlpool)
-	:action( -1, backAction)
 	:action( -1, tail.waterAct)
 	:action( -1, tail.smallAct)
 	:action( -1, tail.earsAct)
+	:action( -1, backAct)
 
 -- Dry actions
 pages.dry
-	:action( -1, backAction)
 	:action( -1, tail.dryAct)
 	:action( -1, tail.soundAct)
+	:action( -1, backAct)
 
 -- Whirlpool actions
 pages.whirlpool
-	:action( -1, backAction)
 	:action( -1, whirlpool.bubbleAct)
 	:action( -1, whirlpool.dolphinsGraceAct)
+	:action( -1, backAct)
 
 -- Glowing actions
 pages.glow
 	:action( -1, pageActions.eyes)
-	:action( -1, backAction)
 	:action( -1, glow.toggleAct)
 	:action( -1, glow.dynamicAct)
 	:action( -1, glow.waterAct)
 	:action( -1, glow.uniqueAct)
+	:action( -1, backAct)
 
 -- Eye glow actions
 pages.eyes
-	:action( -1, backAction)
 	:action( -1, eyes.toggleAct)
 	:action( -1, eyes.powerAct)
 	:action( -1, eyes.nightVisionAct)
 	:action( -1, eyes.waterAct)
+	:action( -1, backAct)
 
 -- Animation actions
 pages.anims
-	:action( -1, backAction)	:action( -1, anims.sharkAct)
+	:action( -1, anims.sharkAct)
 	:action( -1, anims.crawlAct)
 	:action( -1, anims.mountAct)
 	:action( -1, squapi.armsAct)
 	:action( -1, anims.twirlAct)
 	:action( -1, anims.singAct)
+	:action( -1, backAct)
