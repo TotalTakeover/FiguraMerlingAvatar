@@ -207,7 +207,8 @@ if not host:isHost() then return tailData end
 
 -- Required scripts
 local itemCheck = require("lib.ItemCheck")
-local color     = require("scripts.ColorProperties")
+local s, color = pcall(require, "scripts.ColorProperties")
+if not s then color = {} end
 
 -- Tail Keybind
 local waterBind   = config:load("TailWaterKeybind") or "key.keyboard.keypad.1"

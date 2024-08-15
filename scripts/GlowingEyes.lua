@@ -123,7 +123,8 @@ if not host:isHost() then return end
 
 -- Required scripts
 local itemCheck = require("lib.ItemCheck")
-local color     = require("scripts.ColorProperties")
+local s, color = pcall(require, "scripts.ColorProperties")
+if not s then color = {} end
 
 -- Glow eyes keybind
 local toggleBind   = config:load("EyesToggleKeybind") or "key.keyboard.keypad.5"

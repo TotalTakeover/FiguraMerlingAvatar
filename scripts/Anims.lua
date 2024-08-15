@@ -324,7 +324,8 @@ if not host:isHost() then return a end
 
 -- Required scripts
 local itemCheck = require("lib.ItemCheck")
-local color     = require("scripts.ColorProperties")
+local s, color = pcall(require, "scripts.ColorProperties")
+if not s then color = {} end
 
 -- Twirl keybind
 local twirlBind   = config:load("AnimTwirlKeybind") or "key.keyboard.keypad.6"

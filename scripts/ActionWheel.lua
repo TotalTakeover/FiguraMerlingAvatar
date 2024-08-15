@@ -3,16 +3,36 @@ if not host:isHost() then return end
 
 -- Required scripts
 local itemCheck = require("lib.ItemCheck")
-local avatar    = require("scripts.Player")
-local armor     = require("scripts.Armor")
-local camera    = require("scripts.CameraControl")
-local _, tail   = require("scripts.Tail")
-local whirlpool = require("scripts.WhirlpoolEffect")
-local glow      = require("scripts.GlowingTail")
-local eyes      = require("scripts.GlowingEyes")
-local _, anims  = require("scripts.Anims")
-local squapi    = require("scripts.SquishyAnims")
-local color     = require("scripts.ColorProperties")
+
+local s, avatar = pcall(require, "scripts.Player")
+if not s then avatar = {} end
+
+local s, armor = pcall(require, "scripts.Armor")
+if not s then armor = {} end
+
+local s, camera = pcall(require, "scripts.CameraControl")
+if not s then camera = {} end
+
+local s, _, tail = pcall(require, "scripts.Tail")
+if not s then tail = {} end
+
+local s, whirlpool = pcall(require, "scripts.WhirlpoolEffect")
+if not s then whirlpool = {} end
+
+local s, glow = pcall(require, "scripts.GlowingTail")
+if not s then glow = {} end
+
+local s, eyes = pcall(require, "scripts.GlowingEyes")
+if not s then eyes = {} end
+
+local s, _, anims = pcall(require, "scripts.Anims")
+if not s then anims = {} end
+
+local s, squapi = pcall(require, "scripts.SquishyAnims")
+if not s then squapi = {} end
+
+local s, color = pcall(require, "scripts.ColorProperties")
+if not s then color = {} end
 
 -- Logs pages for navigation
 local navigation = {}
