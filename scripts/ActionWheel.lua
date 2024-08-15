@@ -167,71 +167,70 @@ pages.main
 
 -- Avatar actions
 pages.avatar
-	:action( -1, avatar.vanillaSkinPage)
-	:action( -1, avatar.modelPage)
 	:action( -1, pageActions.armor)
 	:action( -1, pageActions.camera)
 	:action( -1, backAction)
+	:action( -1, avatar.vanillaSkinAct)
+	:action( -1, avatar.modelAct)
 
 -- Armor actions
 pages.armor
-	:action( -1, armor.allPage)
-	:action( -1, armor.bootsPage)
-	:action( -1, armor.leggingsPage)
-	:action( -1, armor.chestplatePage)
-	:action( -1, armor.helmetPage)
 	:action( -1, backAction)
+	:action( -1, armor.allAct)
+	:action( -1, armor.bootsAct)
+	:action( -1, armor.leggingsAct)
+	:action( -1, armor.chestplateAct)
+	:action( -1, armor.helmetAct)
 
 -- Camera actions
 pages.camera
-	:action( -1, camera.posPage)
-	:action( -1, camera.eyePage)
 	:action( -1, backAction)
+	:action( -1, camera.posAct)
+	:action( -1, camera.eyeAct)
 
 -- Tail actions
 pages.tail
-	:action( -1, tail.waterPage)
-	:action( -1, tail.smallPage)
-	:action( -1, tail.earsPage)
 	:action( -1, pageActions.dry)
 	:action( -1, pageActions.whirlpool)
 	:action( -1, backAction)
+	:action( -1, tail.waterAct)
+	:action( -1, tail.smallAct)
+	:action( -1, tail.earsAct)
 
 -- Dry actions
 pages.dry
-	:action( -1, tail.dryPage)
-	:action( -1, tail.soundPage)
 	:action( -1, backAction)
+	:action( -1, tail.dryAct)
+	:action( -1, tail.soundAct)
 
 -- Whirlpool actions
 pages.whirlpool
-	:action( -1, whirlpool.bubblePage)
-	:action( -1, whirlpool.dolphinsGracePage)
 	:action( -1, backAction)
+	:action( -1, whirlpool.bubbleAct)
+	:action( -1, whirlpool.dolphinsGraceAct)
 
 -- Glowing actions
 pages.glow
-	:action( -1, glow.togglePage)
-	:action( -1, glow.dynamicPage)
-	:action( -1, glow.waterPage)
-	:action( -1, glow.uniquePage)
 	:action( -1, pageActions.eyes)
 	:action( -1, backAction)
+	:action( -1, glow.toggleAct)
+	:action( -1, glow.dynamicAct)
+	:action( -1, glow.waterAct)
+	:action( -1, glow.uniqueAct)
 
 -- Eye glow actions
 pages.eyes
-	:action( -1, eyes.togglePage)
-	:action( -1, eyes.powerPage)
-	:action( -1, eyes.nightVisionPage)
-	:action( -1, eyes.waterPage)
 	:action( -1, backAction)
+	:action( -1, eyes.toggleAct)
+	:action( -1, eyes.powerAct)
+	:action( -1, eyes.nightVisionAct)
+	:action( -1, eyes.waterAct)
 
 -- Animation actions
 pages.anims
-	:action( -1, anims.sharkPage)
-	:action( -1, anims.crawlPage)
-	:action( -1, anims.mountPage)
-	:action( -1, squapi.armsPage)
-	:action( -1, anims.twirlPage)
-	:action( -1, anims.singPage)
-	:action( -1, backAction)
+	:action( -1, backAction)	:action( -1, anims.sharkAct)
+	:action( -1, anims.crawlAct)
+	:action( -1, anims.mountAct)
+	:action( -1, squapi.armsAct)
+	:action( -1, anims.twirlAct)
+	:action( -1, anims.singAct)

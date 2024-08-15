@@ -153,24 +153,24 @@ end
 local t = {}
 
 -- Actions
-t.togglePage = action_wheel:newAction()
+t.toggleAct = action_wheel:newAction()
 	:item(itemCheck("ender_pearl"))
 	:toggleItem(itemCheck("ender_eye"))
 	:onToggle(pings.setEyesToggle)
 
-t.powerPage = action_wheel:newAction()
+t.powerAct = action_wheel:newAction()
 	:item(itemCheck("cod"))
 	:toggleItem(itemCheck("tropical_fish"))
 	:onToggle(pings.setEyesPower)
 	:toggled(power)
 
-t.nightVisionPage = action_wheel:newAction()
+t.nightVisionAct = action_wheel:newAction()
 	:item(itemCheck("glass_bottle"))
 	:toggleItem(itemCheck("potion{CustomPotionColor:" .. tostring(0x96C54F) .. "}"))
 	:onToggle(pings.setEyesNightVision)
 	:toggled(nightVision)
 
-t.waterPage = action_wheel:newAction()
+t.waterAct = action_wheel:newAction()
 	:item(itemCheck("bucket"))
 	:toggleItem(itemCheck("water_bucket"))
 	:onToggle(pings.setEyesWater)
@@ -180,7 +180,7 @@ t.waterPage = action_wheel:newAction()
 function events.RENDER(delta, context)
 	
 	if action_wheel:isEnabled() then
-		t.togglePage
+		t.toggleAct
 			:title(toJson
 				{"",
 				{text = "Toggle Glowing Eyes\n\n", bold = true, color = color.primary},
@@ -190,14 +190,14 @@ function events.RENDER(delta, context)
 			)
 			:toggled(toggle)
 		
-		t.powerPage
+		t.powerAct
 			:title(toJson
 				{"",
 				{text = "Origins Power Toggle\n\n", bold = true, color = color.primary},
 				{text = "Toggles the glowing based on Origin\'s underwater sight power.\nThe eyes will only glow when this power is active.", color = color.secondary}}
 			)
 		
-		t.nightVisionPage
+		t.nightVisionAct
 			:title(toJson
 				{"",
 				{text = "Night Vision Toggle\n\n", bold = true, color = color.primary},
@@ -206,7 +206,7 @@ function events.RENDER(delta, context)
 				{text = "the other subsettings.", color = color.secondary}}
 			)
 		
-		t.waterPage
+		t.waterAct
 			:title(toJson
 				{"",
 				{text = "Water Sensitivity Toggle\n\n", bold = true, color = color.primary},

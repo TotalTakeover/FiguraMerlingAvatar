@@ -255,27 +255,27 @@ end
 local t = {}
 
 -- Actions
-t.waterPage = action_wheel:newAction()
+t.waterAct = action_wheel:newAction()
 	:onLeftClick(function() pings.setTailWater(1) end)
 	:onRightClick(function() pings.setTailWater(-1) end)
 	:onScroll(pings.setTailWater)
 
-t.earsPage = action_wheel:newAction()
+t.earsAct = action_wheel:newAction()
 	:item(itemCheck("prismarine_crystals"))
 	:toggleItem(itemCheck("prismarine_shard"))
 	:onToggle(pings.setTailEars)
 
-t.smallPage = action_wheel:newAction()
+t.smallAct = action_wheel:newAction()
 	:item(itemCheck("kelp"))
 	:toggleItem(itemCheck("scute"))
 	:onToggle(pings.setTailSmall)
 
-t.dryPage = action_wheel:newAction()
+t.dryAct = action_wheel:newAction()
 	:item(itemCheck("water_bucket"))
 	:onScroll(setDryTimer)
 	:onLeftClick(function() dryTimer = 400 config:save("TailDryTimer", dryTimer) end)
 
-t.soundPage = action_wheel:newAction()
+t.soundAct = action_wheel:newAction()
 	:item(itemCheck("sponge"))
 	:toggleItem(itemCheck("wet_sponge"))
 	:onToggle(pings.setTailFallSound)
@@ -327,7 +327,7 @@ end
 function events.RENDER(delta, context)
 	
 	if action_wheel:isEnabled() then
-		t.waterPage
+		t.waterAct
 			:title(toJson
 				{"",
 				{text = "Water Sensitivity\n\n", bold = true, color = color.primary},
@@ -340,7 +340,7 @@ function events.RENDER(delta, context)
 			:color(vectors.hexToRGB(waterInfo[waterType].color))
 			:item(itemCheck(waterInfo[waterType].item.."{CustomPotionColor:" .. tostring(0x0094FF) .. "}"))
 		
-		t.earsPage
+		t.earsAct
 			:title(toJson
 				{"",
 				{text = "Toggle Ears\n\n", bold = true, color = color.primary},
@@ -348,7 +348,7 @@ function events.RENDER(delta, context)
 			)
 			:toggled(ears)
 		
-		t.smallPage
+		t.smallAct
 			:title(toJson
 				{"",
 				{text = "Toggle Small Tail\n\n", bold = true, color = color.primary},
@@ -361,7 +361,7 @@ function events.RENDER(delta, context)
 		local legsTimer = timeStr(math.max(math.ceil((timer - (dryTimer * legsForm)) / 20), 0))
 		local fullTimer = timeStr(math.ceil(timer / 20))
 		
-		t.dryPage
+		t.dryAct
 			:title(toJson
 				{"",
 				{text = "Set Drying Timer\n\n", bold = true, color = color.primary},
@@ -374,7 +374,7 @@ function events.RENDER(delta, context)
 				{text = fullTimer}}
 			)
 		
-		t.soundPage
+		t.soundAct
 			:title(toJson
 				{"",
 				{text = "Toggle Flop Sound\n\n", bold = true, color = color.primary},

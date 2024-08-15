@@ -363,28 +363,28 @@ end
 local t = {}
 
 -- Actions
-t.sharkPage = action_wheel:newAction()
+t.sharkAct = action_wheel:newAction()
 	:item(itemCheck("dolphin_spawn_egg"))
 	:toggleItem(itemCheck("guardian_spawn_egg"))
 	:onToggle(pings.setAnimShark)
 	:toggled(isShark)
 
-t.crawlPage = action_wheel:newAction()
+t.crawlAct = action_wheel:newAction()
 	:item(itemCheck("armor_stand"))
 	:toggleItem(itemCheck("oak_boat"))
 	:onToggle(pings.setAnimCrawl)
 	:toggled(isCrawl)
 
-t.mountPage = action_wheel:newAction()
+t.mountAct = action_wheel:newAction()
 	:item(itemCheck("saddle"))
 	:onLeftClick(pings.setAnimMountDir)
 	:onRightClick(pings.setAnimMountFlip)
 
-t.twirlPage = action_wheel:newAction()
+t.twirlAct = action_wheel:newAction()
 	:item(itemCheck("cod"))
 	:onLeftClick(pings.animPlayTwirl)
 
-t.singPage = action_wheel:newAction()
+t.singAct = action_wheel:newAction()
 	:item(itemCheck("music_disc_blocks"))
 	:toggleItem(itemCheck("music_disc_cat"))
 	:onToggle(pings.setAnimSing)
@@ -393,21 +393,21 @@ t.singPage = action_wheel:newAction()
 function events.RENDER(delta, context)
 	
 	if action_wheel:isEnabled() then
-		t.sharkPage
+		t.sharkAct
 			:title(toJson
 				{"",
 				{text = "Toggle Shark Animations\n\n", bold = true, color = color.primary},
 				{text = "Toggles the movement of the tail to be more shark based.", color = color.secondary}}
 			)
 		
-		t.crawlPage
+		t.crawlAct
 			:title(toJson
 				{"",
 				{text = "Toggle Crawl Animation\n\n", bold = true, color = color.primary},
 				{text = "Toggles crawling over standing when you are touching the ground.", color = color.secondary}}
 			)
 		
-		t.mountPage
+		t.mountAct
 			:title(toJson
 				{"",
 				{text = "Set Mount Positioning\n\n", bold = true, color = color.primary},
@@ -418,12 +418,12 @@ function events.RENDER(delta, context)
 				{text = mountFlip and "Front" or "Back"}}
 			)
 		
-		t.twirlPage
+		t.twirlAct
 			:title(toJson
 				{text = "Play Twirl animation", bold = true, color = color.primary}
 			)
 		
-		t.singPage
+		t.singAct
 			:title(toJson
 				{text = "Play Singing animation", bold = true, color = color.primary}
 			)

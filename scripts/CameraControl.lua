@@ -191,13 +191,13 @@ end
 local t = {}
 
 -- Actions
-t.posPage = action_wheel:newAction()
+t.posAct = action_wheel:newAction()
 	:item(itemCheck("skeleton_skull"))
 	:toggleItem(itemCheck("player_head{SkullOwner:"..avatar:getEntityName().."}"))
 	:onToggle(pings.setCameraPos)
 	:toggled(camPos)
 
-t.eyePage = action_wheel:newAction()
+t.eyeAct = action_wheel:newAction()
 	:item(itemCheck("ender_pearl"))
 	:toggleItem(itemCheck("ender_eye"))
 	:onToggle(pings.setCameraEye)
@@ -207,7 +207,7 @@ t.eyePage = action_wheel:newAction()
 function events.RENDER(delta, context)
 	
 	if action_wheel:isEnabled() then
-		t.posPage
+		t.posAct
 			:title(toJson
 				{"",
 				{text = "Camera Position Toggle\n\n", bold = true, color = color.primary},
@@ -215,7 +215,7 @@ function events.RENDER(delta, context)
 				{text = "To prevent x-ray, the camera will reset to its default position if inside a block.", color = "red"}}
 			)
 		
-		t.eyePage
+		t.eyeAct
 			:title(toJson
 				{"",
 				{text = "Eye Position Toggle\n\n", bold = true, color = color.primary},

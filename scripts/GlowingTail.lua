@@ -239,23 +239,23 @@ end
 local t = {}
 
 -- Actions
-t.togglePage = action_wheel:newAction()
+t.toggleAct = action_wheel:newAction()
 	:item(itemCheck("ink_sac"))
 	:toggleItem(itemCheck("glow_ink_sac"))
 	:onToggle(pings.setGlowToggle)
 
-t.dynamicPage = action_wheel:newAction()
+t.dynamicAct = action_wheel:newAction()
 	:item(itemCheck("light"))
 	:onToggle(pings.setGlowDynamic)
 	:toggled(dynamic)
 
-t.waterPage = action_wheel:newAction()
+t.waterAct = action_wheel:newAction()
 	:item(itemCheck("bucket"))
 	:toggleItem(itemCheck("water_bucket"))
 	:onToggle(pings.setGlowWater)
 	:toggled(water)
 
-t.uniquePage = action_wheel:newAction()
+t.uniqueAct = action_wheel:newAction()
 	:item(itemCheck("prismarine_shard"))
 	:toggleItem(itemCheck("prismarine_crystals"))
 	:onToggle(pings.setGlowUnique)
@@ -265,7 +265,7 @@ t.uniquePage = action_wheel:newAction()
 function events.RENDER(delta, context)
 	
 	if action_wheel:isEnabled() then
-		t.togglePage
+		t.toggleAct
 			:title(toJson
 				{"",
 				{text = "Toggle Glowing\n\n", bold = true, color = color.primary},
@@ -275,7 +275,7 @@ function events.RENDER(delta, context)
 			)
 			:toggled(toggle)
 		
-		t.dynamicPage
+		t.dynamicAct
 			:title(toJson
 				{"",
 				{text = "Toggle Dynamic Glowing\n\n", bold = true, color = color.primary},
@@ -283,14 +283,14 @@ function events.RENDER(delta, context)
 			)
 			:toggleItem(itemCheck("light{BlockStateTag:{level:"..math.map(world.getLightLevel(player:getPos()), 0, 15, 15, 0).."}}"))
 		
-		t.waterPage
+		t.waterAct
 			:title(toJson
 				{"",
 				{text = "Toggle Water Glowing\n\n", bold = true, color = color.primary},
 				{text = "Toggles the glowing sensitivity to water.\nAny water will cause your tail to glow.", color = color.secondary}}
 			)
 		
-		t.uniquePage
+		t.uniqueAct
 			:title(toJson
 				{"",
 				{text = "Toggle Unique Glowing\n\n", bold = true, color = color.primary},

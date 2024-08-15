@@ -184,7 +184,7 @@ end
 local t = {}
 
 -- Action
-t.armsPage = action_wheel:newAction()
+t.armsAct = action_wheel:newAction()
 	:item(itemCheck("red_dye"))
 	:toggleItem(itemCheck("rabbit_foot"))
 	:onToggle(pings.setSquapiArmsMove)
@@ -194,7 +194,7 @@ t.armsPage = action_wheel:newAction()
 function events.RENDER(delta, context)
 	
 	if action_wheel:isEnabled() then
-		t.armsPage
+		t.armsAct
 			:title(toJson
 				{"",
 				{text = "Arm Movement Toggle\n\n", bold = true, color = color.primary},

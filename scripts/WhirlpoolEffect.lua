@@ -74,13 +74,13 @@ end
 local t = {}
 
 -- Actions
-t.bubblePage = action_wheel:newAction()
+t.bubbleAct = action_wheel:newAction()
 	:item(itemCheck("soul_sand"))
 	:toggleItem(itemCheck("magma_block"))
 	:onToggle(pings.setWhirlpoolBubbles)
 	:toggled(bubbles)
 
-t.dolphinsGracePage = action_wheel:newAction()
+t.dolphinsGraceAct = action_wheel:newAction()
 	:item(itemCheck("egg"))
 	:toggleItem(itemCheck("dolphin_spawn_egg"))
 	:onToggle(pings.setWhirlpoolDolphinsGrace)
@@ -90,14 +90,14 @@ t.dolphinsGracePage = action_wheel:newAction()
 function events.RENDER(delta, context)
 	
 	if action_wheel:isEnabled() then
-		t.bubblePage
+		t.bubbleAct
 			:title(toJson
 				{"",
 				{text = "Whirlpool Effect Toggle\n\n", bold = true, color = color.primary},
 				{text = "Toggles the whirlpool created while swimming.", color = color.secondary}}
 			)
 		
-		t.dolphinsGracePage
+		t.dolphinsGraceAct
 			:title(toJson
 				{"",
 				{text = "Dolphin\'s Grace Toggle\n\n", bold = true, color = color.primary},
