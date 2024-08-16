@@ -16,11 +16,15 @@ local lerpAPI = {}
 -- List of every lerp instance
 local list = {}
 
+-- Counter
+local counter = 0
+
 -- Create a table of variables that can be lerped
 function lerpAPI:new(speed, initPos)
 	
 	-- Create instance
 	local inst = {}
+	counter = counter + 1
 	
 	-- Speed
 	inst.speed = speed
@@ -36,16 +40,23 @@ function lerpAPI:new(speed, initPos)
 	inst.enabled = true
 	
 	-- Add instance to list
-	table.insert(list, inst)
+	list[inst] = inst
 	
 	-- Return instance variables
 	return inst
 	
 end
 
+function lerpAPI:remove(inst)
+	
+	list[inst] = nil
+	counter = counter - 1
+	
+end
+
 -- Iterate through the list to set the next tick of each lerp
 function events.TICK()
-	for _, inst in ipairs(list) do
+	for _, inst in pairs(list) do
 		if inst.enabled then
 			inst.prevTick = inst.currTick
 			inst.currTick = math.lerp(inst.currTick, inst.target, inst.speed)
@@ -55,7 +66,7 @@ end
 
 -- Iterate through the list to smooth the lerp each frame
 function events.RENDER(delta, context)
-	for _, inst in ipairs(list) do
+	for _, inst in pairs(list) do
 		if inst.enabled then
 			inst.currPos = math.lerp(inst.prevTick, inst.currTick, delta)
 		end
