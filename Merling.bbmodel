@@ -1585,7 +1585,7 @@
 			"uuid": "cb29d03c-b6a1-d859-37a3-b1668e5accc6"
 		},
 		{
-			"name": "Boots",
+			"name": "Boot",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -1629,7 +1629,7 @@
 			"uuid": "01b4cacf-5919-a1b3-b71e-dbf8450c2f39"
 		},
 		{
-			"name": "Boots",
+			"name": "Boot",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -1805,7 +1805,7 @@
 			"uuid": "40f3e8e1-076c-e2ad-e5a7-ef9ec33afd44"
 		},
 		{
-			"name": "BootsLeather",
+			"name": "BootLeather",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -1981,7 +1981,7 @@
 			"uuid": "cdff0468-fd8c-5bc1-9775-95ec34e1cc8b"
 		},
 		{
-			"name": "BootsLeather",
+			"name": "BootLeather",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -2025,7 +2025,7 @@
 			"uuid": "73a09b04-7ca3-65b1-196d-04463fda17f7"
 		},
 		{
-			"name": "BootsTrim",
+			"name": "BootTrim",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -2069,7 +2069,7 @@
 			"uuid": "35460729-ab55-285f-b0ee-a4c94f545a2d"
 		},
 		{
-			"name": "BootsTrim",
+			"name": "BootTrim",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -2925,7 +2925,7 @@
 												"45b43f88-8c29-2ae0-de44-7e1070263ba9",
 												"a058689c-a87d-6578-75d0-d28ee1a7a2a0",
 												{
-													"name": "Tail3ArmorBoots",
+													"name": "Tail3ArmorBoot",
 													"origin": [0, -1, 0],
 													"color": 0,
 													"uuid": "9d880c89-a512-798e-b111-96ce582e87de",
@@ -2952,7 +2952,7 @@
 														"a61a6d22-451e-a860-b235-ca0c8c8b6660",
 														"031703b5-0ed6-ac02-d9f6-374423cf9c73",
 														{
-															"name": "Tail4ArmorBoots",
+															"name": "Tail4ArmorBoot",
 															"origin": [0, -8, 0],
 															"color": 0,
 															"uuid": "08eeaa7a-92e4-15f2-3244-fe6d08f652b6",

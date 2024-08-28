@@ -10,14 +10,14 @@ kattArmor.Armor.Leggings
 	:addParts(table.unpack(parts:createTable(function(part) return part:getName() == "Leggings" end)))
 	:addTrimParts(table.unpack(parts:createTable(function(part) return part:getName() == "LeggingsTrim" end)))
 kattArmor.Armor.Boots
-	:addParts(table.unpack(parts:createTable(function(part) return part:getName() == "Boots" end)))
-	:addTrimParts(table.unpack(parts:createTable(function(part) return part:getName() == "BootsTrim" end)))
+	:addParts(table.unpack(parts:createTable(function(part) return part:getName() == "Boot" end)))
+	:addTrimParts(table.unpack(parts:createTable(function(part) return part:getName() == "BootTrim" end)))
 
 -- Leather armor
 kattArmor.Materials.leather
 	:setTexture(textures["textures.armor.leatherArmor"] or textures["Merling.leatherArmor"])
 	:addParts(kattArmor.Armor.Leggings, table.unpack(parts:createTable(function(part) return part:getName() == "LeggingsLeather" end)))
-	:addParts(kattArmor.Armor.Boots,    table.unpack(parts:createTable(function(part) return part:getName() == "BootsLeather" end)))
+	:addParts(kattArmor.Armor.Boots,    table.unpack(parts:createTable(function(part) return part:getName() == "BootLeather" end)))
 
 -- Chainmail armor
 kattArmor.Materials.chainmail
@@ -141,7 +141,7 @@ local leggingsGroups = {
 local bootsGroups = {
 	
 	vanilla_model.BOOTS,
-	table.unpack(parts:createTable(function(part) return part:getName():find("ArmorBoots") end))
+	table.unpack(parts:createTable(function(part) return part:getName():find("ArmorBoot") end))
 	
 }
 
