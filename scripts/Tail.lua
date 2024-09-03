@@ -6,30 +6,30 @@ local effects = require("scripts.SyncedVariables")
 
 -- Config setup
 config:name("Merling")
-local waterType = config:load("TailWater") or 4
+local tailType  = config:load("TailType") or 4
+local earsType  = config:load("TailEarsType") or tailType
 local small     = config:load("TailSmall")
-local ears      = config:load("TailEars")
 local dryTimer  = config:load("TailDryTimer") or 400
 local fallSound = config:load("TailFallSound")
 if small     == nil then small = true end
-if ears      == nil then ears = true end
 if fallSound == nil then fallSound = true end
 
 -- Variables setup
-local legsForm = 0.75
-local timer = 0
-local wasInAir = false
+local legsForm  = 0.75
+local tailTimer = 0
+local earsTimer = 0
+local wasInAir  = false
 
 -- Lerp variables
-local scale      = lerp:new(0.2, waterType == 5 and 1 or 0)
-local legsScale  = lerp:new(0.2, waterType ~= 5 and 1 or 0)
+local tailScale  = lerp:new(0.2, tailType == 5 and 1 or 0)
+local legsScale  = lerp:new(0.2, tailType ~= 5 and 1 or 0)
+local earsScale  = lerp:new(0.2, earsType == 5 and 1 or 0)
 local smallScale = lerp:new(0.2, small and 1 or 0)
-local earsScale  = lerp:new(0.2, ears and 1 or 0)
 
 -- Data sent to other scripts
 local tailData = {
-	scale = scale.currPos * math.map(smallScale.currPos, 0, 1, 1, 0.5) + smallScale.currPos * 0.5,
-	large = scale.currPos,
+	scale = tailScale.currPos * math.map(smallScale.currPos, 0, 1, 1, 0.5) + smallScale.currPos * 0.5,
+	large = tailScale.currPos,
 	small = smallScale.currPos,
 	legs  = legsScale.currPos,
 	dry   = dryTimer,
@@ -41,8 +41,8 @@ local splash = false
 function events.ON_PLAY_SOUND(id, pos, vol, pitch, loop, category, path)
 	
 	if player:isLoaded() then
-		local atPos      = pos < player:getPos() + 2 and pos > player:getPos() - 2
-		local splashID   = id == "minecraft:entity.splash_potion.break" or id == "minecraft:entity.lingering_potion.break"
+		local atPos    = pos < player:getPos() + 2 and pos > player:getPos() - 2
+		local splashID = id == "minecraft:entity.splash_potion.break" or id == "minecraft:entity.lingering_potion.break"
 		splash = atPos and splashID and path
 	end
 	
@@ -82,28 +82,37 @@ function events.TICK()
 		true
 	}
 	
-	-- Adjust timer based on state
-	if waterState[waterType] then
-		timer = dryTimer
+	-- Control how fast drying occurs
+	local dryRate = player:getItem(1).id == "minecraft:sponge" and 10 or 1
+	
+	-- Adjust tail timer based on state
+	if waterState[tailType] then
+		tailTimer = dryTimer
+	elseif tailType == 1 then
+		tailTimer = 0
 	else
-		timer = math.max(timer - 1, 0)
+		tailTimer = math.clamp(tailTimer - 1 * dryRate, 0, dryTimer)
 	end
 	
-	-- Timer should not exceed the max default timer
-	if timer > dryTimer then
-		timer = dryTimer
+	-- Adjust ears timer based on state
+	if waterState[earsType] then
+		earsTimer = dryTimer
+	elseif earsType == 1 then
+		earsTimer = 0
+	else
+		earsTimer = math.clamp(earsTimer - 1 * dryRate, 0, dryTimer)
 	end
 	
 	-- Target
-	scale.target      = timer / dryTimer
-	legsScale.target  = timer / dryTimer <= legsForm and 1 or 0
+	tailScale.target  = dryTimer == 0 and (waterState[tailType] and 1 or 0) or tailTimer / dryTimer
+	legsScale.target  = dryTimer == 0 and (waterState[tailType] and 0 or 1) or tailTimer / dryTimer <= legsForm and 1 or 0
+	earsScale.target  = dryTimer == 0 and (waterState[earsType] and 1 or 0) or earsTimer / dryTimer
 	smallScale.target = small and 1 or 0
-	earsScale.target  = ears and 1 or 0
 	
 	-- Play sound if conditions are met
-	if fallSound and wasInAir and ground() and scale.currPos >= legsForm and not player:getVehicle() and not player:isInWater() and not effects.cF then
+	if fallSound and wasInAir and ground() and tailScale.currPos >= legsForm and not player:getVehicle() and not player:isInWater() and not effects.cF then
 		local vel    = math.abs(-player:getVelocity().y + 1)
-		local dry    = scale.currPos
+		local dry    = tailScale.currPos
 		local volume = math.clamp((vel * dry) / 2, 0, 1)
 		
 		if volume ~= 0 then
@@ -117,42 +126,59 @@ end
 function events.RENDER(delta, context)
 	
 	-- Variables
-	local tailScale = scale.currPos * math.map(smallScale.currPos, 0, 1, 1, 0.5) + smallScale.currPos * 0.5
-	local legScale  = legsScale.currPos
-	local earScale  = earsScale.currPos
+	local tailApply = tailScale.currPos * math.map(smallScale.currPos, 0, 1, 1, 0.5) + smallScale.currPos * 0.5
+	local legsApply = legsScale.currPos
+	local earsApply = earsScale.currPos
 	
 	-- Apply tail
-	parts.group.Tail1:scale(tailScale)
+	parts.group.Tail1:scale(tailApply)
 	
 	-- Apply legs
-	parts.group.LeftLeg:scale(legScale)
-	parts.group.RightLeg:scale(legScale)
+	parts.group.LeftLeg:scale(legsApply)
+	parts.group.RightLeg:scale(legsApply)
 	
 	-- Apply ears
-	parts.group.LeftEar:scale(earScale)
-	parts.group.RightEar:scale(earScale)
-	parts.group.LeftEarSkull:scale(earScale)
-	parts.group.RightEarSkull:scale(earScale)
+	parts.group.LeftEar:scale(earsApply)
+	parts.group.RightEar:scale(earsApply)
+	parts.group.LeftEarSkull:scale(earsApply)
+	parts.group.RightEarSkull:scale(earsApply)
 	
 	-- Update tail data
-	tailData.scale = tailScale
-	tailData.large = scale.currPos
+	tailData.scale = tailApply
+	tailData.large = tailScale.currPos
 	tailData.small = smallScale.currPos
 	tailData.legs  = legsScale.currPos
 	tailData.dry   = dryTimer
 	
 end
 
--- Water sensitivity
-function pings.setTailWater(i)
+-- Set sensitivity
+local function setSensitivity(sen, i)
 	
-	waterType = waterType + i
-	if waterType > 5 then waterType = 1 end
-	if waterType < 1 then waterType = 5 end
-	if player:isLoaded() and host:isHost() and i ~= 0 then
+	sen = sen + i
+	if sen > 5 then sen = 1 end
+	if sen < 1 then sen = 5 end
+	if player:isLoaded() and host:isHost() then
 		sounds:playSound("ambient.underwater.enter", player:getPos(), 0.35)
 	end
-	config:save("TailWater", waterType)
+	
+	return sen
+	
+end
+
+-- Tail sensitivity
+function pings.setTailType(i)
+	
+	tailType = setSensitivity(tailType, i)
+	config:save("TailType", tailType)
+	
+end
+
+-- Ears sensitivity
+function pings.setTailEarsType(i)
+	
+	earsType = setSensitivity(earsType, i)
+	config:save("TailEarsType", earsType)
 	
 end
 
@@ -164,18 +190,10 @@ function pings.setTailSmall(boolean)
 	
 end
 
--- Ears toggle
-function pings.setTailEars(boolean)
-	
-	ears = boolean
-	config:save("TailEars", ears)
-	
-end
-
 -- Set timer
 local function setDryTimer(x)
 	
-	dryTimer = math.clamp(dryTimer + (x * 20), 20, 72000)
+	dryTimer = math.clamp(dryTimer + (x * 20), 0, 72000)
 	config:save("TailDryTimer", dryTimer)
 	
 end
@@ -194,9 +212,9 @@ end
 -- Sync variables
 function pings.syncTail(a, b, c, d, e)
 	
-	waterType = a
-	small     = b
-	ears      = c
+	tailType  = a
+	earsType  = b
+	small     = c
 	dryTimer  = d
 	fallSound = e
 	
@@ -211,34 +229,34 @@ local s, color = pcall(require, "scripts.ColorProperties")
 if not s then color = {} end
 
 -- Tail Keybind
-local waterBind   = config:load("TailWaterKeybind") or "key.keyboard.keypad.1"
-local setWaterKey = keybinds:newKeybind("Merling Water Type"):onPress(function() pings.setTailWater(1) end):key(waterBind)
-
--- Small tail keybind
-local smallBind   = config:load("TailSmallKeybind") or "key.keyboard.keypad.2"
-local setSmallKey = keybinds:newKeybind("Small Tail Toggle"):onPress(function() pings.setTailSmall(not small) end):key(smallBind)
+local tailBind   = config:load("TailTypeKeybind") or "key.keyboard.keypad.1"
+local setTailKey = keybinds:newKeybind("Tail Sensitivity Type"):onPress(function() pings.setTailType(1) end):key(tailBind)
 
 -- Ears keybind
-local earsBind   = config:load("TailEarsKeybind") or "key.keyboard.keypad.3"
-local setEarsKey = keybinds:newKeybind("Ears Toggle"):onPress(function() pings.setTailEars(not ears) end):key(earsBind)
+local earsBind   = config:load("TailEarsTypeKeybind") or "key.keyboard.keypad.2"
+local setEarsKey = keybinds:newKeybind("Ears Sensitivity Type"):onPress(function() pings.setTailEarsType(1) end):key(earsBind)
+
+-- Small tail keybind
+local smallBind   = config:load("TailSmallKeybind") or "key.keyboard.keypad.3"
+local setSmallKey = keybinds:newKeybind("Small Tail Toggle"):onPress(function() pings.setTailSmall(not small) end):key(smallBind)
 
 -- Keybind updaters
 function events.TICK()
 	
-	local waterKey = setWaterKey:getKey()
-	local smallKey = setSmallKey:getKey()
+	local tailKey  = setTailKey:getKey()
 	local earsKey  = setEarsKey:getKey()
-	if waterKey ~= waterBind then
-		waterBind = waterKey
-		config:save("TailWaterKeybind", waterKey)
+	local smallKey = setSmallKey:getKey()
+	if tailKey ~= tailBind then
+		tailBind = tailKey
+		config:save("TailTypeKeybind", tailKey)
+	end
+	if earsKey ~= earsBind then
+		earsBind = earsKey
+		config:save("TailEarsTypeKeybind", earsKey)
 	end
 	if smallKey ~= smallBind then
 		smallBind = smallKey
 		config:save("TailSmallKeybind", smallKey)
-	end
-	if earsKey ~= earsBind then
-		earsBind = earsKey
-		config:save("TailEarsKeybind", earsKey)
 	end
 	
 end
@@ -247,7 +265,7 @@ end
 function events.TICK()
 	
 	if world.getTime() % 200 == 0 then
-		pings.syncTail(waterType, small, ears, dryTimer, fallSound)
+		pings.syncTail(tailType, earsType, small, dryTimer, fallSound)
 	end
 	
 end
@@ -256,15 +274,15 @@ end
 local t = {}
 
 -- Actions
-t.waterAct = action_wheel:newAction()
-	:onLeftClick(function() pings.setTailWater(1) end)
-	:onRightClick(function() pings.setTailWater(-1) end)
-	:onScroll(pings.setTailWater)
+t.tailAct = action_wheel:newAction()
+	:onLeftClick(function() pings.setTailType(1) end)
+	:onRightClick(function() pings.setTailType(-1) end)
+	:onScroll(pings.setTailType)
 
 t.earsAct = action_wheel:newAction()
-	:item(itemCheck("prismarine_crystals"))
-	:toggleItem(itemCheck("prismarine_shard"))
-	:onToggle(pings.setTailEars)
+	:onLeftClick(function() pings.setTailEarsType(1) end)
+	:onRightClick(function() pings.setTailEarsType(-1) end)
+	:onScroll(pings.setTailEarsType)
 
 t.smallAct = action_wheel:newAction()
 	:item(itemCheck("kelp"))
@@ -272,20 +290,19 @@ t.smallAct = action_wheel:newAction()
 	:onToggle(pings.setTailSmall)
 
 t.dryAct = action_wheel:newAction()
-	:item(itemCheck("water_bucket"))
 	:onScroll(setDryTimer)
 	:onLeftClick(function() dryTimer = 400 config:save("TailDryTimer", dryTimer) end)
 
 t.soundAct = action_wheel:newAction()
-	:item(itemCheck("sponge"))
-	:toggleItem(itemCheck("wet_sponge"))
+	:item(itemCheck("bucket"))
+	:toggleItem(itemCheck("water_bucket"))
 	:onToggle(pings.setTailFallSound)
 	:toggled(fallSound)
 
 -- Water context info table
 local waterInfo = {
 	{
-		title = {label = {text = "None", color = "red"}, text = "Tail cannot form."},
+		title = {label = {text = "None", color = "red"}, text = "Cannot form."},
 		item  = "glass_bottle",
 		color = "FF5555"
 	},
@@ -305,7 +322,7 @@ local waterInfo = {
 		color = "55FFFF"
 	},
 	{
-		title = {label = {text = "Max", color = "blue"}, text = "Tail is always active."},
+		title = {label = {text = "Max", color = "blue"}, text = "Always active."},
 		item  = "dragon_breath",
 		color = "5555FF"
 	}
@@ -328,26 +345,33 @@ end
 function events.RENDER(delta, context)
 	
 	if action_wheel:isEnabled() then
-		t.waterAct
+		local actionSetup = waterInfo[tailType]
+		t.tailAct
 			:title(toJson
 				{"",
-				{text = "Water Sensitivity\n\n", bold = true, color = color.primary},
+				{text = "Tail Water Sensitivity\n\n", bold = true, color = color.primary},
 				{text = "Determines how your tail should form in contact with water.\n\n", color = color.secondary},
 				{text = "Current configuration: ", bold = true, color = color.secondary},
-				{text = waterInfo[waterType].title.label.text, color = waterInfo[waterType].title.label.color},
+				{text = actionSetup.title.label.text, color = actionSetup.title.label.color},
 				{text = " | "},
-				{text = waterInfo[waterType].title.text, color = color.secondary}}
+				{text = actionSetup.title.text, color = color.secondary}}
 			)
-			:color(vectors.hexToRGB(waterInfo[waterType].color))
-			:item(itemCheck(waterInfo[waterType].item.."{CustomPotionColor:" .. tostring(0x0094FF) .. "}"))
+			:color(vectors.hexToRGB(actionSetup.color))
+			:item(itemCheck(actionSetup.item.."{CustomPotionColor:"..tostring(0x0094FF).."}"))
 		
+		local actionSetup = waterInfo[earsType]
 		t.earsAct
 			:title(toJson
 				{"",
-				{text = "Toggle Ears\n\n", bold = true, color = color.primary},
-				{text = "Toggles the appearence of your ears.", color = color.secondary}}
+				{text = "Ears Water Sensitivity\n\n", bold = true, color = color.primary},
+				{text = "Determines how your ears should form in contact with water.\n\n", color = color.secondary},
+				{text = "Current configuration: ", bold = true, color = color.secondary},
+				{text = actionSetup.title.label.text, color = actionSetup.title.label.color},
+				{text = " | "},
+				{text = actionSetup.title.text, color = color.secondary}}
 			)
-			:toggled(ears)
+			:color(vectors.hexToRGB(actionSetup.color))
+			:item(itemCheck(actionSetup.item.."{CustomPotionColor:"..tostring(0x0094FF).."}"))
 		
 		t.smallAct
 			:title(toJson
@@ -358,9 +382,18 @@ function events.RENDER(delta, context)
 			:toggled(small)
 		
 		-- Timers
-		local setTimer  = timeStr(dryTimer / 20)
-		local legsTimer = timeStr(math.max(math.ceil((timer - (dryTimer * legsForm)) / 20), 0))
-		local fullTimer = timeStr(math.ceil(timer / 20))
+		local timers = {
+			set  = dryTimer / 20,
+			legs = math.max(math.ceil((tailTimer - (dryTimer * legsForm)) / 20), 0),
+			tail = math.ceil(tailTimer / 20),
+			ears = math.ceil(earsTimer / 20),
+		}
+		
+		-- Countdowns
+		local cD = {}
+		for k, v in pairs(timers) do
+			cD[k] = timeStr(v)
+		end
 		
 		t.dryAct
 			:title(toJson
@@ -368,12 +401,16 @@ function events.RENDER(delta, context)
 				{text = "Set Drying Timer\n\n", bold = true, color = color.primary},
 				{text = "Scroll to adjust how long it takes for you to dry.\nLeft click resets timer to 20 seconds.\n\n", color = color.secondary},
 				{text = "Drying timer:\n", bold = true, color = color.secondary},
-				{text = setTimer.."\n\n"},
-				{text = "Time left until legs:\n", bold = true, color = color.secondary},
-				{text = legsTimer.."\n\n"},
-				{text = "Time left until fully dry:\n", bold = true, color = color.secondary},
-				{text = fullTimer}}
+				{text = cD.set.."\n\n"},
+				{text = "Legs form:\n", bold = true, color = color.secondary},
+				{text = cD.legs.."\n\n"},
+				{text = "Tail fully dry:\n", bold = true, color = color.secondary},
+				{text = cD.tail.."\n\n"},
+				{text = "Ears fully dry:\n", bold = true, color = color.secondary},
+				{text = cD.ears.."\n\n"},
+				{text = "Hint: Holding a dry sponge will increase drying rate by x10!", color = "gray"}}
 			)
+			:item(itemCheck((timers.tail ~= 0 or timers.ears ~= 0) and "wet_sponge" or "sponge"))
 		
 		t.soundAct
 			:title(toJson

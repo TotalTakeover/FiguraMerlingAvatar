@@ -109,20 +109,18 @@ function events.TICK()
 					
 				end
 				
+				-- Control how fast drying occurs
+				local dryRate = player:getItem(1).id == "minecraft:sponge" and 10 or 1
+				
 				-- Adjust timer
 				if wet then
 					index.timer = tail.dry
 				else
-					index.timer = math.max(index.timer - 1, 0)
-				end
-				
-				-- Timer should not exceed the max default timer
-				if index.timer > tail.dry then
-					index.timer = tail.dry
+					index.timer = math.clamp(index.timer - 1 * dryRate, 0, tail.dry)
 				end
 				
 				-- Apply
-				index.glow.target = index.glow.target * (index.timer / tail.dry)
+				index.glow.target = (tail.dry == 0 and wet and index.glow.target or 0) or index.glow.target * (index.timer / tail.dry)
 				
 			end
 			

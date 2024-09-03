@@ -210,9 +210,9 @@ pages.camera
 
 -- Tail actions
 pages.tail
-	:action( -1, tail.waterAct)
-	:action( -1, tail.smallAct)
+	:action( -1, tail.tailAct)
 	:action( -1, tail.earsAct)
+	:action( -1, tail.smallAct)
 	:action( -1, pageActs.dry)
 	:action( -1, pageActs.whirlpool)
 	:action( -1, backAct)
