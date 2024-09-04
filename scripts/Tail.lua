@@ -85,28 +85,31 @@ function events.TICK()
 	-- Control how fast drying occurs
 	local dryRate = player:getItem(1).id == "minecraft:sponge" and 10 or 1
 	
+	-- Zero check
+	local modDryTimer = math.max(dryTimer, 1)
+	
 	-- Adjust tail timer based on state
 	if waterState[tailType] then
-		tailTimer = dryTimer
+		tailTimer = modDryTimer
 	elseif tailType == 1 then
 		tailTimer = 0
 	else
-		tailTimer = math.clamp(tailTimer - 1 * dryRate, 0, dryTimer)
+		tailTimer = math.clamp(tailTimer - 1 * dryRate, 0, modDryTimer)
 	end
 	
 	-- Adjust ears timer based on state
 	if waterState[earsType] then
-		earsTimer = dryTimer
+		earsTimer = modDryTimer
 	elseif earsType == 1 then
 		earsTimer = 0
 	else
-		earsTimer = math.clamp(earsTimer - 1 * dryRate, 0, dryTimer)
+		earsTimer = math.clamp(earsTimer - 1 * dryRate, 0, modDryTimer)
 	end
 	
 	-- Target
-	tailScale.target  = dryTimer == 0 and (waterState[tailType] and 1 or 0) or tailTimer / dryTimer
-	legsScale.target  = dryTimer == 0 and (waterState[tailType] and 0 or 1) or tailTimer / dryTimer <= legsForm and 1 or 0
-	earsScale.target  = dryTimer == 0 and (waterState[earsType] and 1 or 0) or earsTimer / dryTimer
+	tailScale.target  = tailTimer / modDryTimer
+	legsScale.target  = tailTimer / modDryTimer <= legsForm and 1 or 0
+	earsScale.target  = earsTimer / modDryTimer
 	smallScale.target = small and 1 or 0
 	
 	-- Play sound if conditions are met
