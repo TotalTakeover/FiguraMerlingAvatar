@@ -63,7 +63,7 @@ function events.TICK()
 	-- Toggle check
 	for _, index in ipairs(glowingParts) do
 		
-		if toggle then
+		if toggle and index.part:getVisible() then
 			
 			-- Init apply
 			index.glow.target = 1
@@ -134,6 +134,7 @@ function events.TICK()
 			
 		end
 		
+		index.glow.enabled = index.part:getVisible()
 	end
 	
 end
