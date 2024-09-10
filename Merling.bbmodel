@@ -5,7 +5,7 @@
 		"box_uv": false
 	},
 	"visible_box": [1, 1, 0],
-	"variable_placeholders": "v.time     = q.anim_time\nv.strength = slider(\"Strength\", 0.05, 1,  2)\nv.pitch    = slider(\"Pitch\",    0.5, -20, 20)\nv.yaw      = slider(\"Yaw\",      1,   -45, 45)\nv.roll     = slider(\"Roll\",     0.5, -20, 20)\nv.headY    = slider(\"HeadY\",    1,   -50, 50)\nv.shark    = toggle(\"Shark\")\n",
+	"variable_placeholders": "v.time     = q.anim_time\nv.strength = slider(\"Strength\", 0.05, 1,  2)\nv.pitch    = slider(\"Pitch\",    0.5, -20, 20)\nv.yaw      = slider(\"Yaw\",      1,   -45, 45)\nv.roll     = slider(\"Roll\",     0.5, -20, 20)\nv.headY    = slider(\"HeadY\",    1,   -50, 50)\nv.shark    = toggle(\"Shark\")",
 	"variable_placeholder_buttons": [
 		{
 			"type": "slider",
@@ -4283,7 +4283,7 @@
 								{
 									"x": "v.pitch+(math.sin(v.time*180)*v.strength*(1-v.shark))",
 									"y": "0",
-									"z": "math.sin(v.time*180)*v.strength*v.shark\n"
+									"z": "math.sin(v.time*180)*v.strength*v.shark"
 								}
 							],
 							"uuid": "9341e6ce-60ec-1324-be50-d342808edb2d",
@@ -4323,7 +4323,7 @@
 								{
 									"x": "v.pitch+(math.sin(v.time*180-90)*v.strength*7.5*(1-v.shark))",
 									"y": "v.yaw/5",
-									"z": "v.roll+(math.sin(v.time*180-90)*v.strength*7.5*v.shark)\n"
+									"z": "v.roll+(math.sin(v.time*180-90)*v.strength*7.5*v.shark)"
 								}
 							],
 							"uuid": "debcbe4c-02c2-575c-2999-ab13c341eef7",
@@ -4343,7 +4343,7 @@
 								{
 									"x": "v.pitch+(math.sin(v.time*180-135)*v.strength*10*(1-v.shark))",
 									"y": "v.yaw/5",
-									"z": "v.roll+(math.sin(v.time*180-135)*v.strength*10*v.shark)\n"
+									"z": "v.roll+(math.sin(v.time*180-135)*v.strength*10*v.shark)"
 								}
 							],
 							"uuid": "e1a175f8-032b-573a-cc8a-08b1d7e4e6e8",
@@ -4363,7 +4363,7 @@
 								{
 									"x": "v.pitch+(math.sin(v.time*180-180)*v.strength*2.5*(1-v.shark))",
 									"y": "v.yaw/5",
-									"z": "v.roll+(math.sin(v.time*180-180)*v.strength*2.5*v.shark)\n"
+									"z": "v.roll+(math.sin(v.time*180-180)*v.strength*2.5*v.shark)"
 								}
 							],
 							"uuid": "0b8118c7-678a-0503-1f47-054e5579d72d",
@@ -4381,9 +4381,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "(v.pitch+math.sin(v.time*180-225)*v.strength*7.5)*(1-v.shark)\n",
+									"x": "(v.pitch+math.sin(v.time*180-225)*v.strength*7.5)*(1-v.shark)",
 									"y": "(v.yaw/5)-(90*v.shark)",
-									"z": "v.roll+(math.sin(v.time*180-225)*v.strength*7.5*v.shark)\n"
+									"z": "v.roll+(math.sin(v.time*180-225)*v.strength*7.5*v.shark)"
 								}
 							],
 							"uuid": "2d23bf1d-4bf1-aad7-d9e5-e7658b451889",
@@ -4493,7 +4493,7 @@
 								{
 									"x": "(math.sin(v.time*180-45)*(v.strength-1)*60*(1-v.shark))+60",
 									"y": "v.yaw/5",
-									"z": "math.sin(v.time*180-45)*(v.strength-1)*60*v.shark\n"
+									"z": "math.sin(v.time*180-45)*(v.strength-1)*60*v.shark"
 								}
 							],
 							"uuid": "debcbe4c-02c2-575c-2999-ab13c341eef7",
@@ -4513,7 +4513,7 @@
 								{
 									"x": "40",
 									"y": "v.yaw/5",
-									"z": "math.sin(v.time*180-135)*(v.strength-1)*-30*v.shark\n"
+									"z": "math.sin(v.time*180-135)*(v.strength-1)*-30*v.shark"
 								}
 							],
 							"uuid": "e1a175f8-032b-573a-cc8a-08b1d7e4e6e8",
@@ -4533,7 +4533,7 @@
 								{
 									"x": "(math.sin(v.time*180-180)*v.strength*-15*(1-v.shark))+35",
 									"y": "v.yaw/5",
-									"z": "math.sin(v.time*180-180)*v.strength*-15*v.shark\n"
+									"z": "math.sin(v.time*180-180)*v.strength*-15*v.shark"
 								}
 							],
 							"uuid": "0b8118c7-678a-0503-1f47-054e5579d72d",
@@ -4553,7 +4553,7 @@
 								{
 									"x": "math.sin(v.time*180-225)*v.strength*-15*(1-v.shark)",
 									"y": "(v.yaw/5)-(90*v.shark)",
-									"z": "math.sin(v.time*180-225)*v.strength*-15*v.shark\n"
+									"z": "math.sin(v.time*180-225)*v.strength*-15*v.shark"
 								}
 							],
 							"uuid": "2d23bf1d-4bf1-aad7-d9e5-e7658b451889",
@@ -4572,7 +4572,7 @@
 							"data_points": [
 								{
 									"x": "0",
-									"y": "-(v.scale*12)-math.abs(math.sin(v.time*180-45)*(v.strength-1)*1.5)\n",
+									"y": "-(v.scale*12)-math.abs(math.sin(v.time*180-45)*(v.strength-1)*1.5)",
 									"z": "0"
 								}
 							],
@@ -4628,7 +4628,7 @@
 								{
 									"x": "32.5",
 									"y": "0",
-									"z": "math.sin(v.time*180)*(v.strength-1)*5\n"
+									"z": "math.sin(v.time*180)*(v.strength-1)*5"
 								}
 							],
 							"uuid": "bb531fac-db26-98ec-88b5-f10d6f77772f",
@@ -4668,7 +4668,7 @@
 								{
 									"x": "0",
 									"y": "v.yaw/5",
-									"z": "math.sin(v.time*180-90)*(v.strength-1)*10\n"
+									"z": "math.sin(v.time*180-90)*(v.strength-1)*10"
 								}
 							],
 							"uuid": "3f645337-79e5-56b0-d2dc-d2876a6ba8ee",
@@ -4688,7 +4688,7 @@
 								{
 									"x": "(math.sin(v.time*180-135)*v.strength*10*(1-v.shark))+20",
 									"y": "v.yaw/5",
-									"z": "math.sin(v.time*180-135)*v.strength*10*v.shark\n"
+									"z": "math.sin(v.time*180-135)*v.strength*10*v.shark"
 								}
 							],
 							"uuid": "f2ae9c58-8eba-947a-0b83-b1ec7805f483",
@@ -4708,7 +4708,7 @@
 								{
 									"x": "(math.sin(v.time*180-180)*v.strength*15*(1-v.shark))+20",
 									"y": "v.yaw/5",
-									"z": "math.sin(v.time*180-180)*v.strength*15*v.shark\n"
+									"z": "math.sin(v.time*180-180)*v.strength*15*v.shark"
 								}
 							],
 							"uuid": "6a0521eb-f46f-e9cb-9c79-ea628ed305ab",
@@ -4728,7 +4728,7 @@
 								{
 									"x": "math.sin(v.time*180-225)*v.strength*15*(1-v.shark)",
 									"y": "(v.yaw/5)-(90*v.shark)",
-									"z": "math.sin(v.time*180-225)*v.strength*15*v.shark\n"
+									"z": "math.sin(v.time*180-225)*v.strength*15*v.shark"
 								}
 							],
 							"uuid": "1383006d-5085-fea2-58d1-bf8090527ceb",
@@ -4857,7 +4857,7 @@
 								{
 									"x": "v.pitch+(math.sin(v.time*180-90)*v.strength*7.5*(1-v.shark))+10",
 									"y": "v.yaw/5",
-									"z": "v.roll+(math.sin(v.time*180-90)*v.strength*7.5*v.shark)\n"
+									"z": "v.roll+(math.sin(v.time*180-90)*v.strength*7.5*v.shark)"
 								}
 							],
 							"uuid": "debcbe4c-02c2-575c-2999-ab13c341eef7",
@@ -4877,7 +4877,7 @@
 								{
 									"x": "v.pitch+(math.sin(v.time*180-135)*v.strength*10*(1-v.shark))+10",
 									"y": "v.yaw/5",
-									"z": "v.roll+(math.sin(v.time*180-135)*v.strength*10*v.shark)\n"
+									"z": "v.roll+(math.sin(v.time*180-135)*v.strength*10*v.shark)"
 								}
 							],
 							"uuid": "e1a175f8-032b-573a-cc8a-08b1d7e4e6e8",
@@ -4897,7 +4897,7 @@
 								{
 									"x": "v.pitch+(math.sin(v.time*180-180)*v.strength*2.5*(1-v.shark))+10",
 									"y": "v.yaw/5",
-									"z": "v.roll+(math.sin(v.time*180-180)*v.strength*2.5*v.shark)\n"
+									"z": "v.roll+(math.sin(v.time*180-180)*v.strength*2.5*v.shark)"
 								}
 							],
 							"uuid": "0b8118c7-678a-0503-1f47-054e5579d72d",
@@ -4915,9 +4915,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "(v.pitch+math.sin(v.time*180-225)*v.strength*7.5)*(1-v.shark)\n",
+									"x": "(v.pitch+math.sin(v.time*180-225)*v.strength*7.5)*(1-v.shark)",
 									"y": "(v.yaw/5)-(90*v.shark)",
-									"z": "v.roll+(math.sin(v.time*180-225)*v.strength*7.5*v.shark)\n"
+									"z": "v.roll+(math.sin(v.time*180-225)*v.strength*7.5*v.shark)"
 								}
 							],
 							"uuid": "2d23bf1d-4bf1-aad7-d9e5-e7658b451889",
@@ -5182,7 +5182,7 @@
 								{
 									"x": "0",
 									"y": "-v.headY/4",
-									"z": "v.headY/2\n"
+									"z": "v.headY/2"
 								}
 							],
 							"uuid": "079cbec1-653e-bbac-6b68-9f07a6cad661",
@@ -5220,7 +5220,7 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "(math.sin(v.time*180-180)*2.5*(1-v.shark))+(-20*v.shark)-10\n",
+									"x": "(math.sin(v.time*180-180)*2.5*(1-v.shark))+(-20*v.shark)-10",
 									"y": "-v.headY/4",
 									"z": "-v.headY+(math.sin(v.time*180-180)*2.5*v.shark)"
 								}
@@ -6351,5 +6351,5 @@
 			}
 		}
 	],
-	"animation_variable_placeholders": "v.time     = q.anim_time\nv.strength = slider(\"Strength\", 0.05, 1,  2)\nv.pitch    = slider(\"Pitch\",    0.5, -20, 20)\nv.yaw      = slider(\"Yaw\",      1,   -45, 45)\nv.roll     = slider(\"Roll\",     0.5, -20, 20)\nv.headY    = slider(\"HeadY\",    1,   -50, 50)\nv.shark    = toggle(\"Shark\")\n"
+	"animation_variable_placeholders": "v.time     = q.anim_time\nv.strength = slider(\"Strength\", 0.05, 1,  2)\nv.pitch    = slider(\"Pitch\",    0.5, -20, 20)\nv.yaw      = slider(\"Yaw\",      1,   -45, 45)\nv.roll     = slider(\"Roll\",     0.5, -20, 20)\nv.headY    = slider(\"HeadY\",    1,   -50, 50)\nv.shark    = toggle(\"Shark\")"
 }
