@@ -5,8 +5,60 @@
 		"box_uv": false
 	},
 	"visible_box": [1, 1, 0],
-	"variable_placeholders": "t.time     = q.anim_time\nt.strength = 1.5\nt.pitch    = 0\nt.yaw      = 0\nt.roll     = 0\nt.headY    = 0\nt.normal   = 1\nt.shark    = 0\n",
-	"variable_placeholder_buttons": [],
+	"variable_placeholders": "v.time     = q.anim_time\nv.strength = slider(\"Strength\", 0.05, 1,  2)\nv.pitch    = slider(\"Pitch\",    0.5, -20, 20)\nv.yaw      = slider(\"Yaw\",      1,   -45, 45)\nv.roll     = slider(\"Roll\",     0.5, -20, 20)\nv.headY    = slider(\"HeadY\",    1,   -50, 50)\nv.shark    = toggle(\"Shark\")\n",
+	"variable_placeholder_buttons": [
+		{
+			"type": "slider",
+			"id": "Strength",
+			"value": 1.5,
+			"variable": "variable.strength",
+			"step": 0.05,
+			"min": 1,
+			"max": 2
+		},
+		{
+			"type": "slider",
+			"id": "Pitch",
+			"value": 0,
+			"variable": "variable.pitch",
+			"step": 0.5,
+			"min": -20,
+			"max": 20
+		},
+		{
+			"type": "slider",
+			"id": "Yaw",
+			"value": 0,
+			"variable": "variable.yaw",
+			"step": 1,
+			"min": -45,
+			"max": 45
+		},
+		{
+			"type": "slider",
+			"id": "Roll",
+			"value": 0,
+			"variable": "variable.roll",
+			"step": 0.5,
+			"min": -20,
+			"max": 20
+		},
+		{
+			"type": "slider",
+			"id": "HeadY",
+			"value": 0,
+			"variable": "variable.headY",
+			"step": 1,
+			"min": -50,
+			"max": 50
+		},
+		{
+			"type": "toggle",
+			"id": "Shark",
+			"value": 0,
+			"variable": "variable.shark"
+		}
+	],
 	"timeline_setups": [],
 	"unhandled_root_fields": {},
 	"resolution": {
@@ -4229,9 +4281,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "local t = require(\"scripts.Anims\") return\n0+t.pitch+(math.sin(t.time*180)*t.strength*t.normal)",
+									"x": "v.pitch+(math.sin(v.time*180)*v.strength*(1-v.shark))",
 									"y": "0",
-									"z": "local t = require(\"scripts.Anims\") return\n0+(math.sin(t.time*180)*t.strength*t.shark)\n"
+									"z": "math.sin(v.time*180)*v.strength*v.shark\n"
 								}
 							],
 							"uuid": "9341e6ce-60ec-1324-be50-d342808edb2d",
@@ -4249,9 +4301,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "local t = require(\"scripts.Anims\") return\n0+t.pitch+(math.sin(t.time*180-45)*t.strength*2.5*t.normal)",
-									"y": "local t = require(\"scripts.Anims\") return\n0+t.yaw/5",
-									"z": "local t = require(\"scripts.Anims\") return\n0+t.roll+(math.sin(t.time*180-45)*t.strength*2.5*t.shark)"
+									"x": "v.pitch+(math.sin(v.time*180-45)*v.strength*2.5*(1-v.shark))",
+									"y": "v.yaw/5",
+									"z": "v.roll+(math.sin(v.time*180-45)*v.strength*2.5*v.shark)"
 								}
 							],
 							"uuid": "2e9d076f-5369-90df-49a4-d1f6a8ef8a74",
@@ -4269,9 +4321,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "local t = require(\"scripts.Anims\") return\n0+t.pitch+(math.sin(t.time*180-90)*t.strength*7.5*t.normal)",
-									"y": "local t = require(\"scripts.Anims\") return\n0+t.yaw/5",
-									"z": "local t = require(\"scripts.Anims\") return\n0+t.roll+(math.sin(t.time*180-90)*t.strength*7.5*t.shark)\n"
+									"x": "v.pitch+(math.sin(v.time*180-90)*v.strength*7.5*(1-v.shark))",
+									"y": "v.yaw/5",
+									"z": "v.roll+(math.sin(v.time*180-90)*v.strength*7.5*v.shark)\n"
 								}
 							],
 							"uuid": "debcbe4c-02c2-575c-2999-ab13c341eef7",
@@ -4289,9 +4341,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "local t = require(\"scripts.Anims\") return\n0+t.pitch+(math.sin(t.time*180-135)*t.strength*10*t.normal)",
-									"y": "local t = require(\"scripts.Anims\") return\n0+t.yaw/5",
-									"z": "local t = require(\"scripts.Anims\") return\n0+t.roll+(math.sin(t.time*180-135)*t.strength*10*t.shark)\n"
+									"x": "v.pitch+(math.sin(v.time*180-135)*v.strength*10*(1-v.shark))",
+									"y": "v.yaw/5",
+									"z": "v.roll+(math.sin(v.time*180-135)*v.strength*10*v.shark)\n"
 								}
 							],
 							"uuid": "e1a175f8-032b-573a-cc8a-08b1d7e4e6e8",
@@ -4309,9 +4361,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "local t = require(\"scripts.Anims\") return\n0+t.pitch+(math.sin(t.time*180-180)*t.strength*2.5*t.normal)",
-									"y": "local t = require(\"scripts.Anims\") return\n0+t.yaw/5",
-									"z": "local t = require(\"scripts.Anims\") return\n0+t.roll+(math.sin(t.time*180-180)*t.strength*2.5*t.shark)\n"
+									"x": "v.pitch+(math.sin(v.time*180-180)*v.strength*2.5*(1-v.shark))",
+									"y": "v.yaw/5",
+									"z": "v.roll+(math.sin(v.time*180-180)*v.strength*2.5*v.shark)\n"
 								}
 							],
 							"uuid": "0b8118c7-678a-0503-1f47-054e5579d72d",
@@ -4329,9 +4381,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "local t = require(\"scripts.Anims\") return\n0+(t.pitch+math.sin(t.time*180-225)*t.strength*7.5)*t.normal\n",
-									"y": "local t = require(\"scripts.Anims\") return\n0+(t.yaw/5)-(90*t.shark)",
-									"z": "local t = require(\"scripts.Anims\") return\n0+t.roll+(math.sin(t.time*180-225)*t.strength*7.5*t.shark)\n"
+									"x": "(v.pitch+math.sin(v.time*180-225)*v.strength*7.5)*(1-v.shark)\n",
+									"y": "(v.yaw/5)-(90*v.shark)",
+									"z": "v.roll+(math.sin(v.time*180-225)*v.strength*7.5*v.shark)\n"
 								}
 							],
 							"uuid": "2d23bf1d-4bf1-aad7-d9e5-e7658b451889",
@@ -4365,7 +4417,7 @@
 							"data_points": [
 								{
 									"x": "0",
-									"y": "local t = require(\"scripts.Anims\") return\n0+math.sin(t.time*180+45)*t.strength*3",
+									"y": "math.sin(v.time*180+45)*v.strength*3",
 									"z": "0"
 								}
 							],
@@ -4385,7 +4437,7 @@
 							"data_points": [
 								{
 									"x": "0",
-									"y": "local t = require(\"scripts.Anims\") return\n0-math.sin(t.time*180+45)*t.strength*3",
+									"y": "-math.sin(v.time*180+45)*v.strength*3",
 									"z": "0"
 								}
 							],
@@ -4419,9 +4471,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "local t = require(\"scripts.Anims\") return\n0+(math.sin(t.time*180-45)*(t.strength-1)*-60*t.normal)-10",
-									"y": "local t = require(\"scripts.Anims\") return\n0+t.yaw/5",
-									"z": "local t = require(\"scripts.Anims\") return\n0+math.sin(t.time*180-45)*(t.strength-1)*-60*t.shark"
+									"x": "(math.sin(v.time*180-45)*(v.strength-1)*-60*(1-v.shark))-10",
+									"y": "v.yaw/5",
+									"z": "math.sin(v.time*180-45)*(v.strength-1)*-60*v.shark"
 								}
 							],
 							"uuid": "2e9d076f-5369-90df-49a4-d1f6a8ef8a74",
@@ -4439,9 +4491,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "local t = require(\"scripts.Anims\") return\n0+(math.sin(t.time*180-45)*(t.strength-1)*60*t.normal)+60",
-									"y": "local t = require(\"scripts.Anims\") return\n0+t.yaw/5",
-									"z": "local t = require(\"scripts.Anims\") return\n0+math.sin(t.time*180-45)*(t.strength-1)*60*t.shark\n"
+									"x": "(math.sin(v.time*180-45)*(v.strength-1)*60*(1-v.shark))+60",
+									"y": "v.yaw/5",
+									"z": "math.sin(v.time*180-45)*(v.strength-1)*60*v.shark\n"
 								}
 							],
 							"uuid": "debcbe4c-02c2-575c-2999-ab13c341eef7",
@@ -4460,8 +4512,8 @@
 							"data_points": [
 								{
 									"x": "40",
-									"y": "local t = require(\"scripts.Anims\") return\n0+t.yaw/5",
-									"z": "local t = require(\"scripts.Anims\") return\n0+math.sin(t.time*180-135)*(t.strength-1)*-30*t.shark\n"
+									"y": "v.yaw/5",
+									"z": "math.sin(v.time*180-135)*(v.strength-1)*-30*v.shark\n"
 								}
 							],
 							"uuid": "e1a175f8-032b-573a-cc8a-08b1d7e4e6e8",
@@ -4479,9 +4531,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "local t = require(\"scripts.Anims\") return\n0+(math.sin(t.time*180-180)*t.strength*-15*t.normal)+35",
-									"y": "local t = require(\"scripts.Anims\") return\n0+t.yaw/5",
-									"z": "local t = require(\"scripts.Anims\") return\n0+math.sin(t.time*180-180)*t.strength*-15*t.shark\n"
+									"x": "(math.sin(v.time*180-180)*v.strength*-15*(1-v.shark))+35",
+									"y": "v.yaw/5",
+									"z": "math.sin(v.time*180-180)*v.strength*-15*v.shark\n"
 								}
 							],
 							"uuid": "0b8118c7-678a-0503-1f47-054e5579d72d",
@@ -4499,9 +4551,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "local t = require(\"scripts.Anims\") return\n0+math.sin(t.time*180-225)*t.strength*-15*t.normal",
-									"y": "local t = require(\"scripts.Anims\") return\n0+(t.yaw/5)-(90*t.shark)",
-									"z": "local t = require(\"scripts.Anims\") return\n0+math.sin(t.time*180-225)*t.strength*-15*t.shark\n"
+									"x": "math.sin(v.time*180-225)*v.strength*-15*(1-v.shark)",
+									"y": "(v.yaw/5)-(90*v.shark)",
+									"z": "math.sin(v.time*180-225)*v.strength*-15*v.shark\n"
 								}
 							],
 							"uuid": "2d23bf1d-4bf1-aad7-d9e5-e7658b451889",
@@ -4520,7 +4572,7 @@
 							"data_points": [
 								{
 									"x": "0",
-									"y": "local t = require(\"scripts.Anims\") return\n0-(t.scale*12)-math.abs(math.sin(t.time*180-45)*(t.strength-1)*1.5)\n",
+									"y": "-(v.scale*12)-math.abs(math.sin(v.time*180-45)*(v.strength-1)*1.5)\n",
 									"z": "0"
 								}
 							],
@@ -4576,7 +4628,7 @@
 								{
 									"x": "32.5",
 									"y": "0",
-									"z": "local t = require(\"scripts.Anims\") return\n0+math.sin(t.time*180)*(t.strength-1)*5\n"
+									"z": "math.sin(v.time*180)*(v.strength-1)*5\n"
 								}
 							],
 							"uuid": "bb531fac-db26-98ec-88b5-f10d6f77772f",
@@ -4595,8 +4647,8 @@
 							"data_points": [
 								{
 									"x": "57.5",
-									"y": "local t = require(\"scripts.Anims\") return\n0+t.yaw/5",
-									"z": "local t = require(\"scripts.Anims\") return\n0+math.sin(t.time*180-45)*(t.strength-1)*10"
+									"y": "v.yaw/5",
+									"z": "math.sin(v.time*180-45)*(v.strength-1)*10"
 								}
 							],
 							"uuid": "169b86d7-a33e-d931-e954-e9bb9c73f6bf",
@@ -4615,8 +4667,8 @@
 							"data_points": [
 								{
 									"x": "0",
-									"y": "local t = require(\"scripts.Anims\") return\n0+t.yaw/5",
-									"z": "local t = require(\"scripts.Anims\") return\n0+math.sin(t.time*180-90)*(t.strength-1)*10\n"
+									"y": "v.yaw/5",
+									"z": "math.sin(v.time*180-90)*(v.strength-1)*10\n"
 								}
 							],
 							"uuid": "3f645337-79e5-56b0-d2dc-d2876a6ba8ee",
@@ -4634,9 +4686,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "local t = require(\"scripts.Anims\") return\n0+(math.sin(t.time*180-135)*t.strength*10*t.normal)+20",
-									"y": "local t = require(\"scripts.Anims\") return\n0+t.yaw/5",
-									"z": "local t = require(\"scripts.Anims\") return\n0+math.sin(t.time*180-135)*t.strength*10*t.shark\n"
+									"x": "(math.sin(v.time*180-135)*v.strength*10*(1-v.shark))+20",
+									"y": "v.yaw/5",
+									"z": "math.sin(v.time*180-135)*v.strength*10*v.shark\n"
 								}
 							],
 							"uuid": "f2ae9c58-8eba-947a-0b83-b1ec7805f483",
@@ -4654,9 +4706,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "local t = require(\"scripts.Anims\") return\n0+(math.sin(t.time*180-180)*t.strength*15*t.normal)+20",
-									"y": "local t = require(\"scripts.Anims\") return\n0+t.yaw/5",
-									"z": "local t = require(\"scripts.Anims\") return\n0+math.sin(t.time*180-180)*t.strength*15*t.shark\n"
+									"x": "(math.sin(v.time*180-180)*v.strength*15*(1-v.shark))+20",
+									"y": "v.yaw/5",
+									"z": "math.sin(v.time*180-180)*v.strength*15*v.shark\n"
 								}
 							],
 							"uuid": "6a0521eb-f46f-e9cb-9c79-ea628ed305ab",
@@ -4674,9 +4726,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "local t = require(\"scripts.Anims\") return\n0+math.sin(t.time*180-225)*t.strength*15*t.normal",
-									"y": "local t = require(\"scripts.Anims\") return\n0+(t.yaw/5)-(90*t.shark)",
-									"z": "local t = require(\"scripts.Anims\") return\n0+math.sin(t.time*180-225)*t.strength*15*t.shark\n"
+									"x": "math.sin(v.time*180-225)*v.strength*15*(1-v.shark)",
+									"y": "(v.yaw/5)-(90*v.shark)",
+									"z": "math.sin(v.time*180-225)*v.strength*15*v.shark\n"
 								}
 							],
 							"uuid": "1383006d-5085-fea2-58d1-bf8090527ceb",
@@ -4769,9 +4821,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "local t = require(\"scripts.Anims\") return\n0+t.pitch+(math.sin(t.time*180-45)*t.strength*2.5*t.normal)+60",
-									"y": "local t = require(\"scripts.Anims\") return\n0+t.yaw/5",
-									"z": "local t = require(\"scripts.Anims\") return\n0+t.roll+(math.sin(t.time*180-45)*t.strength*2.5*t.shark)"
+									"x": "v.pitch+(math.sin(v.time*180-45)*v.strength*2.5*(1-v.shark))+60",
+									"y": "v.yaw/5",
+									"z": "v.roll+(math.sin(v.time*180-45)*v.strength*2.5*v.shark)"
 								}
 							],
 							"uuid": "2e9d076f-5369-90df-49a4-d1f6a8ef8a74",
@@ -4803,9 +4855,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "local t = require(\"scripts.Anims\") return\n0+t.pitch+(math.sin(t.time*180-90)*t.strength*7.5*t.normal)+10",
-									"y": "local t = require(\"scripts.Anims\") return\n0+t.yaw/5",
-									"z": "local t = require(\"scripts.Anims\") return\n0+t.roll+(math.sin(t.time*180-90)*t.strength*7.5*t.shark)\n"
+									"x": "v.pitch+(math.sin(v.time*180-90)*v.strength*7.5*(1-v.shark))+10",
+									"y": "v.yaw/5",
+									"z": "v.roll+(math.sin(v.time*180-90)*v.strength*7.5*v.shark)\n"
 								}
 							],
 							"uuid": "debcbe4c-02c2-575c-2999-ab13c341eef7",
@@ -4823,9 +4875,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "local t = require(\"scripts.Anims\") return\n0+t.pitch+(math.sin(t.time*180-135)*t.strength*10*t.normal)+10",
-									"y": "local t = require(\"scripts.Anims\") return\n0+t.yaw/5",
-									"z": "local t = require(\"scripts.Anims\") return\n0+t.roll+(math.sin(t.time*180-135)*t.strength*10*t.shark)\n"
+									"x": "v.pitch+(math.sin(v.time*180-135)*v.strength*10*(1-v.shark))+10",
+									"y": "v.yaw/5",
+									"z": "v.roll+(math.sin(v.time*180-135)*v.strength*10*v.shark)\n"
 								}
 							],
 							"uuid": "e1a175f8-032b-573a-cc8a-08b1d7e4e6e8",
@@ -4843,9 +4895,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "local t = require(\"scripts.Anims\") return\n0+t.pitch+(math.sin(t.time*180-180)*t.strength*2.5*t.normal)+10",
-									"y": "local t = require(\"scripts.Anims\") return\n0+t.yaw/5",
-									"z": "local t = require(\"scripts.Anims\") return\n0+t.roll+(math.sin(t.time*180-180)*t.strength*2.5*t.shark)\n"
+									"x": "v.pitch+(math.sin(v.time*180-180)*v.strength*2.5*(1-v.shark))+10",
+									"y": "v.yaw/5",
+									"z": "v.roll+(math.sin(v.time*180-180)*v.strength*2.5*v.shark)\n"
 								}
 							],
 							"uuid": "0b8118c7-678a-0503-1f47-054e5579d72d",
@@ -4863,9 +4915,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "local t = require(\"scripts.Anims\") return\n0+(t.pitch+math.sin(t.time*180-225)*t.strength*7.5)*t.normal\n",
-									"y": "local t = require(\"scripts.Anims\") return\n0+(t.yaw/5)-(90*t.shark)",
-									"z": "local t = require(\"scripts.Anims\") return\n0+t.roll+(math.sin(t.time*180-225)*t.strength*7.5*t.shark)\n"
+									"x": "(v.pitch+math.sin(v.time*180-225)*v.strength*7.5)*(1-v.shark)\n",
+									"y": "(v.yaw/5)-(90*v.shark)",
+									"z": "v.roll+(math.sin(v.time*180-225)*v.strength*7.5*v.shark)\n"
 								}
 							],
 							"uuid": "2d23bf1d-4bf1-aad7-d9e5-e7658b451889",
@@ -5089,7 +5141,7 @@
 							"data_points": [
 								{
 									"x": -30,
-									"y": "local t = require(\"scripts.Anims\") return\n0+(-t.headY/4)-(90*t.shark)",
+									"y": "(-v.headY/4)-(90*v.shark)",
 									"z": "0"
 								}
 							],
@@ -5109,8 +5161,8 @@
 							"data_points": [
 								{
 									"x": "0",
-									"y": "local t = require(\"scripts.Anims\") return\n0-t.headY/4",
-									"z": "local t = require(\"scripts.Anims\") return\n0+t.headY/2"
+									"y": "-v.headY/4",
+									"z": "v.headY/2"
 								}
 							],
 							"uuid": "cbb42e88-8556-9d3c-e424-4268e0b62697",
@@ -5129,8 +5181,8 @@
 							"data_points": [
 								{
 									"x": "0",
-									"y": "local t = require(\"scripts.Anims\") return\n0-t.headY/4",
-									"z": "local t = require(\"scripts.Anims\") return\n0+t.headY/2\n"
+									"y": "-v.headY/4",
+									"z": "v.headY/2\n"
 								}
 							],
 							"uuid": "079cbec1-653e-bbac-6b68-9f07a6cad661",
@@ -5149,8 +5201,8 @@
 							"data_points": [
 								{
 									"x": 30,
-									"y": "local t = require(\"scripts.Anims\") return\n0-t.headY/4",
-									"z": "local t = require(\"scripts.Anims\") return\n0-t.headY"
+									"y": "-v.headY/4",
+									"z": "-v.headY"
 								}
 							],
 							"uuid": "2d57ae31-0d0d-ea2c-858b-a7e6497933ff",
@@ -5168,9 +5220,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "local t = require(\"scripts.Anims\") return\n0+(math.sin(t.time*180-180)*2.5*t.normal)+(-20*t.shark)-10\n",
-									"y": "local t = require(\"scripts.Anims\") return\n0-t.headY/4",
-									"z": "local t = require(\"scripts.Anims\") return\n0-t.headY+(math.sin(t.time*180-180)*2.5*t.shark)"
+									"x": "(math.sin(v.time*180-180)*2.5*(1-v.shark))+(-20*v.shark)-10\n",
+									"y": "-v.headY/4",
+									"z": "-v.headY+(math.sin(v.time*180-180)*2.5*v.shark)"
 								}
 							],
 							"uuid": "609d2c57-7e7e-54cd-cc70-cabf34036540",
@@ -6299,5 +6351,5 @@
 			}
 		}
 	],
-	"animation_variable_placeholders": "t.time     = q.anim_time\nt.strength = 1.5\nt.pitch    = 0\nt.yaw      = 0\nt.roll     = 0\nt.headY    = 0\nt.normal   = 1\nt.shark    = 0\n"
+	"animation_variable_placeholders": "v.time     = q.anim_time\nv.strength = slider(\"Strength\", 0.05, 1,  2)\nv.pitch    = slider(\"Pitch\",    0.5, -20, 20)\nv.yaw      = slider(\"Yaw\",      1,   -45, 45)\nv.roll     = slider(\"Roll\",     0.5, -20, 20)\nv.headY    = slider(\"HeadY\",    1,   -50, 50)\nv.shark    = toggle(\"Shark\")\n"
 }

@@ -25,7 +25,7 @@ if not s then glow = {} end
 local s, eyes = pcall(require, "scripts.GlowingEyes")
 if not s then eyes = {} end
 
-local s, _, anims = pcall(require, "scripts.Anims")
+local s, anims = pcall(require, "scripts.Anims")
 if not s then anims = {} end
 
 local s, squapi = pcall(require, "scripts.SquishyAnims")

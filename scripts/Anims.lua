@@ -18,22 +18,20 @@ local mountDir  = config:load("AnimMountDir") or false
 local mountFlip = config:load("AnimMountFlip") or false
 
 -- Table setup
-local a = {}
+v = {}
 
 -- Animation variables
-a.time     = 0
-a.strength = 1
+v.time     = 0
+v.strength = 1
 
--- Axis variables
-a.pitch = 0
-a.yaw   = 0
-a.roll  = 0
-a.headY = 0
-a.scale = math.map(math.max(tail.scale, tail.legs), 0, 1, 1, 0)
+v.pitch = 0
+v.yaw   = 0
+v.roll  = 0
+v.headY = 0
 
--- Animation types
-a.normal = isShark and 0 or 1
-a.shark  = isShark and 1 or 0
+v.shark = isShark and 1 or 0
+
+v.scale = math.map(math.max(tail.scale, tail.legs), 0, 1, 1, 0)
 
 -- Variables
 local waterTimer = 0
@@ -212,19 +210,17 @@ end
 function events.RENDER(delta, context)
 	
 	-- Store animation variables
-	a.time     = time.currPos
-	a.strength = strength.currPos
+	v.time     = time.currPos
+	v.strength = strength.currPos
 	
-	a.pitch = pitch.currPos
-	a.yaw   = yaw.currPos
-	a.roll  = roll.currPos
-	a.scale = math.map(math.max(tail.scale, tail.legs), 0, 1, 1, 0)
+	v.pitch = pitch.currPos
+	v.yaw   = yaw.currPos
+	v.roll  = roll.currPos
+	v.headY = (vanilla_model.HEAD:getOriginRot().y + 180) % 360 - 180
 	
-	a.shark  = shark.currPos
-	a.normal = math.map(a.shark, 0, 1, 1 ,0)
+	v.shark = shark.currPos
 	
-	-- Head Y rot calc (for sleep offset)
-	a.headY = (vanilla_model.HEAD:getOriginRot().y + 180) % 360 - 180
+	v.scale = math.map(math.max(tail.scale, tail.legs), 0, 1, 1, 0)
 	
 	-- Animation blending
 	anims.mountUp:blend(mountFlipLerp.currPos)
@@ -320,7 +316,7 @@ function pings.syncAnims(a, b, c, d, e)
 end
 
 -- Host only instructions
-if not host:isHost() then return a end
+if not host:isHost() then return end
 
 -- Required scripts
 local itemCheck = require("lib.ItemCheck")
@@ -439,4 +435,4 @@ function events.RENDER(delta, context)
 end
 
 -- Returns animation variables & actions
-return a, t
+return t
