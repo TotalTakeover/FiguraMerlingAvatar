@@ -10,7 +10,7 @@
 		{
 			"type": "slider",
 			"id": "Strength",
-			"value": 1.5,
+			"value": 0,
 			"variable": "variable.strength",
 			"step": 0.05,
 			"min": 1,
