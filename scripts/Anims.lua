@@ -38,6 +38,25 @@ local waterTimer = 0
 local canTwirl = false
 local isSing   = false
 
+-- Parrot pivots
+local parrots = {
+	
+	parts.group.LeftParrotPivot,
+	parts.group.RightParrotPivot
+	
+}
+
+-- Calculate parent's rotations
+local function calculateParentRot(m)
+	
+	local parent = m:getParent()
+	if not parent then
+		return m:getTrueRot()
+	end
+	return calculateParentRot(parent) + m:getTrueRot()
+	
+end
+
 -- Lerps
 local time     = lerp:new(1)
 local strength = lerp:new(1)
@@ -225,6 +244,11 @@ function events.RENDER(delta, context)
 	-- Animation blending
 	anims.mountUp:blend(mountFlipLerp.currPos)
 	anims.mountDown:blend(mountFlipLerp.currPos)
+	
+	-- Parrot rot offset
+	for _, parrot in pairs(parrots) do
+		parrot:rot(-calculateParentRot(parrot:getParent()) - vanilla_model.BODY:getOriginRot())
+	end
 	
 end
 
