@@ -1415,7 +1415,7 @@
 			"uuid": "4f291da2-1db3-ca3b-52ca-3494485d8875"
 		},
 		{
-			"name": "Cape",
+			"name": "CAPE",
 			"box_uv": false,
 			"rescale": false,
 			"locked": false,
@@ -1426,6 +1426,7 @@
 			"to": [5, 24, 3],
 			"autouv": 0,
 			"color": 0,
+			"visibility": false,
 			"rotation": [0, -180, 0],
 			"origin": [0, 24, 2.5],
 			"faces": {
