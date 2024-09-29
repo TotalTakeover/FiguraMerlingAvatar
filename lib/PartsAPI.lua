@@ -8,7 +8,7 @@
 --			   \ \__\ \ \_______\   \ \__\ \ \__\ \__\ \_______\
 --				\|__|  \|_______|    \|__|  \|__|\|__|\|_______|
 --
--- Version: 1.0.0
+-- Version: 1.0.1
 
 -- Functions table
 local partsAPI = {parts = {}, group = {}}
@@ -67,7 +67,11 @@ function partsAPI:createChain(n, l, p, t)
 			if #t == 1 and child:getName() == n or child:getName() == n..#t+1 then
 				
 				table.insert(t, child)
-				self:createChain(n, l, child, t)
+				
+				if l > #t then
+					self:createChain(n, l, child, t)
+				end
+				
 				break
 				
 			end
@@ -77,7 +81,10 @@ function partsAPI:createChain(n, l, p, t)
 	else
 		
 		t = self:createTable(function(part) return part:getName():find(n) end, 1)
-		self:createChain(n, l, table.unpack(t), t)
+		
+		if l > #t then 
+			self:createChain(n, l, table.unpack(t), t)
+		end
 		
 	end
 	
