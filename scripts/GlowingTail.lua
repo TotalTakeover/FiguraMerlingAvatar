@@ -12,7 +12,7 @@ local unique  = config:load("GlowUnique") or false
 if toggle == nil then toggle = true end
 
 -- Glowing parts
-local glowingParts = parts:createTable(function(part) return part:getName():find("_Glow") end)
+local glowingParts = parts:createTable(function(part) return part:getName():find("_[gG]low") end)
 
 for i, part in ipairs(glowingParts) do
 	

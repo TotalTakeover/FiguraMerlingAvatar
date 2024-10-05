@@ -12,7 +12,7 @@ local nightVision = config:load("EyesNightVision") or false
 local water       = config:load("EyesWater") or false
 
 -- Glowing parts
-local glowingParts = parts:createTable(function(part) return part:getName():find("_EyeGlow") end)
+local glowingParts = parts:createTable(function(part) return part:getName():find("_[eE]ye[gG]low") end)
 
 -- Lerp eyes table
 local eyes = lerp:new(0.2, toggle and 1 or 0)

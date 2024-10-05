@@ -18,7 +18,7 @@ local defaultParts = parts:createTable(function(part) return part:getName():find
 local slimParts    = parts:createTable(function(part) return part:getName():find("ArmSlim")    end)
 
 -- Vanilla skin parts
-local skinParts = parts:createTable(function(part) return part:getName():find("_Skin") end)
+local skinParts = parts:createTable(function(part) return part:getName():find("_[sS]kin") end)
 
 -- Layer parts
 local layerTypes = {"HAT", "JACKET", "LEFT_SLEEVE", "RIGHT_SLEEVE", "LEFT_PANTS_LEG", "RIGHT_PANTS_LEG", "CAPE", "TAIL_LAYER"}
@@ -28,7 +28,7 @@ for _, type in pairs(layerTypes) do
 end
 
 -- Apply translucent cull
-local flatParts = parts:createTable(function(part) return part:getName():find("_Flat") end)
+local flatParts = parts:createTable(function(part) return part:getName():find("_[fF]lat") end)
 for _, part in ipairs(flatParts) do
 	part:primaryRenderType("TRANSLUCENT_CULL")
 end
