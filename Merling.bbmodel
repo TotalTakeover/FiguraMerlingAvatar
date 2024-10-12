@@ -2736,7 +2736,7 @@
 						"33fc311d-5832-cc27-e7e3-c35f9d5716f1",
 						{
 							"name": "Ears",
-							"origin": [0, 28, 0],
+							"origin": [0, 0, 0],
 							"color": 0,
 							"uuid": "8bad3f3c-dc48-112c-53f7-18f5bded2b8f",
 							"export": true,
@@ -2820,7 +2820,7 @@
 						"83b93389-d01b-4574-805a-56c1a9cfaf2c",
 						{
 							"name": "Elytra",
-							"origin": [0, 24, 2],
+							"origin": [0, 0, 0],
 							"color": 0,
 							"uuid": "cdb3bcd4-78d1-00d3-290f-f923e0bfcfe1",
 							"export": true,
@@ -2952,7 +2952,7 @@
 								"edd7e072-6596-f3be-5a2c-e91cf63c9e48",
 								{
 									"name": "Tail1ArmorLeggings",
-									"origin": [0, 12, 0],
+									"origin": [0, 0, 0],
 									"color": 0,
 									"uuid": "ed18f931-9c64-27c4-f07d-5c9128fe618f",
 									"export": true,
@@ -3012,7 +3012,7 @@
 										},
 										{
 											"name": "Tail2ArmorLeggings",
-											"origin": [0, 6, 0],
+											"origin": [0, 0, 0],
 											"color": 0,
 											"uuid": "f90a75d6-f6f7-fa4d-591b-13635e29b06b",
 											"export": true,
@@ -3039,7 +3039,7 @@
 												"a058689c-a87d-6578-75d0-d28ee1a7a2a0",
 												{
 													"name": "Tail3ArmorBoot",
-													"origin": [0, -1, 0],
+													"origin": [0, 0, 0],
 													"color": 0,
 													"uuid": "9d880c89-a512-798e-b111-96ce582e87de",
 													"export": true,
@@ -3066,7 +3066,7 @@
 														"031703b5-0ed6-ac02-d9f6-374423cf9c73",
 														{
 															"name": "Tail4ArmorBoot",
-															"origin": [0, -8, 0],
+															"origin": [0, 0, 0],
 															"color": 0,
 															"uuid": "08eeaa7a-92e4-15f2-3244-fe6d08f652b6",
 															"export": true,
@@ -3114,7 +3114,7 @@
 					"children": [
 						{
 							"name": "leftArmDefault",
-							"origin": [-5, 22, 0],
+							"origin": [0, 0, 0],
 							"color": 0,
 							"uuid": "1a08ac72-2db2-253c-5774-cc87afc90071",
 							"export": true,
@@ -3127,7 +3127,7 @@
 						},
 						{
 							"name": "leftArmSlim",
-							"origin": [-5, 22, 0],
+							"origin": [0, 0, 0],
 							"color": 0,
 							"uuid": "1dd7f772-fe48-49d9-86dc-8ae1a7de6d39",
 							"export": true,
@@ -3180,7 +3180,7 @@
 					"children": [
 						{
 							"name": "rightArmDefault",
-							"origin": [5, 22, 0],
+							"origin": [0, 0, 0],
 							"color": 0,
 							"uuid": "c9294ef5-d5e3-2c03-a424-d15b6fd817a4",
 							"export": true,
@@ -3193,7 +3193,7 @@
 						},
 						{
 							"name": "rightArmSlim",
-							"origin": [5, 22, 0],
+							"origin": [0, 0, 0],
 							"color": 0,
 							"uuid": "544f3da1-3d1f-7764-9d77-d609f9c587c9",
 							"export": true,
@@ -3506,7 +3506,7 @@
 				"6d27071e-6d33-1eae-1fd8-8805ec8b1396",
 				{
 					"name": "EarsSkull",
-					"origin": [0, 4, 0],
+					"origin": [0, 0, 0],
 					"color": 0,
 					"uuid": "19c74eb1-e73f-3c0e-b8ac-c017155fa6b2",
 					"export": true,
