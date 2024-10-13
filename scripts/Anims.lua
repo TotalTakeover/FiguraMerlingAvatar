@@ -1,5 +1,6 @@
 -- Required scripts
 require("lib.GSAnimBlend")
+require("lib.Molang")
 local parts   = require("lib.PartsAPI")
 local lerp    = require("lib.LerpAPI")
 local ground  = require("lib.GroundCheck")
@@ -21,9 +22,7 @@ local mountFlip = config:load("AnimMountFlip") or false
 v = {}
 
 -- Animation variables
-v.time     = 0
 v.strength = 1
-
 v.pitch = 0
 v.yaw   = 0
 v.roll  = 0
@@ -58,9 +57,7 @@ local function calculateParentRot(m)
 end
 
 -- Lerps
-local time     = lerp:new(1)
 local strength = lerp:new(1)
-
 local pitch = lerp:new(0.1)
 local yaw   = lerp:new(1)
 local roll  = lerp:new(0.1)
@@ -119,26 +116,19 @@ function events.TICK()
 	staticYaw = math.lerp(staticYaw, bodyYaw, onGround and math.clamp(vel:length(), 0, 1) or 0.25)
 	local yawDif = staticYaw - bodyYaw
 	
-	-- Animation control
-	if player:getVehicle() then
-		
-		-- In vehicle
-		time.target = time.target + 0.0005
-		strength.target = 1
-		
-	elseif (onGround or waterTimer == 0) and largeTail and not effects.cF then
-		
-		-- Above water or on ground
-		time.target = time.target + math.clamp(fbVel < -0.05 and math.min(fbVel, math.abs(lrVel)) * 0.005 - 0.0005 or math.max(fbVel, math.abs(lrVel)) * 0.005 + 0.0005, -0.0045, 0.0045)
-		strength.target = math.clamp(vel.xz:length() * 2 + 1, 1, 2)
-		
-	else
-		
-		-- Assumed floating in water
-		time.target = time.target + math.clamp(vel:length() * 0.005 + 0.0005, -0.0045, 0.0045)
-		strength.target = math.clamp(vel:length() * 2 + 1, 1, 2)
-		
-	end
+	-- Speed control
+	local speed     = player:getVehicle() and 1 or math.min(vel:length() * 3, 3) + 1
+	local landSpeed = math.clamp(fbVel < -0.05 and math.min(fbVel, math.abs(lrVel)) * 6 - 0.5 or math.max(fbVel, math.abs(lrVel)) * 6 + 0.5, -6, 6)
+	
+	-- Animation speeds
+	anims.swim:speed(speed)
+	anims.stand:speed(landSpeed)
+	anims.crawl:speed(landSpeed)
+	anims.small:speed(speed)
+	anims.ears:speed(speed)
+	
+	-- Strength control
+	strength.target = player:getVehicle() and 1 or math.clamp((groundAnim and vel.xz or vel):length() * 2 + 1, 1, 2)
 	
 	-- Axis controls
 	-- X axis control
@@ -229,9 +219,7 @@ end
 function events.RENDER(delta, context)
 	
 	-- Store animation variables
-	v.time     = time.currPos
 	v.strength = strength.currPos
-	
 	v.pitch = pitch.currPos
 	v.yaw   = yaw.currPos
 	v.roll  = roll.currPos
