@@ -8,16 +8,16 @@ Math.cos = function(a)
 end
 
 -- Allow q.anim_time to be interpreted as anim:getTime()
-local current
-function prepare(t)
-    current = t
-    return 0
-end
 q = {}
+local anim
 setmetatable(q, {
-    __index=function(...)
-        if ({...})[2] == "anim_time" then
-            return current[2]:getTime()
-        end
-    end
+	__index = function(t, i)
+		if i == "anim_time" then
+			return anim:getTime()
+		end
+	end,
+		__call = function(t, _, a)
+		anim = a
+		return 0
+	end 
 })

@@ -18,6 +18,8 @@ This Figura avatar is a template designed around giving the user a customizable 
 - Squishy (SquAPI)
 - Katt (OriginsAPI, KattArmor, DynamicCrosshair)
 - 4P5 (GroundCheck)
+- Manuel (Molang Conversions)
+- Auria (Molang Conversions)
 
 ## Features
 Below is a list of all features this Avatar contains, but you could always watch instead of read: 

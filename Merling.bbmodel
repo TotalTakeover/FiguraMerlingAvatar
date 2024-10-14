@@ -4384,9 +4384,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "(0 * prepare{...}) +\nv.pitch+(Math.sin(q.anim_time*180)*v.strength*(1-v.shark))",
+									"x": "q(...) +\nv.pitch+(Math.sin(q.anim_time*180)*v.strength*(1-v.shark))",
 									"y": "0",
-									"z": "(0 * prepare{...}) +\nMath.sin(q.anim_time*180)*v.strength*v.shark"
+									"z": "q(...) +\nMath.sin(q.anim_time*180)*v.strength*v.shark"
 								}
 							],
 							"uuid": "9341e6ce-60ec-1324-be50-d342808edb2d",
@@ -4404,9 +4404,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "(0 * prepare{...}) +\nv.pitch+(Math.sin(q.anim_time*180-45)*v.strength*2.5*(1-v.shark))",
+									"x": "q(...) +\nv.pitch+(Math.sin(q.anim_time*180-45)*v.strength*2.5*(1-v.shark))",
 									"y": "v.yaw/5",
-									"z": "(0 * prepare{...}) +\nv.roll+(Math.sin(q.anim_time*180-45)*v.strength*2.5*v.shark)"
+									"z": "q(...) +\nv.roll+(Math.sin(q.anim_time*180-45)*v.strength*2.5*v.shark)"
 								}
 							],
 							"uuid": "2e9d076f-5369-90df-49a4-d1f6a8ef8a74",
@@ -4424,9 +4424,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "(0 * prepare{...}) +\nv.pitch+(Math.sin(q.anim_time*180-90)*v.strength*7.5*(1-v.shark))",
+									"x": "q(...) +\nv.pitch+(Math.sin(q.anim_time*180-90)*v.strength*7.5*(1-v.shark))",
 									"y": "v.yaw/5",
-									"z": "(0 * prepare{...}) +\nv.roll+(Math.sin(q.anim_time*180-90)*v.strength*7.5*v.shark)"
+									"z": "q(...) +\nv.roll+(Math.sin(q.anim_time*180-90)*v.strength*7.5*v.shark)"
 								}
 							],
 							"uuid": "debcbe4c-02c2-575c-2999-ab13c341eef7",
@@ -4444,9 +4444,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "(0 * prepare{...}) +\nv.pitch+(Math.sin(q.anim_time*180-135)*v.strength*10*(1-v.shark))",
+									"x": "q(...) +\nv.pitch+(Math.sin(q.anim_time*180-135)*v.strength*10*(1-v.shark))",
 									"y": "v.yaw/5",
-									"z": "(0 * prepare{...}) +\nv.roll+(Math.sin(q.anim_time*180-135)*v.strength*10*v.shark)"
+									"z": "q(...) +\nv.roll+(Math.sin(q.anim_time*180-135)*v.strength*10*v.shark)"
 								}
 							],
 							"uuid": "e1a175f8-032b-573a-cc8a-08b1d7e4e6e8",
@@ -4464,9 +4464,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "(0 * prepare{...}) +\nv.pitch+(Math.sin(q.anim_time*180-180)*v.strength*2.5*(1-v.shark))",
+									"x": "q(...) +\nv.pitch+(Math.sin(q.anim_time*180-180)*v.strength*2.5*(1-v.shark))",
 									"y": "v.yaw/5",
-									"z": "(0 * prepare{...}) +\nv.roll+(Math.sin(q.anim_time*180-180)*v.strength*2.5*v.shark)"
+									"z": "q(...) +\nv.roll+(Math.sin(q.anim_time*180-180)*v.strength*2.5*v.shark)"
 								}
 							],
 							"uuid": "0b8118c7-678a-0503-1f47-054e5579d72d",
@@ -4484,9 +4484,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "(0 * prepare{...}) +\n(v.pitch+Math.sin(q.anim_time*180-225)*v.strength*7.5)*(1-v.shark)",
+									"x": "q(...) +\n(v.pitch+Math.sin(q.anim_time*180-225)*v.strength*7.5)*(1-v.shark)",
 									"y": "(v.yaw/5)-(90*v.shark)",
-									"z": "(0 * prepare{...}) +\nv.roll+(Math.sin(q.anim_time*180-225)*v.strength*7.5*v.shark)"
+									"z": "q(...) +\nv.roll+(Math.sin(q.anim_time*180-225)*v.strength*7.5*v.shark)"
 								}
 							],
 							"uuid": "2d23bf1d-4bf1-aad7-d9e5-e7658b451889",
@@ -4520,7 +4520,7 @@
 							"data_points": [
 								{
 									"x": "0",
-									"y": "(0 * prepare{...}) +\nMath.sin(q.anim_time*180+45)*v.strength*3",
+									"y": "q(...) +\nMath.sin(q.anim_time*180+45)*v.strength*3",
 									"z": "0"
 								}
 							],
@@ -4540,7 +4540,7 @@
 							"data_points": [
 								{
 									"x": "0",
-									"y": "(0 * prepare{...}) +\n-Math.sin(q.anim_time*180+45)*v.strength*3",
+									"y": "q(...) +\n-Math.sin(q.anim_time*180+45)*v.strength*3",
 									"z": "0"
 								}
 							],
@@ -4574,9 +4574,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "(0 * prepare{...}) +\n(Math.sin(q.anim_time*180-45)*(v.strength-1)*-60*(1-v.shark))-10",
+									"x": "q(...) +\n(Math.sin(q.anim_time*180-45)*(v.strength-1)*-60*(1-v.shark))-10",
 									"y": "v.yaw/5",
-									"z": "(0 * prepare{...}) +\nMath.sin(q.anim_time*180-45)*(v.strength-1)*-60*v.shark"
+									"z": "q(...) +\nMath.sin(q.anim_time*180-45)*(v.strength-1)*-60*v.shark"
 								}
 							],
 							"uuid": "2e9d076f-5369-90df-49a4-d1f6a8ef8a74",
@@ -4594,9 +4594,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "(0 * prepare{...}) +\n(Math.sin(q.anim_time*180-45)*(v.strength-1)*60*(1-v.shark))+60",
+									"x": "q(...) +\n(Math.sin(q.anim_time*180-45)*(v.strength-1)*60*(1-v.shark))+60",
 									"y": "v.yaw/5",
-									"z": "(0 * prepare{...}) +\nMath.sin(q.anim_time*180-45)*(v.strength-1)*60*v.shark"
+									"z": "q(...) +\nMath.sin(q.anim_time*180-45)*(v.strength-1)*60*v.shark"
 								}
 							],
 							"uuid": "debcbe4c-02c2-575c-2999-ab13c341eef7",
@@ -4616,7 +4616,7 @@
 								{
 									"x": "40",
 									"y": "v.yaw/5",
-									"z": "(0 * prepare{...}) +\nMath.sin(q.anim_time*180-135)*(v.strength-1)*-30*v.shark"
+									"z": "q(...) +\nMath.sin(q.anim_time*180-135)*(v.strength-1)*-30*v.shark"
 								}
 							],
 							"uuid": "e1a175f8-032b-573a-cc8a-08b1d7e4e6e8",
@@ -4634,9 +4634,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "(0 * prepare{...}) +\n(Math.sin(q.anim_time*180-180)*v.strength*-15*(1-v.shark))+35",
+									"x": "q(...) +\n(Math.sin(q.anim_time*180-180)*v.strength*-15*(1-v.shark))+35",
 									"y": "v.yaw/5",
-									"z": "(0 * prepare{...}) +\nMath.sin(q.anim_time*180-180)*v.strength*-15*v.shark"
+									"z": "q(...) +\nMath.sin(q.anim_time*180-180)*v.strength*-15*v.shark"
 								}
 							],
 							"uuid": "0b8118c7-678a-0503-1f47-054e5579d72d",
@@ -4654,9 +4654,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "(0 * prepare{...}) +\nMath.sin(q.anim_time*180-225)*v.strength*-15*(1-v.shark)",
+									"x": "q(...) +\nMath.sin(q.anim_time*180-225)*v.strength*-15*(1-v.shark)",
 									"y": "(v.yaw/5)-(90*v.shark)",
-									"z": "(0 * prepare{...}) +\nMath.sin(q.anim_time*180-225)*v.strength*-15*v.shark"
+									"z": "q(...) +\nMath.sin(q.anim_time*180-225)*v.strength*-15*v.shark"
 								}
 							],
 							"uuid": "2d23bf1d-4bf1-aad7-d9e5-e7658b451889",
@@ -4675,7 +4675,7 @@
 							"data_points": [
 								{
 									"x": "0",
-									"y": "(0 * prepare{...}) +\n-(v.scale*12)-math.abs(Math.sin(q.anim_time*180-45)*(v.strength-1)*1.5)",
+									"y": "q(...) +\n-(v.scale*12)-math.abs(Math.sin(q.anim_time*180-45)*(v.strength-1)*1.5)",
 									"z": "0"
 								}
 							],
@@ -4731,7 +4731,7 @@
 								{
 									"x": "32.5",
 									"y": "0",
-									"z": "(0 * prepare{...}) +\nMath.sin(q.anim_time*180)*(v.strength-1)*5"
+									"z": "q(...) +\nMath.sin(q.anim_time*180)*(v.strength-1)*5"
 								}
 							],
 							"uuid": "bb531fac-db26-98ec-88b5-f10d6f77772f",
@@ -4751,7 +4751,7 @@
 								{
 									"x": "57.5",
 									"y": "v.yaw/5",
-									"z": "(0 * prepare{...}) +\nMath.sin(q.anim_time*180-45)*(v.strength-1)*10"
+									"z": "q(...) +\nMath.sin(q.anim_time*180-45)*(v.strength-1)*10"
 								}
 							],
 							"uuid": "169b86d7-a33e-d931-e954-e9bb9c73f6bf",
@@ -4771,7 +4771,7 @@
 								{
 									"x": "0",
 									"y": "v.yaw/5",
-									"z": "(0 * prepare{...}) +\nMath.sin(q.anim_time*180-90)*(v.strength-1)*10"
+									"z": "q(...) +\nMath.sin(q.anim_time*180-90)*(v.strength-1)*10"
 								}
 							],
 							"uuid": "3f645337-79e5-56b0-d2dc-d2876a6ba8ee",
@@ -4789,9 +4789,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "(0 * prepare{...}) +\n(Math.sin(q.anim_time*180-135)*v.strength*10*(1-v.shark))+20",
+									"x": "q(...) +\n(Math.sin(q.anim_time*180-135)*v.strength*10*(1-v.shark))+20",
 									"y": "v.yaw/5",
-									"z": "(0 * prepare{...}) +\nMath.sin(q.anim_time*180-135)*v.strength*10*v.shark"
+									"z": "q(...) +\nMath.sin(q.anim_time*180-135)*v.strength*10*v.shark"
 								}
 							],
 							"uuid": "f2ae9c58-8eba-947a-0b83-b1ec7805f483",
@@ -4809,9 +4809,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "(0 * prepare{...}) +\n(Math.sin(q.anim_time*180-180)*v.strength*15*(1-v.shark))+20",
+									"x": "q(...) +\n(Math.sin(q.anim_time*180-180)*v.strength*15*(1-v.shark))+20",
 									"y": "v.yaw/5",
-									"z": "(0 * prepare{...}) +\nMath.sin(q.anim_time*180-180)*v.strength*15*v.shark"
+									"z": "q(...) +\nMath.sin(q.anim_time*180-180)*v.strength*15*v.shark"
 								}
 							],
 							"uuid": "6a0521eb-f46f-e9cb-9c79-ea628ed305ab",
@@ -4829,9 +4829,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "(0 * prepare{...}) +\nMath.sin(q.anim_time*180-225)*v.strength*15*(1-v.shark)",
+									"x": "q(...) +\nMath.sin(q.anim_time*180-225)*v.strength*15*(1-v.shark)",
 									"y": "(v.yaw/5)-(90*v.shark)",
-									"z": "(0 * prepare{...}) +\nMath.sin(q.anim_time*180-225)*v.strength*15*v.shark"
+									"z": "q(...) +\nMath.sin(q.anim_time*180-225)*v.strength*15*v.shark"
 								}
 							],
 							"uuid": "1383006d-5085-fea2-58d1-bf8090527ceb",
@@ -4924,9 +4924,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "(0 * prepare{...}) +\nv.pitch+(Math.sin(q.anim_time*180-45)*v.strength*2.5*(1-v.shark))+60",
+									"x": "q(...) +\nv.pitch+(Math.sin(q.anim_time*180-45)*v.strength*2.5*(1-v.shark))+60",
 									"y": "v.yaw/5",
-									"z": "(0 * prepare{...}) +\nv.roll+(Math.sin(q.anim_time*180-45)*v.strength*2.5*v.shark)"
+									"z": "q(...) +\nv.roll+(Math.sin(q.anim_time*180-45)*v.strength*2.5*v.shark)"
 								}
 							],
 							"uuid": "2e9d076f-5369-90df-49a4-d1f6a8ef8a74",
@@ -4958,9 +4958,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "(0 * prepare{...}) +\nv.pitch+(Math.sin(q.anim_time*180-90)*v.strength*7.5*(1-v.shark))+10",
+									"x": "q(...) +\nv.pitch+(Math.sin(q.anim_time*180-90)*v.strength*7.5*(1-v.shark))+10",
 									"y": "v.yaw/5",
-									"z": "(0 * prepare{...}) +\nv.roll+(Math.sin(q.anim_time*180-90)*v.strength*7.5*v.shark)"
+									"z": "q(...) +\nv.roll+(Math.sin(q.anim_time*180-90)*v.strength*7.5*v.shark)"
 								}
 							],
 							"uuid": "debcbe4c-02c2-575c-2999-ab13c341eef7",
@@ -4978,7 +4978,7 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "(0 * prepare{...}) +\nv.pitch+(Math.sin(q.anim_time*180-135)*v.strength*10*(1-v.shark))+10",
+									"x": "q(...) +\nv.pitch+(Math.sin(q.anim_time*180-135)*v.strength*10*(1-v.shark))+10",
 									"y": "v.yaw/5",
 									"z": "v.roll+(Math.sin(q.anim_time*180-135)*v.strength*10*v.shark)"
 								}
@@ -4998,7 +4998,7 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "(0 * prepare{...}) +\nv.pitch+(Math.sin(q.anim_time*180-180)*v.strength*2.5*(1-v.shark))+10",
+									"x": "q(...) +\nv.pitch+(Math.sin(q.anim_time*180-180)*v.strength*2.5*(1-v.shark))+10",
 									"y": "v.yaw/5",
 									"z": "v.roll+(Math.sin(q.anim_time*180-180)*v.strength*2.5*v.shark)"
 								}
@@ -5018,9 +5018,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "(0 * prepare{...}) +\n(v.pitch+Math.sin(q.anim_time*180-225)*v.strength*7.5)*(1-v.shark)",
+									"x": "q(...) +\n(v.pitch+Math.sin(q.anim_time*180-225)*v.strength*7.5)*(1-v.shark)",
 									"y": "(v.yaw/5)-(90*v.shark)",
-									"z": "(0 * prepare{...}) +\nv.roll+(Math.sin(q.anim_time*180-225)*v.strength*7.5*v.shark)"
+									"z": "q(...) +\nv.roll+(Math.sin(q.anim_time*180-225)*v.strength*7.5*v.shark)"
 								}
 							],
 							"uuid": "2d23bf1d-4bf1-aad7-d9e5-e7658b451889",
@@ -5323,9 +5323,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "(0 * prepare{...}) +\n(Math.sin(q.anim_time*180-180)*2.5*(1-v.shark))+(-20*v.shark)-10",
+									"x": "q(...) +\n(Math.sin(q.anim_time*180-180)*2.5*(1-v.shark))+(-20*v.shark)-10",
 									"y": "-v.headY/4",
-									"z": "(0 * prepare{...}) +\n-v.headY+(Math.sin(q.anim_time*180-180)*2.5*v.shark)"
+									"z": "q(...) +\n-v.headY+(Math.sin(q.anim_time*180-180)*2.5*v.shark)"
 								}
 							],
 							"uuid": "609d2c57-7e7e-54cd-cc70-cabf34036540",
@@ -6206,9 +6206,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "(0 * prepare{...}) +\n-Math.sin(q.anim_time*360-90)*3.75-3.75",
-									"y": "(0 * prepare{...}) +\n-math.pow(Math.sin(q.anim_time*180),3)*5",
-									"z": "(0 * prepare{...}) +\n-math.pow(Math.sin(q.anim_time*180),3)*9.25"
+									"x": "q(...) +\n-Math.sin(q.anim_time*360-90)*3.75-3.75",
+									"y": "q(...) +\n-math.pow(Math.sin(q.anim_time*180),3)*5",
+									"z": "q(...) +\n-math.pow(Math.sin(q.anim_time*180),3)*9.25"
 								}
 							],
 							"uuid": "b71d0a5b-4b0d-ac99-a2e5-69b4eb6e72e1",
