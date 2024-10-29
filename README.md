@@ -22,7 +22,10 @@ This Figura avatar is a template designed around giving the user a customizable 
 - Auria (Molang Conversions)
 
 ## Features
-Below is a list of all features this Avatar contains, but you could always watch instead of read: 
+Below is a list of all features this Avatar contains, but you could always watch instead of read:
+
+### Warning!
+This list is extremely outdated, features may or may not exist.
 
 [<img src="https://img.youtube.com/vi/rSYfbQ1mkgM/maxresdefault.jpg" alt="image" width="300" height="auto">](https://youtu.be/rSYfbQ1mkgM) 
 (v3.0.0 release shown)
