@@ -10,8 +10,10 @@ local tailType  = config:load("TailType") or 4
 local earsType  = config:load("TailEarsType") or tailType
 local small     = config:load("TailSmall")
 local dryTimer  = config:load("TailDryTimer") or 400
+local gradual   = config:load("TailGradual")
 local fallSound = config:load("TailFallSound")
 if small     == nil then small = true end
+if gradual   == nil then gradual = true end
 if fallSound == nil then fallSound = true end
 
 -- Variables setup
@@ -108,14 +110,27 @@ function events.TICK()
 		earsTimer = math.clamp(earsTimer - 1 * dryRate, 0, modDryTimer)
 	end
 	
-	-- Target
-	scale.tail.target  = tailTimer / modDryTimer
-	scale.legs.target  = tailTimer / modDryTimer <= legsForm and 1 or 0
-	scale.ears.target  = earsTimer / modDryTimer
-	scale.small.target = small and 1 or 0
+	-- Targets
+	if gradual then
+		
+		-- Gradual lerp
+		scale.tail.target  = tailTimer / modDryTimer
+		scale.legs.target  = tailTimer / modDryTimer <= legsForm and 1 or 0
+		scale.ears.target  = earsTimer / modDryTimer
+		scale.small.target = small and 1 or 0
+		
+	else
+		
+		-- Instant lerp
+		scale.tail.target  = tailTimer ~= 0 and 1 or 0
+		scale.legs.target  = tailTimer == 0 and 1 or 0
+		scale.ears.target  = earsTimer ~= 0 and 1 or 0
+		scale.small.target = small and 1 or 0
+		
+	end
 	
 	-- Play sound if conditions are met
-	if fallSound and wasInAir and ground() and scale.tail.currPos >= legsForm and not player:getVehicle() and not player:isInWater() and not effects.cF then
+	if fallSound and wasInAir and ground() and scale.legs.target ~= 1 and not player:getVehicle() and not player:isInWater() and not effects.cF then
 		local vel    = math.abs(-player:getVelocity().y + 1)
 		local dry    = scale.tail.currPos
 		local volume = math.clamp((vel * dry) / 2, 0, 1)
@@ -129,6 +144,13 @@ function events.TICK()
 end
 
 function events.RENDER(delta, context)
+
+	-- Force Current Positions to be targets
+	if not gradual then
+		for _, lerp in pairs(scale) do
+			lerp.currPos = lerp.target
+		end
+	end
 	
 	-- Variables
 	local tailApply = scale.tail.currPos * math.map(scale.small.currPos, 0, 1, 1, 0.5) + scale.small.currPos * 0.5
@@ -203,6 +225,14 @@ local function setDryTimer(x)
 	
 end
 
+-- Gradual toggle
+function pings.setTailGradual(boolean)
+	
+	gradual = boolean
+	config:save("TailGradual", gradual)
+	
+end
+
 -- Sound toggle
 function pings.setTailFallSound(boolean)
 
@@ -215,13 +245,14 @@ function pings.setTailFallSound(boolean)
 end
 
 -- Sync variables
-function pings.syncTail(a, b, c, d, e)
+function pings.syncTail(a, b, c, d, e, f)
 	
 	tailType  = a
 	earsType  = b
 	small     = c
 	dryTimer  = d
-	fallSound = e
+	gradual   = e
+	fallSound = f
 	
 end
 
@@ -270,7 +301,7 @@ end
 function events.TICK()
 	
 	if world.getTime() % 200 == 0 then
-		pings.syncTail(tailType, earsType, small, dryTimer, fallSound)
+		pings.syncTail(tailType, earsType, small, dryTimer, gradual, fallSound)
 	end
 	
 end
@@ -297,6 +328,11 @@ t.smallAct = action_wheel:newAction()
 t.dryAct = action_wheel:newAction()
 	:onScroll(setDryTimer)
 	:onLeftClick(function() dryTimer = 400 config:save("TailDryTimer", dryTimer) end)
+
+t.gradualAct = action_wheel:newAction()
+	:item(itemCheck("sugar"))
+	:toggleItem(itemCheck("fermented_spider_eye"))
+	:onToggle(pings.setTailGradual)
 
 t.soundAct = action_wheel:newAction()
 	:item(itemCheck("bucket"))
@@ -389,7 +425,7 @@ function events.RENDER(delta, context)
 		-- Timers
 		local timers = {
 			set  = dryTimer / 20,
-			legs = math.max(math.ceil((tailTimer - (dryTimer * legsForm)) / 20), 0),
+			legs = gradual and math.max(math.ceil((tailTimer - (dryTimer * legsForm)) / 20), 0) or nil,
 			tail = math.ceil(tailTimer / 20),
 			ears = math.ceil(earsTimer / 20)
 		}
@@ -407,8 +443,8 @@ function events.RENDER(delta, context)
 				{text = "Scroll to adjust how long it takes for you to dry.\nLeft click resets timer to 20 seconds.\n\n", color = color.secondary},
 				{text = "Drying timer:\n", bold = true, color = color.secondary},
 				{text = cD.set.."\n\n"},
-				{text = "Legs form:\n", bold = true, color = color.secondary},
-				{text = cD.legs.."\n\n"},
+				{text = cD.legs and "Legs form:\n" or "", bold = true, color = color.secondary},
+				{text = cD.legs and (cD.legs.."\n\n") or ""},
 				{text = "Tail fully dry:\n", bold = true, color = color.secondary},
 				{text = cD.tail.."\n\n"},
 				{text = "Ears fully dry:\n", bold = true, color = color.secondary},
@@ -416,6 +452,14 @@ function events.RENDER(delta, context)
 				{text = "Hint: Holding a dry sponge will increase drying rate by x10!", color = "gray"}}
 			)
 			:item(itemCheck((timers.tail ~= 0 or timers.ears ~= 0) and "wet_sponge" or "sponge"))
+		
+		t.gradualAct
+			:title(toJson
+				{"",
+				{text = "Toggle Gradual Dry\n\n", bold = true, color = color.primary},
+				{text = "Toggles the scaling of your tail to be gradual rather than instantly changing size.", color = color.secondary}}
+			)
+			:toggled(gradual)
 		
 		t.soundAct
 			:title(toJson
