@@ -332,13 +332,13 @@ local waterInfo = {
 }
 
 -- Creates a clock string
-local function timeStr(seconds)
+local function timeStr(s)
 
-	local min = seconds >= 60
-		and ("%d Minute%s"):format(seconds / 60, seconds >= 120 and "s" or "")
+	local min = s >= 60
+		and ("%d Minute%s"):format(s / 60, s >= 120 and "s" or "")
 		or nil
 	
-	local sec = ("%d Second%s"):format(seconds % 60, seconds % 60 == 1 and "" or "s")
+	local sec = ("%d Second%s"):format(s % 60, s % 60 == 1 and "" or "s")
 	
 	return min and (min.." "..sec) or sec
 	
