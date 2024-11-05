@@ -6,6 +6,7 @@ if not s then return {} end
 local parts     = require("lib.PartsAPI")
 local lerp      = require("lib.LerpAPI")
 local tailScale = require("scripts.Tail")
+local pose      = require("scripts.Posing")
 local effects   = require("scripts.SyncedVariables")
 
 -- Animation setup
@@ -56,13 +57,14 @@ local tail = squapi.tail:new(
 	0,     -- Seg Offset (0)
 	0.015, -- Stiffness (0.015)
 	0.95,  -- Bounce (0.95)
-	25,    -- Fly Offset (25)
+	0,     -- Fly Offset (0)
 	-15,   -- Down Limit (-15)
 	25     -- Up Limit (25)
 )
 
 -- Tail strength variables
 local tailStrength  = tail.bendStrength
+local tailVelPush   = tail.velocityPush
 local tailFlyOffset = tail.flyingOffset
 
 -- Squishy vanilla arms
@@ -112,6 +114,7 @@ function events.TICK()
 	-- Control the intensity of the tail function based on its scale
 	local scale = tailScale.large <= tailScale.swap and 1 or 0
 	tail.bendStrength = scale * tailStrength
+	tail.velocityPush = not (player:isInWater() or pose.swim or pose.crawl or pose.elytra) and tailVelPush or 0
 	tail.flyingOffset = scale * tailFlyOffset
 	
 end

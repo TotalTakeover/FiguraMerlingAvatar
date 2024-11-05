@@ -5,7 +5,7 @@
 		"box_uv": false
 	},
 	"visible_box": [1, 1, 0],
-	"variable_placeholders": "v.strength = slider(\"Strength\", 0.05, 1,  2)\nv.pitch    = slider(\"Pitch\",    0.5, -20, 20)\nv.yaw      = slider(\"Yaw\",      1,   -45, 45)\nv.roll     = slider(\"Roll\",     0.5, -20, 20)\nv.headY    = slider(\"HeadY\",    1,   -50, 50)\nv.shark    = toggle(\"Shark\")",
+	"variable_placeholders": "v.strength = slider(\"Strength\", 0.05, 1,  2)\nv.pitch    = slider(\"Pitch\",    0.5, -20, 20)\nv.yaw      = slider(\"Yaw\",      1,   -45, 45)\nv.roll     = slider(\"Roll\",     0.5, -20, 20)\nv.headY    = slider(\"HeadY\",    1,   -50, 50)\nv.shark    = toggle(\"Shark\")\nv.tail     = toggle(\"Tail\")",
 	"variable_placeholder_buttons": [
 		{
 			"type": "slider",
@@ -57,6 +57,12 @@
 			"id": "Shark",
 			"value": 0,
 			"variable": "variable.shark"
+		},
+		{
+			"type": "toggle",
+			"id": "Tail",
+			"value": 0,
+			"variable": "variable.tail"
 		}
 	],
 	"timeline_setups": [],
@@ -4384,9 +4390,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "q(...) +\nv.pitch+(Math.sin(q.anim_time*180)*v.strength*(1-v.shark))",
+									"x": "q(...) +\n(v.pitch+(Math.sin(q.anim_time*180)*v.strength*(1-v.shark)))*v.tail",
 									"y": 0,
-									"z": "q(...) +\nMath.sin(q.anim_time*180)*v.strength*v.shark"
+									"z": "q(...) +\n(Math.sin(q.anim_time*180)*v.strength*v.shark)*v.tail"
 								}
 							],
 							"uuid": "9341e6ce-60ec-1324-be50-d342808edb2d",
@@ -4924,9 +4930,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "q(...) +\nv.pitch+(Math.sin(q.anim_time*180-45)*v.strength*2.5*(1-v.shark))+60",
-									"y": "v.yaw/5",
-									"z": "q(...) +\nv.roll+(Math.sin(q.anim_time*180-45)*v.strength*2.5*v.shark)"
+									"x": 60,
+									"y": 0,
+									"z": 0
 								}
 							],
 							"uuid": "2e9d076f-5369-90df-49a4-d1f6a8ef8a74",
@@ -4958,9 +4964,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "q(...) +\nv.pitch+(Math.sin(q.anim_time*180-90)*v.strength*7.5*(1-v.shark))+10",
-									"y": "v.yaw/5",
-									"z": "q(...) +\nv.roll+(Math.sin(q.anim_time*180-90)*v.strength*7.5*v.shark)"
+									"x": 20,
+									"y": 0,
+									"z": 0
 								}
 							],
 							"uuid": "debcbe4c-02c2-575c-2999-ab13c341eef7",
@@ -4978,9 +4984,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "q(...) +\nv.pitch+(Math.sin(q.anim_time*180-135)*v.strength*10*(1-v.shark))+10",
-									"y": "v.yaw/5",
-									"z": "v.roll+(Math.sin(q.anim_time*180-135)*v.strength*10*v.shark)"
+									"x": 15,
+									"y": 0,
+									"z": 0
 								}
 							],
 							"uuid": "e1a175f8-032b-573a-cc8a-08b1d7e4e6e8",
@@ -4998,9 +5004,9 @@
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "q(...) +\nv.pitch+(Math.sin(q.anim_time*180-180)*v.strength*2.5*(1-v.shark))+10",
-									"y": "v.yaw/5",
-									"z": "v.roll+(Math.sin(q.anim_time*180-180)*v.strength*2.5*v.shark)"
+									"x": 10,
+									"y": 0,
+									"z": 0
 								}
 							],
 							"uuid": "0b8118c7-678a-0503-1f47-054e5579d72d",
@@ -5009,21 +5015,110 @@
 							"interpolation": "linear"
 						}
 					]
-				},
-				"050920f7-a7c9-e974-2b79-328c539b1b70": {
-					"name": "Fluke",
+				}
+			}
+		},
+		{
+			"uuid": "e7ee7ef8-92be-1883-60d4-6fbe1a7b51f6",
+			"name": "smallSwim",
+			"loop": "loop",
+			"override": false,
+			"length": 0,
+			"snapping": 24,
+			"selected": false,
+			"anim_time_update": "",
+			"blend_weight": "",
+			"start_delay": "",
+			"loop_delay": "",
+			"animators": {
+				"92543b5d-7245-d500-6e29-397b6db675c8": {
+					"name": "Tail1",
 					"type": "bone",
 					"keyframes": [
 						{
 							"channel": "rotation",
 							"data_points": [
 								{
-									"x": "q(...) +\n(v.pitch+Math.sin(q.anim_time*180-225)*v.strength*7.5)*(1-v.shark)",
-									"y": "(v.yaw/5)-(90*v.shark)",
-									"z": "q(...) +\nv.roll+(Math.sin(q.anim_time*180-225)*v.strength*7.5*v.shark)"
+									"x": 45,
+									"y": 0,
+									"z": 0
 								}
 							],
-							"uuid": "2d23bf1d-4bf1-aad7-d9e5-e7658b451889",
+							"uuid": "2e9d076f-5369-90df-49a4-d1f6a8ef8a74",
+							"time": 0,
+							"color": -1,
+							"interpolation": "linear"
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": 0,
+									"y": 1,
+									"z": 1
+								}
+							],
+							"uuid": "8bf614ed-d650-aa90-5a72-06508cec5d43",
+							"time": 0,
+							"color": -1,
+							"interpolation": "linear"
+						}
+					]
+				},
+				"0832a6b4-163b-fc62-6663-bb6b5530b6e1": {
+					"name": "Tail2",
+					"type": "bone",
+					"keyframes": [
+						{
+							"channel": "rotation",
+							"data_points": [
+								{
+									"x": -20,
+									"y": 0,
+									"z": 0
+								}
+							],
+							"uuid": "debcbe4c-02c2-575c-2999-ab13c341eef7",
+							"time": 0,
+							"color": -1,
+							"interpolation": "linear"
+						}
+					]
+				},
+				"f86f9bee-e957-7171-a379-81564249b020": {
+					"name": "Tail3",
+					"type": "bone",
+					"keyframes": [
+						{
+							"channel": "rotation",
+							"data_points": [
+								{
+									"x": -15,
+									"y": 0,
+									"z": 0
+								}
+							],
+							"uuid": "e1a175f8-032b-573a-cc8a-08b1d7e4e6e8",
+							"time": 0,
+							"color": -1,
+							"interpolation": "linear"
+						}
+					]
+				},
+				"85b83b8d-a8a1-7e6f-1d5a-f59cbc11a850": {
+					"name": "Tail4",
+					"type": "bone",
+					"keyframes": [
+						{
+							"channel": "rotation",
+							"data_points": [
+								{
+									"x": -10,
+									"y": 0,
+									"z": 0
+								}
+							],
+							"uuid": "0b8118c7-678a-0503-1f47-054e5579d72d",
 							"time": 0,
 							"color": -1,
 							"interpolation": "linear"
@@ -6221,5 +6316,5 @@
 			}
 		}
 	],
-	"animation_variable_placeholders": "v.strength = slider(\"Strength\", 0.05, 1,  2)\nv.pitch    = slider(\"Pitch\",    0.5, -20, 20)\nv.yaw      = slider(\"Yaw\",      1,   -45, 45)\nv.roll     = slider(\"Roll\",     0.5, -20, 20)\nv.headY    = slider(\"HeadY\",    1,   -50, 50)\nv.shark    = toggle(\"Shark\")"
+	"animation_variable_placeholders": "v.strength = slider(\"Strength\", 0.05, 1,  2)\nv.pitch    = slider(\"Pitch\",    0.5, -20, 20)\nv.yaw      = slider(\"Yaw\",      1,   -45, 45)\nv.roll     = slider(\"Roll\",     0.5, -20, 20)\nv.headY    = slider(\"HeadY\",    1,   -50, 50)\nv.shark    = toggle(\"Shark\")\nv.tail     = toggle(\"Tail\")"
 }

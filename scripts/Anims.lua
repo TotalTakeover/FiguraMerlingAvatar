@@ -102,7 +102,7 @@ function events.TICK()
 	
 	-- Animation variables
 	local largeTail  = tail.large >= tail.swap
-	local smallTail  = tail.small >= tail.swap or tail.large <= tail.swap
+	local smallTail  = tail.small >= tail.swap and tail.large <= tail.swap
 	local groundAnim = (onGround or waterTimer == 0) and not (pose.swim or pose.elytra or pose.crawl or pose.climb or pose.spin or pose.sleep or player:getVehicle() or effects.cF)
 	
 	-- Directional velocity
@@ -182,10 +182,11 @@ function events.TICK()
 	mountFlipLerp.target = mountFlip and 1 or -1
 	
 	-- Animation states
-	local swim      = largeTail and ((not onGround and waterTimer ~= 0) or (pose.climb or pose.swim or pose.crawl or pose.elytra or player:getVehicle()) or effects.cF) and not pose.sleep
+	local swim      = ((not onGround and waterTimer ~= 0) or (smallTail or pose.climb or pose.swim or pose.crawl or pose.elytra or player:getVehicle()) or effects.cF) and not pose.sleep
 	local stand     = largeTail and not isCrawl and groundAnim
 	local crawl     = largeTail and     isCrawl and groundAnim
-	local small     = smallTail and not largeTail
+	local small     = smallTail and not (pose.swim or pose.crawl or pose.elytra)
+	local smallSwim = smallTail and     (pose.swim or pose.crawl or pose.elytra)
 	local mountUp   = largeTail and player:getVehicle() and mountDir
 	local mountDown = largeTail and player:getVehicle() and not mountDir
 	local sleep     = pose.sleep
@@ -197,6 +198,7 @@ function events.TICK()
 	anims.stand:playing(stand)
 	anims.crawl:playing(crawl)
 	anims.small:playing(small)
+	anims.smallSwim:playing(smallSwim)
 	anims.mountUp:playing(mountUp)
 	anims.mountDown:playing(mountDown)
 	anims.sleep:playing(sleep)
@@ -227,9 +229,12 @@ function events.RENDER(delta, context)
 	
 	v.shark = shark.currPos
 	
+	v.tail  = math.map(tail.legs, 0, 1, 1, 0)
 	v.scale = math.map(math.max(tail.scale, tail.legs), 0, 1, 1, 0)
 	
 	-- Animation blending
+	anims.small:blend(tail.smallSize * 0.2 + 1)
+	anims.smallSwim:blend(tail.smallSize * 0.2 + 1)
 	anims.mountUp:blend(mountFlipLerp.currPos)
 	anims.mountDown:blend(mountFlipLerp.currPos)
 	
@@ -246,6 +251,7 @@ local blendAnims = {
 	{ anim = anims.stand,     ticks = {7,7} },
 	{ anim = anims.crawl,     ticks = {7,7} },
 	{ anim = anims.small,     ticks = {7,7} },
+	{ anim = anims.smallSwim, ticks = {7,7} },
 	{ anim = anims.mountUp,   ticks = {7,7} },
 	{ anim = anims.mountDown, ticks = {7,7} },
 	{ anim = anims.sleep,     ticks = {7,7} },
