@@ -9,6 +9,7 @@ config:name("Merling")
 local tailType  = config:load("TailType") or 4
 local earsType  = config:load("TailEarsType") or tailType
 local small     = config:load("TailSmall")
+local smallSize = config:load("TailSmallSize") or 0.5
 local dryTimer  = config:load("TailDryTimer") or 400
 local gradual   = config:load("TailGradual")
 local fallSound = config:load("TailFallSound")
@@ -23,6 +24,7 @@ local earsTimer = 0
 local wasInAir  = false
 
 -- Lerp variables
+local smallLerp = lerp:new(0.2, smallSize)
 local scale = {
 	tail  = lerp:new(0.2, tailType == 5 and 1 or 0),
 	legs  = lerp:new(0.2, tailType ~= 5 and 1 or 0),
@@ -32,12 +34,13 @@ local scale = {
 
 -- Data sent to other scripts
 local tailData = {
-	scale = scale.tail.currPos * math.map(scale.small.currPos, 0, 1, 1, 0.5) + scale.small.currPos * 0.5,
-	large = scale.tail.currPos,
-	small = scale.small.currPos,
-	legs  = scale.legs.currPos,
-	dry   = dryTimer,
-	swap  = legsForm
+	scale     = math.lerp(smallLerp.currPos * scale.small.currPos, 1, scale.tail.currPos),
+	large     = scale.tail.currPos,
+	small     = scale.small.currPos,
+	legs      = scale.legs.currPos,
+	smallSize = smallLerp.currPos,
+	dry       = dryTimer,
+	swap      = legsForm
 }
 
 -- Check if a splash potion is broken near the player
@@ -111,6 +114,7 @@ function events.TICK()
 	end
 	
 	-- Targets
+	smallLerp.target = smallSize
 	if gradual then
 		
 		-- Gradual lerp
@@ -147,13 +151,14 @@ function events.RENDER(delta, context)
 
 	-- Force Current Positions to be targets
 	if not gradual then
+		smallLerp.currPos = smallLerp.target
 		for _, lerp in pairs(scale) do
 			lerp.currPos = lerp.target
 		end
 	end
 	
 	-- Variables
-	local tailApply = scale.tail.currPos * math.map(scale.small.currPos, 0, 1, 1, 0.5) + scale.small.currPos * 0.5
+	local tailApply = math.lerp(smallLerp.currPos * scale.small.currPos, 1, scale.tail.currPos)
 	local legsApply = scale.legs.currPos
 	local earsApply = scale.ears.currPos
 	
@@ -171,11 +176,13 @@ function events.RENDER(delta, context)
 	parts.group.RightEarSkull:scale(earsApply)
 	
 	-- Update tail data
-	tailData.scale = tailApply
-	tailData.large = scale.tail.currPos
-	tailData.small = scale.small.currPos
-	tailData.legs  = scale.legs.currPos
-	tailData.dry   = dryTimer
+	tailData.scale     = tailApply
+	tailData.large     = scale.tail.currPos
+	tailData.small     = scale.small.currPos
+	tailData.legs      = scale.legs.currPos
+	tailData.smallSize = smallLerp.currPos
+	tailData.dry       = dryTimer
+	tailData.swap      = legsForm
 	
 end
 
@@ -217,6 +224,14 @@ function pings.setTailSmall(boolean)
 	
 end
 
+-- Set small size
+local function setSmallSize(x)
+	
+	smallSize = math.clamp(smallSize + (x * 0.05), 0.25, 1)
+	config:save("TailSmallSize", smallSize)
+	
+end
+
 -- Set timer
 local function setDryTimer(x)
 	
@@ -245,14 +260,15 @@ function pings.setTailFallSound(boolean)
 end
 
 -- Sync variables
-function pings.syncTail(a, b, c, d, e, f)
+function pings.syncTail(a, b, c, d, e, f, g)
 	
 	tailType  = a
 	earsType  = b
 	small     = c
-	dryTimer  = d
-	gradual   = e
-	fallSound = f
+	smallSize = d
+	dryTimer  = e
+	gradual   = f
+	fallSound = g
 	
 end
 
@@ -301,7 +317,7 @@ end
 function events.TICK()
 	
 	if world.getTime() % 200 == 0 then
-		pings.syncTail(tailType, earsType, small, dryTimer, gradual, fallSound)
+		pings.syncTail(tailType, earsType, small, smallSize, dryTimer, gradual, fallSound)
 	end
 	
 end
@@ -321,9 +337,9 @@ t.earsAct = action_wheel:newAction()
 	:onScroll(pings.setTailEarsType)
 
 t.smallAct = action_wheel:newAction()
-	:item(itemCheck("kelp"))
-	:toggleItem(itemCheck("scute"))
+	:item(itemCheck("small_amethyst_bud"))
 	:onToggle(pings.setTailSmall)
+	:onScroll(setSmallSize)
 
 t.dryAct = action_wheel:newAction()
 	:onScroll(setDryTimer)
@@ -418,7 +434,16 @@ function events.RENDER(delta, context)
 			:title(toJson
 				{"",
 				{text = "Toggle Small Tail\n\n", bold = true, color = color.primary},
-				{text = "Toggles the appearence of the tail into a smaller tail, only if the tail cannot form.", color = color.secondary}}
+				{text = "Toggles the appearence of the tail into a smaller tail, only if the tail cannot form.\nScroll to control the size of the small tail.\n\n", color = color.secondary},
+				{text = "Small tail size:\n", bold = true, color = color.secondary},
+				{text = math.round(smallSize * 100).."% Size"}}
+			)
+			:toggleItem(
+				itemCheck(
+					smallSize > 0.75 and "amethyst_cluster" or
+					smallSize > 0.5 and "large_amethyst_bud" or
+					"medium_amethyst_bud"
+				)
 			)
 			:toggled(small)
 		
