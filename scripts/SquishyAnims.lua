@@ -1,6 +1,9 @@
+-- Kills script if squAPI cannot be found
+local s, squapi = pcall(require, "lib.SquAPI")
+if not s then return {} end
+
 -- Required scripts
 local parts     = require("lib.PartsAPI")
-local squapi    = require("lib.SquAPI")
 local lerp      = require("lib.LerpAPI")
 local tailScale = require("scripts.Tail")
 local effects   = require("scripts.SyncedVariables")
