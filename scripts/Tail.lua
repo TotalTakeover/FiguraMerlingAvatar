@@ -389,7 +389,7 @@ function events.RENDER(delta, context)
 			set  = dryTimer / 20,
 			legs = math.max(math.ceil((tailTimer - (dryTimer * legsForm)) / 20), 0),
 			tail = math.ceil(tailTimer / 20),
-			ears = math.ceil(earsTimer / 20),
+			ears = math.ceil(earsTimer / 20)
 		}
 		
 		-- Countdowns
