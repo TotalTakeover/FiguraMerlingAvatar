@@ -123,8 +123,8 @@ if not host:isHost() then return end
 
 -- Required scripts
 local itemCheck = require("lib.ItemCheck")
-local s, color = pcall(require, "scripts.ColorProperties")
-if not s then color = {} end
+local s, c = pcall(require, "scripts.ColorProperties")
+if not s then c = {} end
 
 -- Glow eyes keybind
 local toggleBind   = config:load("EyesToggleKeybind") or "key.keyboard.keypad.5"
@@ -184,8 +184,8 @@ function events.RENDER(delta, context)
 		t.toggleAct
 			:title(toJson
 				{"",
-				{text = "Toggle Glowing Eyes\n\n", bold = true, color = color.primary},
-				{text = "Toggles the glowing of the eyes.\n\n", color = color.secondary},
+				{text = "Toggle Glowing Eyes\n\n", bold = true, color = c.primary},
+				{text = "Toggles the glowing of the eyes.\n\n", color = c.secondary},
 				{text = "WARNING: ", bold = true, color = "dark_red"},
 				{text = "This feature has a tendency to not work correctly.\nDue to the rendering properties of emissives, the eyes may not glow.\nIf it does not work, please reload the avatar. Rinse and Repeat.\nThis is the only fix, I have tried everything.\n\n- Total", color = "red"}}
 			)
@@ -194,28 +194,28 @@ function events.RENDER(delta, context)
 		t.powerAct
 			:title(toJson
 				{"",
-				{text = "Origins Power Toggle\n\n", bold = true, color = color.primary},
-				{text = "Toggles the glowing based on Origin\'s underwater sight power.\nThe eyes will only glow when this power is active.", color = color.secondary}}
+				{text = "Origins Power Toggle\n\n", bold = true, color = c.primary},
+				{text = "Toggles the glowing based on Origin\'s underwater sight power.\nThe eyes will only glow when this power is active.", color = c.secondary}}
 			)
 		
 		t.nightVisionAct
 			:title(toJson
 				{"",
-				{text = "Night Vision Toggle\n\n", bold = true, color = color.primary},
-				{text = "Toggles the glowing based on having the Night Vision effect.\nThis setting will ", color = color.secondary},
-				{text = "OVERRIDE ", bold = true, color = color.secondary},
-				{text = "the other subsettings.", color = color.secondary}}
+				{text = "Night Vision Toggle\n\n", bold = true, color = c.primary},
+				{text = "Toggles the glowing based on having the Night Vision effect.\nThis setting will ", color = c.secondary},
+				{text = "OVERRIDE ", bold = true, color = c.secondary},
+				{text = "the other subsettings.", color = c.secondary}}
 			)
 		
 		t.waterAct
 			:title(toJson
 				{"",
-				{text = "Water Sensitivity Toggle\n\n", bold = true, color = color.primary},
-				{text = "Toggles the glowing sensitivity to water.\nThe eyes will only glow when underwater.", color = color.secondary}}
+				{text = "Water Sensitivity Toggle\n\n", bold = true, color = c.primary},
+				{text = "Toggles the glowing sensitivity to water.\nThe eyes will only glow when underwater.", color = c.secondary}}
 			)
 		
 		for _, page in pairs(t) do
-			page:hoverColor(color.hover):toggleColor(color.active)
+			page:hoverColor(c.hover):toggleColor(c.active)
 		end
 		
 	end

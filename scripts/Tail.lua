@@ -286,8 +286,8 @@ if not host:isHost() then return tailData end
 
 -- Required scripts
 local itemCheck = require("lib.ItemCheck")
-local s, color = pcall(require, "scripts.ColorProperties")
-if not s then color = {} end
+local s, c = pcall(require, "scripts.ColorProperties")
+if not s then c = {} end
 
 -- Tail Keybind
 local tailBind   = config:load("TailTypeKeybind") or "key.keyboard.keypad.1"
@@ -419,12 +419,12 @@ function events.RENDER(delta, context)
 		t.tailAct
 			:title(toJson
 				{"",
-				{text = "Tail Water Sensitivity\n\n", bold = true, color = color.primary},
-				{text = "Determines how your tail should form in contact with water.\n\n", color = color.secondary},
-				{text = "Current configuration: ", bold = true, color = color.secondary},
+				{text = "Tail Water Sensitivity\n\n", bold = true, color = c.primary},
+				{text = "Determines how your tail should form in contact with water.\n\n", color = c.secondary},
+				{text = "Current configuration: ", bold = true, color = c.secondary},
 				{text = actionSetup.title.label.text, color = actionSetup.title.label.color},
 				{text = " | "},
-				{text = actionSetup.title.text, color = color.secondary}}
+				{text = actionSetup.title.text, color = c.secondary}}
 			)
 			:color(vectors.hexToRGB(actionSetup.color))
 			:item(itemCheck(actionSetup.item.."{CustomPotionColor:"..tostring(0x0094FF).."}"))
@@ -433,12 +433,12 @@ function events.RENDER(delta, context)
 		t.earsAct
 			:title(toJson
 				{"",
-				{text = "Ears Water Sensitivity\n\n", bold = true, color = color.primary},
-				{text = "Determines how your ears should form in contact with water.\n\n", color = color.secondary},
-				{text = "Current configuration: ", bold = true, color = color.secondary},
+				{text = "Ears Water Sensitivity\n\n", bold = true, color = c.primary},
+				{text = "Determines how your ears should form in contact with water.\n\n", color = c.secondary},
+				{text = "Current configuration: ", bold = true, color = c.secondary},
 				{text = actionSetup.title.label.text, color = actionSetup.title.label.color},
 				{text = " | "},
-				{text = actionSetup.title.text, color = color.secondary}}
+				{text = actionSetup.title.text, color = c.secondary}}
 			)
 			:color(vectors.hexToRGB(actionSetup.color))
 			:item(itemCheck(actionSetup.item.."{CustomPotionColor:"..tostring(0x0094FF).."}"))
@@ -446,9 +446,9 @@ function events.RENDER(delta, context)
 		t.smallAct
 			:title(toJson
 				{"",
-				{text = "Toggle Small Tail\n\n", bold = true, color = color.primary},
-				{text = "Toggles the appearence of the tail into a smaller tail, only if the tail cannot form.\nScroll to control the size of the small tail.\n\n", color = color.secondary},
-				{text = "Small tail size:\n", bold = true, color = color.secondary},
+				{text = "Toggle Small Tail\n\n", bold = true, color = c.primary},
+				{text = "Toggles the appearence of the tail into a smaller tail, only if the tail cannot form.\nScroll to control the size of the small tail.\n\n", color = c.secondary},
+				{text = "Small tail size:\n", bold = true, color = c.secondary},
 				{text = math.round(smallSize * 100).."% Size"}}
 			)
 			:toggleItem(
@@ -477,15 +477,15 @@ function events.RENDER(delta, context)
 		t.dryAct
 			:title(toJson
 				{"",
-				{text = "Set Drying Timer\n\n", bold = true, color = color.primary},
-				{text = "Scroll to adjust how long it takes for you to dry.\nLeft click resets timer to 20 seconds.\n\n", color = color.secondary},
-				{text = "Drying timer:\n", bold = true, color = color.secondary},
+				{text = "Set Drying Timer\n\n", bold = true, color = c.primary},
+				{text = "Scroll to adjust how long it takes for you to dry.\nLeft click resets timer to 20 seconds.\n\n", color = c.secondary},
+				{text = "Drying timer:\n", bold = true, color = c.secondary},
 				{text = cD.set.."\n\n"},
-				{text = cD.legs and "Legs form:\n" or "", bold = true, color = color.secondary},
+				{text = cD.legs and "Legs form:\n" or "", bold = true, color = c.secondary},
 				{text = cD.legs and (cD.legs.."\n\n") or ""},
-				{text = "Tail fully dry:\n", bold = true, color = color.secondary},
+				{text = "Tail fully dry:\n", bold = true, color = c.secondary},
 				{text = cD.tail.."\n\n"},
-				{text = "Ears fully dry:\n", bold = true, color = color.secondary},
+				{text = "Ears fully dry:\n", bold = true, color = c.secondary},
 				{text = cD.ears.."\n\n"},
 				{text = "Hint: Holding a dry sponge will increase drying rate by x10!", color = "gray"}}
 			)
@@ -494,29 +494,29 @@ function events.RENDER(delta, context)
 		t.legsAct
 			:title(toJson
 				{"",
-				{text = "Set Legs Threshold\n\n", bold = true, color = color.primary},
-				{text = "Scroll to adjust the threshold for when the legs should form.\n\n", color = color.secondary},
-				{text = "Legs threshold:\n", bold = true, color = color.secondary},
+				{text = "Set Legs Threshold\n\n", bold = true, color = c.primary},
+				{text = "Scroll to adjust the threshold for when the legs should form.\n\n", color = c.secondary},
+				{text = "Legs threshold:\n", bold = true, color = c.secondary},
 				{text = math.round(legsForm * 100).."% Wet"}}
 			)
 		
 		t.gradualAct
 			:title(toJson
 				{"",
-				{text = "Toggle Gradual Dry\n\n", bold = true, color = color.primary},
-				{text = "Toggles the scaling of your tail to be gradual rather than instantly changing size.", color = color.secondary}}
+				{text = "Toggle Gradual Dry\n\n", bold = true, color = c.primary},
+				{text = "Toggles the scaling of your tail to be gradual rather than instantly changing size.", color = c.secondary}}
 			)
 			:toggled(gradual)
 		
 		t.soundAct
 			:title(toJson
 				{"",
-				{text = "Toggle Flop Sound\n\n", bold = true, color = color.primary},
-				{text = "Toggles flopping sound effects when landing on the ground.\nIf tail can dry, volume will gradually decrease over time until dry.", color = color.secondary}}
+				{text = "Toggle Flop Sound\n\n", bold = true, color = c.primary},
+				{text = "Toggles flopping sound effects when landing on the ground.\nIf tail can dry, volume will gradually decrease over time until dry.", color = c.secondary}}
 			)
 		
 		for _, page in pairs(t) do
-			page:hoverColor(color.hover):toggleColor(color.active)
+			page:hoverColor(c.hover):toggleColor(c.active)
 		end
 		
 	end

@@ -338,8 +338,8 @@ if not host:isHost() then return end
 
 -- Required scripts
 local itemCheck = require("lib.ItemCheck")
-local s, color = pcall(require, "scripts.ColorProperties")
-if not s then color = {} end
+local s, c = pcall(require, "scripts.ColorProperties")
+if not s then c = {} end
 
 -- Twirl keybind
 local twirlBind   = config:load("AnimTwirlKeybind") or "key.keyboard.keypad.6"
@@ -411,23 +411,23 @@ function events.RENDER(delta, context)
 		t.sharkAct
 			:title(toJson
 				{"",
-				{text = "Toggle Shark Animations\n\n", bold = true, color = color.primary},
-				{text = "Toggles the movement of the tail to be more shark based.", color = color.secondary}}
+				{text = "Toggle Shark Animations\n\n", bold = true, color = c.primary},
+				{text = "Toggles the movement of the tail to be more shark based.", color = c.secondary}}
 			)
 		
 		t.crawlAct
 			:title(toJson
 				{"",
-				{text = "Toggle Crawl Animation\n\n", bold = true, color = color.primary},
-				{text = "Toggles crawling over standing when you are touching the ground.", color = color.secondary}}
+				{text = "Toggle Crawl Animation\n\n", bold = true, color = c.primary},
+				{text = "Toggles crawling over standing when you are touching the ground.", color = c.secondary}}
 			)
 		
 		t.mountAct
 			:title(toJson
 				{"",
-				{text = "Set Mount Positioning\n\n", bold = true, color = color.primary},
-				{text = "Left and Right click to set the orientation of your tail while mounted/sitting.\n\n", color = color.secondary},
-				{text = "Current direction: ", bold = true, color = color.secondary},
+				{text = "Set Mount Positioning\n\n", bold = true, color = c.primary},
+				{text = "Left and Right click to set the orientation of your tail while mounted/sitting.\n\n", color = c.secondary},
+				{text = "Current direction: ", bold = true, color = c.secondary},
 				{text = mountDir and "Up" or "Down"},
 				{text = " & "},
 				{text = mountFlip and "Front" or "Back"}}
@@ -435,17 +435,17 @@ function events.RENDER(delta, context)
 		
 		t.twirlAct
 			:title(toJson
-				{text = "Play Twirl animation", bold = true, color = color.primary}
+				{text = "Play Twirl animation", bold = true, color = c.primary}
 			)
 		
 		t.singAct
 			:title(toJson
-				{text = "Play Singing animation", bold = true, color = color.primary}
+				{text = "Play Singing animation", bold = true, color = c.primary}
 			)
 			:toggled(isSing)
 		
 		for _, page in pairs(t) do
-			page:hoverColor(color.hover):toggleColor(color.active)
+			page:hoverColor(c.hover):toggleColor(c.active)
 		end
 		
 	end

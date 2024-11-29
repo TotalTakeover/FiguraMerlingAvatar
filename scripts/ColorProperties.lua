@@ -5,13 +5,13 @@ avatar:color(vectors.hexToRGB("5555FF"))
 if not host:isHost() then return end
 
 -- Table setup
-local t = {}
+local c = {}
 
 -- Action variables
-t.hover     = vectors.hexToRGB("5555FF")
-t.active    = vectors.hexToRGB("55FFFF")
-t.primary   = "blue"
-t.secondary = "aqua"
+c.hover     = vectors.hexToRGB("5555FF")
+c.active    = vectors.hexToRGB("55FFFF")
+c.primary   = "blue"
+c.secondary = "aqua"
 
 -- Return variables
-return t
+return c

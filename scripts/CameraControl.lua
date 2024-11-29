@@ -176,8 +176,8 @@ if not host:isHost() then return end
 
 -- Required scripts
 local itemCheck = require("lib.ItemCheck")
-local s, color = pcall(require, "scripts.ColorProperties")
-if not s then color = {} end
+local s, c = pcall(require, "scripts.ColorProperties")
+if not s then c = {} end
 
 -- Sync on tick
 function events.TICK()
@@ -211,22 +211,22 @@ function events.RENDER(delta, context)
 		t.posAct
 			:title(toJson
 				{"",
-				{text = "Camera Position Toggle\n\n", bold = true, color = color.primary},
-				{text = "Sets the camera position to where your avatar\'s head is.\n\n", color = color.secondary},
+				{text = "Camera Position Toggle\n\n", bold = true, color = c.primary},
+				{text = "Sets the camera position to where your avatar\'s head is.\n\n", color = c.secondary},
 				{text = "To prevent x-ray, the camera will reset to its default position if inside a block.", color = "red"}}
 			)
 		
 		t.eyeAct
 			:title(toJson
 				{"",
-				{text = "Eye Position Toggle\n\n", bold = true, color = color.primary},
-				{text = "Sets the eye position to match the avatar\'s head.\nRequires camera position toggle.\n\n", color = color.secondary},
+				{text = "Eye Position Toggle\n\n", bold = true, color = c.primary},
+				{text = "Sets the eye position to match the avatar\'s head.\nRequires camera position toggle.\n\n", color = c.secondary},
 				{text = "WARNING: ", bold = true, color = "dark_red"},
 				{text = "This feature is dangerous!\nIt can and will be flagged on servers with anticheat!\nFurthermore, \"In Wall\" damage is possible. (The x-ray prevention will try to avoid this)\nThis setting will only be saved on a \"Per-Server\" basis.\n\nPlease use with extreme caution!", color = "red"}}
 			)
 		
 		for _, page in pairs(t) do
-			page:hoverColor(color.hover):toggleColor(color.active)
+			page:hoverColor(c.hover):toggleColor(c.active)
 		end
 		
 	end

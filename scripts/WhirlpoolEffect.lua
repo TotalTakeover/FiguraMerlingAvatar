@@ -59,8 +59,8 @@ if not host:isHost() then return end
 
 -- Required scripts
 local itemCheck = require("lib.ItemCheck")
-local s, color = pcall(require, "scripts.ColorProperties")
-if not s then color = {} end
+local s, c = pcall(require, "scripts.ColorProperties")
+if not s then c = {} end
 
 -- Sync on tick
 function events.TICK()
@@ -94,19 +94,19 @@ function events.RENDER(delta, context)
 		t.bubbleAct
 			:title(toJson
 				{"",
-				{text = "Whirlpool Effect Toggle\n\n", bold = true, color = color.primary},
-				{text = "Toggles the whirlpool created while swimming.", color = color.secondary}}
+				{text = "Whirlpool Effect Toggle\n\n", bold = true, color = c.primary},
+				{text = "Toggles the whirlpool created while swimming.", color = c.secondary}}
 			)
 		
 		t.dolphinsGraceAct
 			:title(toJson
 				{"",
-				{text = "Dolphin\'s Grace Toggle\n\n", bold = true, color = color.primary},
-				{text = "Toggles the whirlpool based on having the Dolphin\'s Grace Effect.", color = color.secondary}}
+				{text = "Dolphin\'s Grace Toggle\n\n", bold = true, color = c.primary},
+				{text = "Toggles the whirlpool based on having the Dolphin\'s Grace Effect.", color = c.secondary}}
 			)
 		
 		for _, page in pairs(t) do
-			page:hoverColor(color.hover):toggleColor(color.active)
+			page:hoverColor(c.hover):toggleColor(c.active)
 		end
 		
 	end
