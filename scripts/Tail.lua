@@ -417,40 +417,46 @@ function events.RENDER(delta, context)
 	if action_wheel:isEnabled() then
 		local actionSetup = waterInfo[tailType]
 		t.tailAct
-			:title(toJson
-				{"",
-				{text = "Tail Water Sensitivity\n\n", bold = true, color = c.primary},
-				{text = "Determines how your tail should form in contact with water.\n\n", color = c.secondary},
-				{text = "Current configuration: ", bold = true, color = c.secondary},
-				{text = actionSetup.title.label.text, color = actionSetup.title.label.color},
-				{text = " | "},
-				{text = actionSetup.title.text, color = c.secondary}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Tail Water Sensitivity\n\n", bold = true, color = c.primary},
+					{text = "Determines how your tail should form in contact with water.\n\n", color = c.secondary},
+					{text = "Current configuration: ", bold = true, color = c.secondary},
+					{text = actionSetup.title.label.text, color = actionSetup.title.label.color},
+					{text = " | "},
+					{text = actionSetup.title.text, color = c.secondary}
+				}
+			))
 			:color(vectors.hexToRGB(actionSetup.color))
 			:item(itemCheck(actionSetup.item.."{CustomPotionColor:"..tostring(0x0094FF).."}"))
 		
 		local actionSetup = waterInfo[earsType]
 		t.earsAct
-			:title(toJson
-				{"",
-				{text = "Ears Water Sensitivity\n\n", bold = true, color = c.primary},
-				{text = "Determines how your ears should form in contact with water.\n\n", color = c.secondary},
-				{text = "Current configuration: ", bold = true, color = c.secondary},
-				{text = actionSetup.title.label.text, color = actionSetup.title.label.color},
-				{text = " | "},
-				{text = actionSetup.title.text, color = c.secondary}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Ears Water Sensitivity\n\n", bold = true, color = c.primary},
+					{text = "Determines how your ears should form in contact with water.\n\n", color = c.secondary},
+					{text = "Current configuration: ", bold = true, color = c.secondary},
+					{text = actionSetup.title.label.text, color = actionSetup.title.label.color},
+					{text = " | "},
+					{text = actionSetup.title.text, color = c.secondary}
+				}
+			))
 			:color(vectors.hexToRGB(actionSetup.color))
 			:item(itemCheck(actionSetup.item.."{CustomPotionColor:"..tostring(0x0094FF).."}"))
 		
 		t.smallAct
-			:title(toJson
-				{"",
-				{text = "Toggle Small Tail\n\n", bold = true, color = c.primary},
-				{text = "Toggles the appearence of the tail into a smaller tail, only if the tail cannot form.\nScroll to control the size of the small tail.\n\n", color = c.secondary},
-				{text = "Small tail size:\n", bold = true, color = c.secondary},
-				{text = math.round(smallSize * 100).."% Size"}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Toggle Small Tail\n\n", bold = true, color = c.primary},
+					{text = "Toggles the appearence of the tail into a smaller tail, only if the tail cannot form.\nScroll to control the size of the small tail.\n\n", color = c.secondary},
+					{text = "Small tail size:\n", bold = true, color = c.secondary},
+					{text = math.round(smallSize * 100).."% Size"}
+				}
+			))
 			:toggleItem(
 				itemCheck(
 					smallSize > 0.75 and "amethyst_cluster" or
@@ -475,45 +481,53 @@ function events.RENDER(delta, context)
 		end
 		
 		t.dryAct
-			:title(toJson
-				{"",
-				{text = "Set Drying Timer\n\n", bold = true, color = c.primary},
-				{text = "Scroll to adjust how long it takes for you to dry.\nLeft click resets timer to 20 seconds.\n\n", color = c.secondary},
-				{text = "Drying timer:\n", bold = true, color = c.secondary},
-				{text = cD.set.."\n\n"},
-				{text = cD.legs and "Legs form:\n" or "", bold = true, color = c.secondary},
-				{text = cD.legs and (cD.legs.."\n\n") or ""},
-				{text = "Tail fully dry:\n", bold = true, color = c.secondary},
-				{text = cD.tail.."\n\n"},
-				{text = "Ears fully dry:\n", bold = true, color = c.secondary},
-				{text = cD.ears.."\n\n"},
-				{text = "Hint: Holding a dry sponge will increase drying rate by x10!", color = "gray"}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Set Drying Timer\n\n", bold = true, color = c.primary},
+					{text = "Scroll to adjust how long it takes for you to dry.\nLeft click resets timer to 20 seconds.\n\n", color = c.secondary},
+					{text = "Drying timer:\n", bold = true, color = c.secondary},
+					{text = cD.set.."\n\n"},
+					{text = cD.legs and "Legs form:\n" or "", bold = true, color = c.secondary},
+					{text = cD.legs and (cD.legs.."\n\n") or ""},
+					{text = "Tail fully dry:\n", bold = true, color = c.secondary},
+					{text = cD.tail.."\n\n"},
+					{text = "Ears fully dry:\n", bold = true, color = c.secondary},
+					{text = cD.ears.."\n\n"},
+					{text = "Hint: Holding a dry sponge will increase drying rate by x10!", color = "gray"}
+				}
+			))
 			:item(itemCheck((timers.tail ~= 0 or timers.ears ~= 0) and "wet_sponge" or "sponge"))
 		
 		t.legsAct
-			:title(toJson
-				{"",
-				{text = "Set Legs Threshold\n\n", bold = true, color = c.primary},
-				{text = "Scroll to adjust the threshold for when the legs should form.\n\n", color = c.secondary},
-				{text = "Legs threshold:\n", bold = true, color = c.secondary},
-				{text = math.round(legsForm * 100).."% Wet"}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Set Legs Threshold\n\n", bold = true, color = c.primary},
+					{text = "Scroll to adjust the threshold for when the legs should form.\n\n", color = c.secondary},
+					{text = "Legs threshold:\n", bold = true, color = c.secondary},
+					{text = math.round(legsForm * 100).."% Wet"}
+				}
+			))
 		
 		t.gradualAct
-			:title(toJson
-				{"",
-				{text = "Toggle Gradual Dry\n\n", bold = true, color = c.primary},
-				{text = "Toggles the scaling of your tail to be gradual rather than instantly changing size.", color = c.secondary}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Toggle Gradual Dry\n\n", bold = true, color = c.primary},
+					{text = "Toggles the scaling of your tail to be gradual rather than instantly changing size.", color = c.secondary}
+				}
+			))
 			:toggled(gradual)
 		
 		t.soundAct
-			:title(toJson
-				{"",
-				{text = "Toggle Flop Sound\n\n", bold = true, color = c.primary},
-				{text = "Toggles flopping sound effects when landing on the ground.\nIf tail can dry, volume will gradually decrease over time until dry.", color = c.secondary}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Toggle Flop Sound\n\n", bold = true, color = c.primary},
+					{text = "Toggles flopping sound effects when landing on the ground.\nIf tail can dry, volume will gradually decrease over time until dry.", color = c.secondary}
+				}
+			))
 		
 		for _, page in pairs(t) do
 			page:hoverColor(c.hover):toggleColor(c.active)

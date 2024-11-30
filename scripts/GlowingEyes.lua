@@ -182,37 +182,45 @@ function events.RENDER(delta, context)
 	
 	if action_wheel:isEnabled() then
 		t.toggleAct
-			:title(toJson
-				{"",
-				{text = "Toggle Glowing Eyes\n\n", bold = true, color = c.primary},
-				{text = "Toggles the glowing of the eyes.\n\n", color = c.secondary},
-				{text = "WARNING: ", bold = true, color = "dark_red"},
-				{text = "This feature has a tendency to not work correctly.\nDue to the rendering properties of emissives, the eyes may not glow.\nIf it does not work, please reload the avatar. Rinse and Repeat.\nThis is the only fix, I have tried everything.\n\n- Total", color = "red"}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Toggle Glowing Eyes\n\n", bold = true, color = c.primary},
+					{text = "Toggles the glowing of the eyes.\n\n", color = c.secondary},
+					{text = "WARNING: ", bold = true, color = "dark_red"},
+					{text = "This feature has a tendency to not work correctly.\nDue to the rendering properties of emissives, the eyes may not glow.\nIf it does not work, please reload the avatar. Rinse and Repeat.\nThis is the only fix, I have tried everything.\n\n- Total", color = "red"}
+				}
+			))
 			:toggled(toggle)
 		
 		t.powerAct
-			:title(toJson
-				{"",
-				{text = "Origins Power Toggle\n\n", bold = true, color = c.primary},
-				{text = "Toggles the glowing based on Origin\'s underwater sight power.\nThe eyes will only glow when this power is active.", color = c.secondary}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Origins Power Toggle\n\n", bold = true, color = c.primary},
+					{text = "Toggles the glowing based on Origin\'s underwater sight power.\nThe eyes will only glow when this power is active.", color = c.secondary}
+				}
+			))
 		
 		t.nightVisionAct
-			:title(toJson
-				{"",
-				{text = "Night Vision Toggle\n\n", bold = true, color = c.primary},
-				{text = "Toggles the glowing based on having the Night Vision effect.\nThis setting will ", color = c.secondary},
-				{text = "OVERRIDE ", bold = true, color = c.secondary},
-				{text = "the other subsettings.", color = c.secondary}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Night Vision Toggle\n\n", bold = true, color = c.primary},
+					{text = "Toggles the glowing based on having the Night Vision effect.\nThis setting will ", color = c.secondary},
+					{text = "OVERRIDE ", bold = true, color = c.secondary},
+					{text = "the other subsettings.", color = c.secondary}
+				}
+			))
 		
 		t.waterAct
-			:title(toJson
-				{"",
-				{text = "Water Sensitivity Toggle\n\n", bold = true, color = c.primary},
-				{text = "Toggles the glowing sensitivity to water.\nThe eyes will only glow when underwater.", color = c.secondary}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Water Sensitivity Toggle\n\n", bold = true, color = c.primary},
+					{text = "Toggles the glowing sensitivity to water.\nThe eyes will only glow when underwater.", color = c.secondary}
+				}
+			))
 		
 		for _, page in pairs(t) do
 			page:hoverColor(c.hover):toggleColor(c.active)

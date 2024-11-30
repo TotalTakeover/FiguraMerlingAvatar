@@ -409,39 +409,45 @@ function events.RENDER(delta, context)
 	
 	if action_wheel:isEnabled() then
 		t.sharkAct
-			:title(toJson
-				{"",
-				{text = "Toggle Shark Animations\n\n", bold = true, color = c.primary},
-				{text = "Toggles the movement of the tail to be more shark based.", color = c.secondary}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Toggle Shark Animations\n\n", bold = true, color = c.primary},
+					{text = "Toggles the movement of the tail to be more shark based.", color = c.secondary}
+				}
+			))
 		
 		t.crawlAct
-			:title(toJson
-				{"",
-				{text = "Toggle Crawl Animation\n\n", bold = true, color = c.primary},
-				{text = "Toggles crawling over standing when you are touching the ground.", color = c.secondary}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Toggle Crawl Animation\n\n", bold = true, color = c.primary},
+					{text = "Toggles crawling over standing when you are touching the ground.", color = c.secondary}
+				}
+			))
 		
 		t.mountAct
-			:title(toJson
-				{"",
-				{text = "Set Mount Positioning\n\n", bold = true, color = c.primary},
-				{text = "Left and Right click to set the orientation of your tail while mounted/sitting.\n\n", color = c.secondary},
-				{text = "Current direction: ", bold = true, color = c.secondary},
-				{text = mountDir and "Up" or "Down"},
-				{text = " & "},
-				{text = mountFlip and "Front" or "Back"}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Set Mount Positioning\n\n", bold = true, color = c.primary},
+					{text = "Left and Right click to set the orientation of your tail while mounted/sitting.\n\n", color = c.secondary},
+					{text = "Current direction: ", bold = true, color = c.secondary},
+					{text = mountDir and "Up" or "Down"},
+					{text = " & "},
+					{text = mountFlip and "Front" or "Back"}
+				}
+			))
 		
 		t.twirlAct
-			:title(toJson
+			:title(toJson(
 				{text = "Play Twirl animation", bold = true, color = c.primary}
-			)
+			))
 		
 		t.singAct
-			:title(toJson
+			:title(toJson(
 				{text = "Play Singing animation", bold = true, color = c.primary}
-			)
+			))
 			:toggled(isSing)
 		
 		for _, page in pairs(t) do

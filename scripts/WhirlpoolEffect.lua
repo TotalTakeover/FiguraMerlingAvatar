@@ -92,18 +92,22 @@ function events.RENDER(delta, context)
 	
 	if action_wheel:isEnabled() then
 		t.bubbleAct
-			:title(toJson
-				{"",
-				{text = "Whirlpool Effect Toggle\n\n", bold = true, color = c.primary},
-				{text = "Toggles the whirlpool created while swimming.", color = c.secondary}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Whirlpool Effect Toggle\n\n", bold = true, color = c.primary},
+					{text = "Toggles the whirlpool created while swimming.", color = c.secondary}
+				}
+			))
 		
 		t.dolphinsGraceAct
-			:title(toJson
-				{"",
-				{text = "Dolphin\'s Grace Toggle\n\n", bold = true, color = c.primary},
-				{text = "Toggles the whirlpool based on having the Dolphin\'s Grace Effect.", color = c.secondary}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Dolphin\'s Grace Toggle\n\n", bold = true, color = c.primary},
+					{text = "Toggles the whirlpool based on having the Dolphin\'s Grace Effect.", color = c.secondary}
+				}
+			))
 		
 		for _, page in pairs(t) do
 			page:hoverColor(c.hover):toggleColor(c.active)

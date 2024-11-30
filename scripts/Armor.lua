@@ -288,43 +288,53 @@ function events.RENDER(delta, context)
 	
 	if action_wheel:isEnabled() then
 		t.allAct
-			:title(toJson
-				{"",
-				{text = "Toggle All Armor\n\n", bold = true, color = c.primary},
-				{text = "Toggles visibility of all armor parts.", color = c.secondary}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Toggle All Armor\n\n", bold = true, color = c.primary},
+					{text = "Toggles visibility of all armor parts.", color = c.secondary}
+				}
+			))
 			:toggled(helmet and chestplate and leggings and boots)
 		
 		t.helmetAct
-			:title(toJson
-				{"",
-				{text = "Toggle Helmet\n\n", bold = true, color = c.primary},
-				{text = "Toggles visibility of helmet parts.", color = c.secondary}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Toggle Helmet\n\n", bold = true, color = c.primary},
+					{text = "Toggles visibility of helmet parts.", color = c.secondary}
+				}
+			))
 			:toggled(helmet)
 		
 		t.chestplateAct
-			:title(toJson
-				{"",
-				{text = "Toggle Chestplate\n\n", bold = true, color = c.primary},
-				{text = "Toggles visibility of chestplate parts.", color = c.secondary}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Toggle Chestplate\n\n", bold = true, color = c.primary},
+					{text = "Toggles visibility of chestplate parts.", color = c.secondary}
+				}
+			))
 			:toggled(chestplate)
 		
 		t.leggingsAct
-			:title(toJson
-				{"",
-				{text = "Toggle Leggings\n\n", bold = true, color = c.primary},
-				{text = "Toggles visibility of leggings parts.", color = c.secondary}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Toggle Leggings\n\n", bold = true, color = c.primary},
+					{text = "Toggles visibility of leggings parts.", color = c.secondary}
+				}
+			))
 			:toggled(leggings)
 		
 		t.bootsAct
-			:title(toJson
-				{"",
-				{text = "Toggle Boots\n\n", bold = true, color = c.primary},
-				{text = "Toggles visibility of boots.", color = c.secondary}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Toggle Boots\n\n", bold = true, color = c.primary},
+					{text = "Toggles visibility of boots.", color = c.secondary}
+				}
+			))
 			:toggled(boots)
 		
 		for _, page in pairs(t) do

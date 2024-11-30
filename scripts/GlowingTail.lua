@@ -269,36 +269,44 @@ function events.RENDER(delta, context)
 	
 	if action_wheel:isEnabled() then
 		t.toggleAct
-			:title(toJson
-				{"",
-				{text = "Toggle Glowing\n\n", bold = true, color = c.primary},
-				{text = "Toggles glowing for the tail, and misc parts.\n\n", color = c.secondary},
-				{text = "WARNING: ", bold = true, color = "dark_red"},
-				{text = "This feature has a tendency to not work correctly.\nDue to the rendering properties of emissives, the tail may not glow.\nIf it does not work, please reload the avatar. Rinse and Repeat.\nThis is the only fix, I have tried everything.\n\n- Total", color = "red"}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Toggle Glowing\n\n", bold = true, color = c.primary},
+					{text = "Toggles glowing for the tail, and misc parts.\n\n", color = c.secondary},
+					{text = "WARNING: ", bold = true, color = "dark_red"},
+					{text = "This feature has a tendency to not work correctly.\nDue to the rendering properties of emissives, the tail may not glow.\nIf it does not work, please reload the avatar. Rinse and Repeat.\nThis is the only fix, I have tried everything.\n\n- Total", color = "red"}
+				}
+			))
 			:toggled(toggle)
 		
 		t.dynamicAct
-			:title(toJson
-				{"",
-				{text = "Toggle Dynamic Glowing\n\n", bold = true, color = c.primary},
-				{text = "Toggles glowing based on lightlevel.\nThe darker the location, the brighter your tail glows.", color = c.secondary}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Toggle Dynamic Glowing\n\n", bold = true, color = c.primary},
+					{text = "Toggles glowing based on lightlevel.\nThe darker the location, the brighter your tail glows.", color = c.secondary}
+				}
+			))
 			:toggleItem(itemCheck("light{BlockStateTag:{level:"..math.map(world.getLightLevel(player:getPos()), 0, 15, 15, 0).."}}"))
 		
 		t.waterAct
-			:title(toJson
-				{"",
-				{text = "Toggle Water Glowing\n\n", bold = true, color = c.primary},
-				{text = "Toggles the glowing sensitivity to water.\nAny water will cause your tail to glow.", color = c.secondary}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Toggle Water Glowing\n\n", bold = true, color = c.primary},
+					{text = "Toggles the glowing sensitivity to water.\nAny water will cause your tail to glow.", color = c.secondary}
+				}
+			))
 		
 		t.uniqueAct
-			:title(toJson
-				{"",
-				{text = "Toggle Unique Glowing\n\n", bold = true, color = c.primary},
-				{text = "Toggles the individual glowing of each part.\nThis relies on the other settings to be noticeable.", color = c.secondary}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Toggle Unique Glowing\n\n", bold = true, color = c.primary},
+					{text = "Toggles the individual glowing of each part.\nThis relies on the other settings to be noticeable.", color = c.secondary}
+				}
+			))
 		
 		for _, page in pairs(t) do
 			page:hoverColor(c.hover):toggleColor(c.active)

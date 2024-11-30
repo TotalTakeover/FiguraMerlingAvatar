@@ -209,21 +209,25 @@ function events.RENDER(delta, context)
 	
 	if action_wheel:isEnabled() then
 		t.posAct
-			:title(toJson
-				{"",
-				{text = "Camera Position Toggle\n\n", bold = true, color = c.primary},
-				{text = "Sets the camera position to where your avatar\'s head is.\n\n", color = c.secondary},
-				{text = "To prevent x-ray, the camera will reset to its default position if inside a block.", color = "red"}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Camera Position Toggle\n\n", bold = true, color = c.primary},
+					{text = "Sets the camera position to where your avatar\'s head is.\n\n", color = c.secondary},
+					{text = "To prevent x-ray, the camera will reset to its default position if inside a block.", color = "red"}
+				}
+			))
 		
 		t.eyeAct
-			:title(toJson
-				{"",
-				{text = "Eye Position Toggle\n\n", bold = true, color = c.primary},
-				{text = "Sets the eye position to match the avatar\'s head.\nRequires camera position toggle.\n\n", color = c.secondary},
-				{text = "WARNING: ", bold = true, color = "dark_red"},
-				{text = "This feature is dangerous!\nIt can and will be flagged on servers with anticheat!\nFurthermore, \"In Wall\" damage is possible. (The x-ray prevention will try to avoid this)\nThis setting will only be saved on a \"Per-Server\" basis.\n\nPlease use with extreme caution!", color = "red"}}
-			)
+			:title(toJson(
+				{
+					"",
+					{text = "Eye Position Toggle\n\n", bold = true, color = c.primary},
+					{text = "Sets the eye position to match the avatar\'s head.\nRequires camera position toggle.\n\n", color = c.secondary},
+					{text = "WARNING: ", bold = true, color = "dark_red"},
+					{text = "This feature is dangerous!\nIt can and will be flagged on servers with anticheat!\nFurthermore, \"In Wall\" damage is possible. (The x-ray prevention will try to avoid this)\nThis setting will only be saved on a \"Per-Server\" basis.\n\nPlease use with extreme caution!", color = "red"}
+				}
+			))
 		
 		for _, page in pairs(t) do
 			page:hoverColor(c.hover):toggleColor(c.active)
