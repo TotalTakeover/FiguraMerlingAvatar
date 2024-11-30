@@ -19,6 +19,9 @@ if not s then tail = {} end
 local s, whirlpool = pcall(require, "scripts.WhirlpoolEffect")
 if not s then whirlpool = {} end
 
+local s, mermod = pcall(require, "scripts.Mermod")
+if not s then mermod = {} end
+
 local s, glow = pcall(require, "scripts.GlowingTail")
 if not s then glow = {} end
 
@@ -213,6 +216,7 @@ pages.tail
 	:action( -1, tail.tailAct)
 	:action( -1, tail.earsAct)
 	:action( -1, tail.smallAct)
+	:action( -1, mermod.overrideAct)
 	:action( -1, pageActs.dry)
 	:action( -1, pageActs.whirlpool)
 	:action( -1, backAct)
