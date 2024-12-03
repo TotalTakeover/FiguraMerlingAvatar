@@ -30,7 +30,7 @@ v.headY = 0
 
 v.shark = isShark and 1 or 0
 
-v.scale = math.map(math.max(tail.scale, tail.legs), 0, 1, 1, 0)
+v.height = 1 - tail.height
 
 -- Variables
 local waterTimer = 0
@@ -101,8 +101,8 @@ function events.TICK()
 	end
 	
 	-- Animation variables
-	local largeTail  = tail.large >= tail.swap
-	local smallTail  = tail.small >= tail.swap and tail.large <= tail.swap
+	local largeTail  = tail.isLarge
+	local smallTail  = tail.isSmall
 	local groundAnim = (onGround or waterTimer == 0) and not (pose.swim or pose.elytra or pose.crawl or pose.climb or pose.spin or pose.sleep or player:getVehicle() or effects.cF)
 	
 	-- Directional velocity
@@ -229,8 +229,8 @@ function events.RENDER(delta, context)
 	
 	v.shark = shark.currPos
 	
-	v.tail  = math.map(tail.legs, 0, 1, 1, 0)
-	v.scale = math.map(math.max(tail.scale, tail.legs), 0, 1, 1, 0)
+	v.tail   = 1 - tail.legs
+	v.height = 1 - tail.height
 	
 	-- Animation blending
 	anims.small:blend(tail.smallSize * 0.2 + 1)

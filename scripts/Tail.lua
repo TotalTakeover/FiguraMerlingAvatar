@@ -35,12 +35,12 @@ local scale = {
 -- Data sent to other scripts
 local tailData = {
 	scale     = math.lerp(smallLerp.currPos * scale.small.currPos, 1, scale.tail.currPos),
-	large     = scale.tail.currPos,
-	small     = scale.small.currPos,
+	isLarge   = scale.tail.currPos >= legsForm,
+	isSmall   = scale.small.currPos >= legsForm and scale.tail.currPos <= legsForm,
 	legs      = scale.legs.currPos,
+	height    = math.max(math.lerp(smallLerp.currPos * scale.small.currPos, 1, scale.tail.currPos), scale.legs.currPos),
 	smallSize = smallLerp.currPos,
-	dry       = dryTimer,
-	swap      = legsForm
+	dry       = dryTimer
 }
 
 -- Check if a splash potion is broken near the player
@@ -177,12 +177,12 @@ function events.RENDER(delta, context)
 	
 	-- Update tail data
 	tailData.scale     = tailApply
-	tailData.large     = scale.tail.currPos
-	tailData.small     = scale.small.currPos
+	tailData.isLarge   = scale.tail.currPos >= legsForm
+	tailData.isSmall   = scale.small.currPos >= legsForm and scale.tail.currPos <= legsForm
 	tailData.legs      = scale.legs.currPos
+	tailData.height    = math.max(tailApply, scale.legs.currPos)
 	tailData.smallSize = smallLerp.currPos
 	tailData.dry       = dryTimer
-	tailData.swap      = legsForm
 	
 end
 
