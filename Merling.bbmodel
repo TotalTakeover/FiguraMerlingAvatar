@@ -4681,7 +4681,7 @@
 							"data_points": [
 								{
 									"x": 0,
-									"y": "q(...) +\n-(v.scale*12)-math.abs(Math.sin(q.anim_time*180-45)*(v.strength-1)*1.5)",
+									"y": "q(...) +\n-(v.height*12)-math.abs(Math.sin(q.anim_time*180-45)*(v.strength-1)*1.5)",
 									"z": 0
 								}
 							],
