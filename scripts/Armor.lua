@@ -40,6 +40,10 @@ merlingArmor.Materials.netherite
 	:setTexture(textures["textures.armor.netheriteArmor"] or textures["Merling.netheriteArmor"])
 
 -- Trims
+-- Bolt
+merlingArmor.TrimPatterns.bolt
+	:setTexture(textures["textures.armor.trims.boltTrim"] or textures["Merling.boltTrim"])
+
 -- Coast
 merlingArmor.TrimPatterns.coast
 	:setTexture(textures["textures.armor.trims.coastTrim"] or textures["Merling.coastTrim"])
@@ -51,6 +55,10 @@ merlingArmor.TrimPatterns.dune
 -- Eye
 merlingArmor.TrimPatterns.eye
 	:setTexture(textures["textures.armor.trims.eyeTrim"] or textures["Merling.eyeTrim"])
+
+-- Flow
+merlingArmor.TrimPatterns.flow
+	:setTexture(textures["textures.armor.trims.flowTrim"] or textures["Merling.flowTrim"])
 
 -- Host
 merlingArmor.TrimPatterns.host
