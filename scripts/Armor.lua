@@ -1,107 +1,107 @@
 -- Required scripts
-local parts     = require("lib.PartsAPI")
-local kattArmor = require("lib.KattArmor")()
+local parts        = require("lib.PartsAPI")
+local merlingArmor = require("lib.KattArmor")()
 
 -- Setting the leggings to layer 1
-kattArmor.Armor.Leggings:setLayer(1)
+merlingArmor.Armor.Leggings:setLayer(1)
 
 -- Armor parts
-kattArmor.Armor.Leggings
+merlingArmor.Armor.Leggings
 	:addParts(table.unpack(parts:createTable(function(part) return part:getName() == "Leggings" end)))
 	:addTrimParts(table.unpack(parts:createTable(function(part) return part:getName() == "LeggingsTrim" end)))
-kattArmor.Armor.Boots
+merlingArmor.Armor.Boots
 	:addParts(table.unpack(parts:createTable(function(part) return part:getName() == "Boot" end)))
 	:addTrimParts(table.unpack(parts:createTable(function(part) return part:getName() == "BootTrim" end)))
 
 -- Leather armor
-kattArmor.Materials.leather
+merlingArmor.Materials.leather
 	:setTexture(textures["textures.armor.leatherArmor"] or textures["Merling.leatherArmor"])
-	:addParts(kattArmor.Armor.Leggings, table.unpack(parts:createTable(function(part) return part:getName() == "LeggingsLeather" end)))
-	:addParts(kattArmor.Armor.Boots,    table.unpack(parts:createTable(function(part) return part:getName() == "BootLeather" end)))
+	:addParts(merlingArmor.Armor.Leggings, table.unpack(parts:createTable(function(part) return part:getName() == "LeggingsLeather" end)))
+	:addParts(merlingArmor.Armor.Boots,    table.unpack(parts:createTable(function(part) return part:getName() == "BootLeather" end)))
 
 -- Chainmail armor
-kattArmor.Materials.chainmail
+merlingArmor.Materials.chainmail
 	:setTexture(textures["textures.armor.chainmailArmor"] or textures["Merling.chainmailArmor"])
 
 -- Iron armor
-kattArmor.Materials.iron
+merlingArmor.Materials.iron
 	:setTexture(textures["textures.armor.ironArmor"] or textures["Merling.ironArmor"])
 
 -- Golden armor
-kattArmor.Materials.golden
+merlingArmor.Materials.golden
 	:setTexture(textures["textures.armor.goldenArmor"] or textures["Merling.goldenArmor"])
 
 -- Diamond armor
-kattArmor.Materials.diamond
+merlingArmor.Materials.diamond
 	:setTexture(textures["textures.armor.diamondArmor"] or textures["Merling.diamondArmor"])
 
 -- Netherite armor
-kattArmor.Materials.netherite
+merlingArmor.Materials.netherite
 	:setTexture(textures["textures.armor.netheriteArmor"] or textures["Merling.netheriteArmor"])
 
 -- Trims
 -- Coast
-kattArmor.TrimPatterns.coast
+merlingArmor.TrimPatterns.coast
 	:setTexture(textures["textures.armor.trims.coastTrim"] or textures["Merling.coastTrim"])
 
 -- Dune
-kattArmor.TrimPatterns.dune
+merlingArmor.TrimPatterns.dune
 	:setTexture(textures["textures.armor.trims.duneTrim"] or textures["Merling.duneTrim"])
 
 -- Eye
-kattArmor.TrimPatterns.eye
+merlingArmor.TrimPatterns.eye
 	:setTexture(textures["textures.armor.trims.eyeTrim"] or textures["Merling.eyeTrim"])
 
 -- Host
-kattArmor.TrimPatterns.host
+merlingArmor.TrimPatterns.host
 	:setTexture(textures["textures.armor.trims.hostTrim"] or textures["Merling.hostTrim"])
 
 -- Raiser
-kattArmor.TrimPatterns.raiser
+merlingArmor.TrimPatterns.raiser
 	:setTexture(textures["textures.armor.trims.raiserTrim"] or textures["Merling.raiserTrim"])
 
 -- Rib
-kattArmor.TrimPatterns.rib
+merlingArmor.TrimPatterns.rib
 	:setTexture(textures["textures.armor.trims.ribTrim"] or textures["Merling.ribTrim"])
 
 -- Sentry
-kattArmor.TrimPatterns.sentry
+merlingArmor.TrimPatterns.sentry
 	:setTexture(textures["textures.armor.trims.sentryTrim"] or textures["Merling.sentryTrim"])
 
 -- Shaper
-kattArmor.TrimPatterns.shaper
+merlingArmor.TrimPatterns.shaper
 	:setTexture(textures["textures.armor.trims.shaperTrim"] or textures["Merling.shaperTrim"])
 
 -- Silence
-kattArmor.TrimPatterns.silence
+merlingArmor.TrimPatterns.silence
 	:setTexture(textures["textures.armor.trims.silenceTrim"] or textures["Merling.silenceTrim"])
 
 -- Snout
-kattArmor.TrimPatterns.snout
+merlingArmor.TrimPatterns.snout
 	:setTexture(textures["textures.armor.trims.snoutTrim"] or textures["Merling.snoutTrim"])
 
 -- Spire
-kattArmor.TrimPatterns.spire
+merlingArmor.TrimPatterns.spire
 	:setTexture(textures["textures.armor.trims.spireTrim"] or textures["Merling.spireTrim"])
 
 -- Tide
-kattArmor.TrimPatterns.tide
+merlingArmor.TrimPatterns.tide
 	:setTexture(textures["textures.armor.trims.tideTrim"] or textures["Merling.tideTrim"])
 
 -- Vex
-kattArmor.TrimPatterns.vex
+merlingArmor.TrimPatterns.vex
 	:setTexture(textures["textures.armor.trims.vexTrim"] or textures["Merling.vexTrim"])
 
 -- Ward
-kattArmor.TrimPatterns.ward
+merlingArmor.TrimPatterns.ward
 	:setTexture(textures["textures.armor.trims.wardTrim"] or textures["Merling.wardTrim"])
 
 -- Wayfinder
-kattArmor.TrimPatterns.wayfinder
+merlingArmor.TrimPatterns.wayfinder
 	:setTexture(textures["textures.armor.trims.wayfinderTrim"] or textures["Merling.wayfinderTrim"])
 
 -- Wild
-kattArmor.TrimPatterns.wild
+merlingArmor.TrimPatterns.wild
 	:setTexture(textures["textures.armor.trims.wildTrim"] or textures["Merling.wildTrim"])
 
 -- Config setup
