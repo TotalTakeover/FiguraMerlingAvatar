@@ -261,7 +261,7 @@ local blendAnims = {
 
 -- Apply GS Blending
 for _, blend in ipairs(blendAnims) do
-	blend.anim:blendTime(table.unpack(blend.ticks)):onBlend("easeOutQuad")
+	blend.anim:blendTime(table.unpack(blend.ticks)):blendCurve("easeOutQuad")
 end
 
 -- Fixing spyglass jank
