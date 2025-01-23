@@ -189,9 +189,7 @@ end
 -- Set sensitivity
 local function setSensitivity(sen, i)
 	
-	sen = sen + i
-	if sen > 5 then sen = 1 end
-	if sen < 1 then sen = 5 end
+	sen = ((sen + i - 1) % 5) + 1
 	if player:isLoaded() and host:isHost() then
 		sounds:playSound("ambient.underwater.enter", player:getPos(), 0.35)
 	end
