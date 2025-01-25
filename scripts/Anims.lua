@@ -30,6 +30,7 @@ v.headY = 0
 
 v.shark = isShark and 1 or 0
 
+v.tail   = 1 - tail.legs
 v.height = 1 - tail.height
 
 -- Variables
