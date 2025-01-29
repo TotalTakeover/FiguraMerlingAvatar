@@ -4922,8 +4922,8 @@
 							"data_points": [
 								{
 									"x": "57.5",
-									"y": "v.yaw/5",
-									"z": "q(...) +\nMath.sin(q.anim_time*180-45)*(v.strength-1)*10"
+									"y": "v.yaw/2",
+									"z": "q(...) +\nMath.sin(q.anim_time*180-45)*(v.strength-1)*10-v.yaw/2"
 								}
 							],
 							"uuid": "169b86d7-a33e-d931-e954-e9bb9c73f6bf",
@@ -4942,8 +4942,8 @@
 							"data_points": [
 								{
 									"x": "0",
-									"y": "v.yaw/5",
-									"z": "q(...) +\nMath.sin(q.anim_time*180-90)*(v.strength-1)*10"
+									"y": "0",
+									"z": "q(...) +\nMath.sin(q.anim_time*180-90)*(v.strength-1)*10-v.yaw/2"
 								}
 							],
 							"uuid": "3f645337-79e5-56b0-d2dc-d2876a6ba8ee",
@@ -4962,8 +4962,8 @@
 							"data_points": [
 								{
 									"x": "q(...) +\n(Math.sin(q.anim_time*180-135)*v.strength*10*(1-v.shark))+20",
-									"y": "v.yaw/5",
-									"z": "q(...) +\nMath.sin(q.anim_time*180-135)*v.strength*10*v.shark"
+									"y": "0",
+									"z": "q(...) +\nMath.sin(q.anim_time*180-135)*v.strength*10*v.shark-v.yaw/2"
 								}
 							],
 							"uuid": "f2ae9c58-8eba-947a-0b83-b1ec7805f483",
@@ -4982,8 +4982,8 @@
 							"data_points": [
 								{
 									"x": "q(...) +\n(Math.sin(q.anim_time*180-180)*v.strength*15*(1-v.shark))+20",
-									"y": "v.yaw/5",
-									"z": "q(...) +\nMath.sin(q.anim_time*180-180)*v.strength*15*v.shark"
+									"y": "0",
+									"z": "q(...) +\nMath.sin(q.anim_time*180-180)*v.strength*15*v.shark-v.yaw/2"
 								}
 							],
 							"uuid": "6a0521eb-f46f-e9cb-9c79-ea628ed305ab",
@@ -5002,8 +5002,8 @@
 							"data_points": [
 								{
 									"x": "q(...) +\nMath.sin(q.anim_time*180-225)*v.strength*15*(1-v.shark)",
-									"y": "(v.yaw/5)-(90*v.shark)",
-									"z": "q(...) +\nMath.sin(q.anim_time*180-225)*v.strength*15*v.shark"
+									"y": "-90*v.shark",
+									"z": "q(...) +\nMath.sin(q.anim_time*180-225)*v.strength*15*v.shark-v.yaw/2"
 								}
 							],
 							"uuid": "1383006d-5085-fea2-58d1-bf8090527ceb",
