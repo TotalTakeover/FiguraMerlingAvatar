@@ -1,33 +1,57 @@
-local function overlaps(box1_min, box1_max, box2_min, box2_max)
-    return not (box1_max.x <= box2_min.x or box2_max.x <= box1_min.x or
-                box1_max.y <= box2_min.y or box2_max.y <= box1_min.y or
-                box1_max.z <= box2_min.z or box2_max.z <= box1_min.z)
+-- Check for overlap
+local function overlaps(box1Min, box1Max, box2Min, box2Max)
+	return not (box1Max.x <= box2Min.x or box2Max.x <= box1Min.x or
+				box1Max.y <= box2Min.y or box2Max.y <= box1Min.y or
+				box1Max.z <= box2Min.z or box2Max.z <= box1Min.z)
 end
 
-local CLEARANCE = 0.2
+-- How much beyond the hitbox it should check
+local clearance = 0.2
+
+-- Check if the player's hitbox is on the ground, and therefore the player is on the ground
 local function onGround()
-    local pos = player:getPos()
-    local hitbox = player:getBoundingBox()
-    local min = pos - hitbox.x_z / 2 - vec(0, CLEARANCE, 0)
-    local max = pos + hitbox.x_z / 2
-    local search_min = min:copy():floor()
-    local search_max = max:copy():floor()
-    for x = search_min.x, search_max.x do
-        for y = search_min.y, search_max.y do
-            for z = search_min.z, search_max.z do
-                local block_pos = vec(x,y,z)
-                local block = world.getBlockState(block_pos)
-                local boxes = block:getCollisionShape()
-                for i = 1, #boxes do
-                    local box = boxes[i]
-                    if overlaps(min, max, block_pos + box[1], block_pos + box[2]) then
-                        return true
-                    end
-                end
-            end
-        end
-    end
-    return false
+	
+	-- Saves instructions should the game already make the detection.
+	if player:isOnGround() then
+		return true
+	end
+	
+	-- Variables
+	local pos = player:getPos()
+	local hitbox = player:getBoundingBox()
+	
+	-- Calc min and max positions
+	local min = pos - hitbox.x_z / 2 - vec(0, clearance, 0)
+	local max = pos + hitbox.x_z / 2
+	local searchMin = min:copy():floor()
+	local searchMax = max:copy():floor()
+	
+	-- Check through blocks to see if any positions are colliding
+	for x = searchMin.x, searchMax.x do
+		for y = searchMin.y, searchMax.y do
+			for z = searchMin.z, searchMax.z do
+				
+				-- Get block
+				local blockPos = vec(x,y,z)
+				local block = world.getBlockState(blockPos)
+				local boxes = block:getCollisionShape()
+				
+				-- If box has any collisions, check for overlap
+				for i = 1, #boxes do
+					local box = boxes[i]
+					if overlaps(min, max, blockPos + box[1], blockPos + box[2]) then
+						return true
+					end
+				end
+				
+			end
+		end
+	end
+	
+	-- If theres no collisions, return false
+	return false
+	
 end
 
+-- Return function
 return onGround
