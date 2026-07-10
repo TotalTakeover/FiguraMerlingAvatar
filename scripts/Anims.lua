@@ -260,7 +260,7 @@ function events.RENDER(delta, context)
 	v.pitch = pitch.currPos
 	v.yaw   = yaw.currPos
 	v.roll  = roll.currPos
-	v.headY = (getOriginRot("HEAD", delta).y + 180) % 360 - 180
+	v.headY = getOriginRot("HEAD", delta).y
 	
 	v.shark = shark.currPos
 	
