@@ -8,7 +8,7 @@
 --         \ \__\ \ \_______\   \ \__\ \ \__\ \__\ \_______\
 --          \|__|  \|_______|    \|__|  \|__|\|__|\|_______|
 --
--- Version: 1.2.8
+-- Version: 1.2.9
 
 -- Create API
 local lerpAPI = {}
@@ -204,11 +204,11 @@ end
 
 -- Flips velocity and "Bounces" position off of provided value
 -- Great for creating limits to lerp when using spring lerping
-function lerpInternal:bounce(val)
+function lerpInternal:bounce(val, damp)
 	
 	-- Apply
 	self.currTick = val
-	self.vel = -self.vel
+	self.vel = -self.vel * (damp or 1)
 	
 	-- Return object
 	return self
