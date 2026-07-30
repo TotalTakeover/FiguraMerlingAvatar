@@ -1,35 +1,35 @@
 -- Disables code if not avatar host
 if not host:isHost() then return end
 
--- Table setup
-local t = {}
+-- Navigation setup
+local pageNav = {}
 
 -- Set starting page to main page
 local main = action_wheel:newPage("Main")
 action_wheel:setPage(main)
 
 -- Logs pages order for navigation
-t.navigation = {}
+local navMap = {}
 
 -- Go forward a page
-function t:descend(page)
+function pageNav.descend(page)
 	
-	t.navigation[#t.navigation + 1] = action_wheel:getCurrentPage() 
+	table.insert(navMap, action_wheel:getCurrentPage())
 	action_wheel:setPage(page)
 	
 end
 
 -- Go back a page
-function t:ascend()
+function pageNav.ascend()
 	
-	action_wheel:setPage(table.remove(t.navigation, #t.navigation))
+	action_wheel:setPage(table.remove(navMap, #navMap))
 	
 end
 
 -- Reset to main page
-function t:reset()
+function pageNav.reset()
 	
-	t.navigation = {}
+	navMap = {}
 	action_wheel:setPage(main)
 	
 end
@@ -73,8 +73,8 @@ local backAct = action_wheel:newAction()
 	))
 	:hoverColor(vectors.hexToRGB("FF5555"))
 	:item("barrier")
-	:onLeftClick(function() t:ascend() end)
-	:onRightClick(function() t:reset() end)
+	:onLeftClick(function() pageNav.ascend() end)
+	:onRightClick(function() pageNav.reset() end)
 
 -- After all pages are created, add a back button to all pages except main
 function events.ENTITY_INIT()
@@ -91,5 +91,5 @@ end
 local s, c = pcall(require, "scripts.ColorProperties")
 if not s then c = {} end
 
--- Return tables and functions
-return t, c
+-- Return functions and colors
+return pageNav, c

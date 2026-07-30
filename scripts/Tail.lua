@@ -198,7 +198,7 @@ local smallKeybind = keybound.new(
 )
 
 -- Required script
-local s, wheel, c = pcall(require, "scripts.ActionWheel")
+local s, pageNav, c = pcall(require, "scripts.ActionWheel")
 if not s then return tailData end -- Kills script early if ActionWheel.lua isnt found
 
 -- Pages
@@ -217,7 +217,7 @@ end
 -- Actions
 a.tailPageAct = parentPage:newAction()
 	:item("tropical_fish")
-	:onLeftClick(function() wheel:descend(tailPage) end)
+	:onLeftClick(function() pageNav.descend(tailPage) end)
 
 a.tailAct = tailPage:newAction()
 	:onLeftClick(function() tailType:update(setSensitivityType(tailType.curr, 1)) end)
@@ -240,7 +240,7 @@ a.smallAct = tailPage:newAction()
 
 a.dryPageAct = tailPage:newAction()
 	:item("sponge")
-	:onLeftClick(function() wheel:descend(dryPage) end)
+	:onLeftClick(function() pageNav.descend(dryPage) end)
 
 a.dryAct = dryPage:newAction()
 	:onScroll(function(x)

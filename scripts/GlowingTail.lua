@@ -189,7 +189,7 @@ local toggleKeybind = keybound.new(
 )
 
 -- Required script
-local s, wheel, c = pcall(require, "scripts.ActionWheel")
+local s, pageNav, c = pcall(require, "scripts.ActionWheel")
 if not s then return end -- Kills script early if ActionWheel.lua isnt found
 
 -- Pages
@@ -202,7 +202,7 @@ local a = {}
 -- Actions
 a.pageAct = parentPage:newAction()
 	:item("glow_ink_sac")
-	:onLeftClick(function() wheel:descend(glowPage) end)
+	:onLeftClick(function() pageNav.descend(glowPage) end)
 
 a.toggleAct = glowPage:newAction()
 	:item("ink_sac")

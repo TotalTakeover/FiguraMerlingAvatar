@@ -103,7 +103,7 @@ local toggleKeybind = keybound.new(
 )
 
 -- Required scripts
-local s, wheel, c = pcall(require, "scripts.ActionWheel")
+local s, pageNav, c = pcall(require, "scripts.ActionWheel")
 if not s then return end -- Kills script early if ActionWheel.lua isnt found
 pcall(require, "scripts.GlowingTail") -- Tries to find script, not required
 
@@ -117,7 +117,7 @@ local a = {}
 -- Actions
 a.pageAct = parentPage:newAction()
 	:item("ender_eye")
-	:onLeftClick(function() wheel:descend(glowEyesPage) end)
+	:onLeftClick(function() pageNav.descend(glowEyesPage) end)
 
 a.toggleAct = glowEyesPage:newAction()
 	:item("ender_pearl")

@@ -86,7 +86,7 @@ end
 if not host:isHost() then return end
 
 -- Required script
-local s, wheel, c = pcall(require, "scripts.ActionWheel")
+local s, pageNav, c = pcall(require, "scripts.ActionWheel")
 if not s then return end -- Kills script early if ActionWheel.lua isnt found
 
 -- Pages
@@ -99,7 +99,7 @@ local a = {}
 -- Actions
 a.pageAct = parentPage:newAction()
 	:item("armor_stand")
-	:onLeftClick(function() wheel:descend(playerPage) end)
+	:onLeftClick(function() pageNav.descend(playerPage) end)
 
 a.vanillaSkinAct = playerPage:newAction()
 	:item("player_head{SkullOwner:"..avatar:getEntityName().."}")

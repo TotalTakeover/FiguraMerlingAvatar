@@ -151,7 +151,7 @@ allowEye:applyFunc(function()
 end)
 
 -- Required scripts
-local s, wheel, c = pcall(require, "scripts.ActionWheel")
+local s, pageNav, c = pcall(require, "scripts.ActionWheel")
 if not s then return end -- Kills script early if ActionWheel.lua isnt found
 pcall(require, "scripts.Player") -- Tries to find script, not required
 
@@ -165,7 +165,7 @@ local a = {}
 -- Actions
 a.pageAct = parentPage:newAction()
 	:item("redstone")
-	:onLeftClick(function() wheel:descend(cameraPage) end)
+	:onLeftClick(function() pageNav.descend(cameraPage) end)
 
 a.posAct = cameraPage:newAction()
 	:item("skeleton_skull")
