@@ -166,9 +166,9 @@ local function typeChangeSound()
 end
 
 -- Apply sound functions
-tailType:applyFunc(typeChangeSound)
-earsType:applyFunc(typeChangeSound)
-fallSound:applyFunc(function()
+tailType:addFunc(typeChangeSound)
+earsType:addFunc(typeChangeSound)
+fallSound:addFunc(function()
 	if player:isLoaded() and fallSound.curr then
 		sounds:playSound("entity.puffer_fish.flop", player:getPos(), 0.35, 0.6)
 	end

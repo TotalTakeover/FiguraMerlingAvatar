@@ -145,7 +145,7 @@ end
 if not host:isHost() then return end
 
 -- Save server to config
-allowEye:applyFunc(function()
+allowEye:addFunc(function()
 	savedServers[serverId] = allowEye.curr
 	config:save("CameraServers", savedServers)
 end)

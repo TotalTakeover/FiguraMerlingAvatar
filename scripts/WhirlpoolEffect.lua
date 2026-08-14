@@ -45,7 +45,7 @@ end
 if not host:isHost() then return end
 
 -- Apply sound function
-bubbles:applyFunc(function()
+bubbles:addFunc(function()
 	if player:isLoaded() and bubbles.curr ~= 1 then
 		sounds:playSound(bubbles.curr == 2 and "entity.dolphin.ambient" or "block.bubble_column.upwards_inside", player:getPos(), 0.35)
 	end

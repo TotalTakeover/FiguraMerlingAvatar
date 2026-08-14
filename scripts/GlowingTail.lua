@@ -156,7 +156,7 @@ function events.RENDER(delta, context)
 end
 
 -- Apply sound function
-toggle:applyFunc(function()
+toggle:addFunc(function()
 	if player:isLoaded() and toggle.curr then
 		sounds:playSound("entity.glow_squid.ambient", player:getPos(), 0.75)
 	end
@@ -166,12 +166,12 @@ end)
 if not host:isHost() then return end
 
 -- Apply sound functions
-dynamic:applyFunc(function()
+dynamic:addFunc(function()
 	if player:isLoaded() and dynamic.curr then
 		sounds:playSound("entity.generic.drink", player:getPos(), 0.35)
 	end
 end)
-water:applyFunc(function()
+water:addFunc(function()
 	if player:isLoaded() and water.curr then
 		sounds:playSound("ambient.underwater.enter", player:getPos(), 0.35)
 	end
