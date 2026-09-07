@@ -151,7 +151,7 @@ allowEye:addFunc(function()
 end)
 
 -- Required scripts
-local s, pageNav, acts, c = pcall(require, "scripts.ActionWheel")
+local s, pageNav, acts, colors = pcall(require, "scripts.ActionWheel")
 if not s then return end -- Kills script early if ActionWheel.lua isnt found
 pcall(require, "scripts.Player") -- Tries to find script, not required
 
@@ -186,34 +186,34 @@ function events.RENDER(delta, context)
 	if action_wheel:isEnabled() then
 		acts.cameraPage
 			:title(toJson(
-				{text = "Camera Settings", bold = true, color = c.primary}
+				{text = "Camera Settings", bold = true, color = colors.primary}
 			))
-			:hoverColor(c.hover)
+			:hoverColor(colors.hover)
 		
 		acts.cameraToggle
 			:title(toJson(
 				{
 					"",
-					{text = "Camera Position Toggle\n\n", bold = true, color = c.primary},
-					{text = "Sets the camera position to where your avatar\'s head is.\nYour crosshair will move to show which block you are targeting.\nAdditionally, hides the head. (Useful for the \"First Person Model\" mod)\n\n", color = c.secondary},
+					{text = "Camera Position Toggle\n\n", bold = true, color = colors.primary},
+					{text = "Sets the camera position to where your avatar\'s head is.\nYour crosshair will move to show which block you are targeting.\nAdditionally, hides the head. (Useful for the \"First Person Model\" mod)\n\n", color = colors.secondary},
 					{text = "To prevent x-ray, the camera will reset to its default position if inside a block.", color = "red"}
 				}
 			))
-			:hoverColor(c.hover)
-			:toggleColor(c.active)
+			:hoverColor(colors.hover)
+			:toggleColor(colors.active)
 		
 		acts.cameraEyeToggle
 			:title(toJson(
 				{
 					"",
-					{text = "Eye Position Toggle\n\n", bold = true, color = c.primary},
-					{text = "Sets the eye position to match the avatar\'s head.\nRequires camera position toggle.\n\n", color = c.secondary},
+					{text = "Eye Position Toggle\n\n", bold = true, color = colors.primary},
+					{text = "Sets the eye position to match the avatar\'s head.\nRequires camera position toggle.\n\n", color = colors.secondary},
 					{text = "WARNING: ", bold = true, color = "dark_red"},
 					{text = "This feature is dangerous!\nIt can and will be flagged on servers with anticheat!\nFurthermore, \"In Wall\" damage is possible. (The x-ray prevention will try to avoid this)\nThis setting will only be saved on a \"Per-Server\" basis.\n\nPlease use with extreme caution!", color = "red"}
 				}
 			))
-			:hoverColor(c.hover)
-			:toggleColor(c.active)
+			:hoverColor(colors.hover)
+			:toggleColor(colors.active)
 		
 	end
 	

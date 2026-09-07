@@ -86,7 +86,7 @@ end
 if not host:isHost() then return end
 
 -- Required script
-local s, pageNav, acts, c = pcall(require, "scripts.ActionWheel")
+local s, pageNav, acts, colors = pcall(require, "scripts.ActionWheel")
 if not s then return end -- Kills script early if ActionWheel.lua isnt found
 
 -- Pages
@@ -119,31 +119,31 @@ function events.RENDER(delta, context)
 	if action_wheel:isEnabled() then
 		acts.playerPage
 			:title(toJson(
-				{text = "Player Settings", bold = true, color = c.primary}
+				{text = "Player Settings", bold = true, color = colors.primary}
 			))
-			:hoverColor(c.hover)
+			:hoverColor(colors.hover)
 		
 		acts.playerVanillaToggle
 			:title(toJson(
 				{
 					"",
-					{text = "Toggle Vanilla Texture\n\n", bold = true, color = c.primary},
-					{text = "Toggles the usage of your vanilla skin.", color = c.secondary}
+					{text = "Toggle Vanilla Texture\n\n", bold = true, color = colors.primary},
+					{text = "Toggles the usage of your vanilla skin.", color = colors.secondary}
 				}
 			))
-			:hoverColor(c.hover)
-			:toggleColor(c.active)
+			:hoverColor(colors.hover)
+			:toggleColor(colors.active)
 		
 		acts.playerModelToggle
 			:title(toJson(
 				{
 					"",
-					{text = "Toggle Model Shape\n\n", bold = true, color = c.primary},
-					{text = "Adjust the model shape to use Default or Slim Proportions.\nWill be overridden by the vanilla skin toggle.", color = c.secondary}
+					{text = "Toggle Model Shape\n\n", bold = true, color = colors.primary},
+					{text = "Adjust the model shape to use Default or Slim Proportions.\nWill be overridden by the vanilla skin toggle.", color = colors.secondary}
 				}
 			))
-			:hoverColor(c.hover)
-			:toggleColor(c.active)
+			:hoverColor(colors.hover)
+			:toggleColor(colors.active)
 		
 	end
 	

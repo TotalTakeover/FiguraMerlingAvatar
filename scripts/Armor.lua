@@ -153,7 +153,7 @@ tail:addFunc(equipSound)
 if not host:isHost() then return end
 
 -- Required scripts
-local s, pageNav, acts, c = pcall(require, "scripts.ActionWheel")
+local s, pageNav, acts, colors = pcall(require, "scripts.ActionWheel")
 if not s then return end -- Kills script early if ActionWheel.lua isnt found
 pcall(require, "scripts.Player") -- Tries to find script, not required
 
@@ -218,81 +218,81 @@ function events.RENDER(delta, context)
 	if action_wheel:isEnabled() then
 		acts.armorPage
 			:title(toJson(
-				{text = "Armor Settings", bold = true, color = c.primary}
+				{text = "Armor Settings", bold = true, color = colors.primary}
 			))
-			:hoverColor(c.hover)
+			:hoverColor(colors.hover)
 		
 		acts.armorAllToggle
 			:title(toJson(
 				{
 					"",
-					{text = "Toggle All Armor\n\n", bold = true, color = c.primary},
-					{text = "Toggles visibility of all armor parts.", color = c.secondary}
+					{text = "Toggle All Armor\n\n", bold = true, color = colors.primary},
+					{text = "Toggles visibility of all armor parts.", color = colors.secondary}
 				}
 			))
 			:toggled(helmet.curr and chestplate.curr and leggings.curr and boots.curr and tail.curr)
-			:hoverColor(c.hover)
-			:toggleColor(c.active)
+			:hoverColor(colors.hover)
+			:toggleColor(colors.active)
 		
 		acts.armorHelmetToggle
 			:title(toJson(
 				{
 					"",
-					{text = "Toggle Helmet\n\n", bold = true, color = c.primary},
-					{text = "Toggles visibility of helmet parts.", color = c.secondary}
+					{text = "Toggle Helmet\n\n", bold = true, color = colors.primary},
+					{text = "Toggles visibility of helmet parts.", color = colors.secondary}
 				}
 			))
 			:toggled(helmet.curr)
-			:hoverColor(c.hover)
-			:toggleColor(c.active)
+			:hoverColor(colors.hover)
+			:toggleColor(colors.active)
 		
 		acts.armorChestplateToggle
 			:title(toJson(
 				{
 					"",
-					{text = "Toggle Chestplate\n\n", bold = true, color = c.primary},
-					{text = "Toggles visibility of chestplate parts.", color = c.secondary}
+					{text = "Toggle Chestplate\n\n", bold = true, color = colors.primary},
+					{text = "Toggles visibility of chestplate parts.", color = colors.secondary}
 				}
 			))
 			:toggled(chestplate.curr)
-			:hoverColor(c.hover)
-			:toggleColor(c.active)
+			:hoverColor(colors.hover)
+			:toggleColor(colors.active)
 		
 		acts.armorLeggingsToggle
 			:title(toJson(
 				{
 					"",
-					{text = "Toggle Leggings\n\n", bold = true, color = c.primary},
-					{text = "Toggles visibility of leggings parts.", color = c.secondary}
+					{text = "Toggle Leggings\n\n", bold = true, color = colors.primary},
+					{text = "Toggles visibility of leggings parts.", color = colors.secondary}
 				}
 			))
 			:toggled(leggings.curr)
-			:hoverColor(c.hover)
-			:toggleColor(c.active)
+			:hoverColor(colors.hover)
+			:toggleColor(colors.active)
 		
 		acts.armorBootsToggle
 			:title(toJson(
 				{
 					"",
-					{text = "Toggle Boots\n\n", bold = true, color = c.primary},
-					{text = "Toggles visibility of boots.", color = c.secondary}
+					{text = "Toggle Boots\n\n", bold = true, color = colors.primary},
+					{text = "Toggles visibility of boots.", color = colors.secondary}
 				}
 			))
 			:toggled(boots.curr)
-			:hoverColor(c.hover)
-			:toggleColor(c.active)
+			:hoverColor(colors.hover)
+			:toggleColor(colors.active)
 		
 		acts.armorTailToggle
 			:title(toJson(
 				{
 					"",
-					{text = "Toggle Tail Armor\n\n", bold = true, color = c.primary},
-					{text = "Toggles visibility of tail armor.", color = c.secondary}
+					{text = "Toggle Tail Armor\n\n", bold = true, color = colors.primary},
+					{text = "Toggles visibility of tail armor.", color = colors.secondary}
 				}
 			))
 			:toggled(tail.curr)
-			:hoverColor(c.hover)
-			:toggleColor(c.active)
+			:hoverColor(colors.hover)
+			:toggleColor(colors.active)
 		
 	end
 	

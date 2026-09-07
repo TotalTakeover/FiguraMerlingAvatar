@@ -52,7 +52,7 @@ bubbles:addFunc(function()
 end)
 
 -- Required scripts
-local s, pageNav, acts, c = pcall(require, "scripts.ActionWheel")
+local s, pageNav, acts, colors = pcall(require, "scripts.ActionWheel")
 if not s then return end -- Kills script early if ActionWheel.lua isnt found
 pcall(require, "scripts.Tail") -- Tries to find script, not required
 
@@ -97,17 +97,17 @@ function events.RENDER(delta, context)
 			:title(toJson(
 				{
 					"",
-					{text = "Whirlpool Effect\n\n", bold = true, color = c.primary},
-					{text = "Adjust how bubbles spawn while swimming.\n\n", color = c.secondary},
-					{text = "Current configuration: ", bold = true, color = c.secondary},
+					{text = "Whirlpool Effect\n\n", bold = true, color = colors.primary},
+					{text = "Adjust how bubbles spawn while swimming.\n\n", color = colors.secondary},
+					{text = "Current configuration: ", bold = true, color = colors.secondary},
 					{text = actionSetup.title.label.text, color = actionSetup.title.label.color},
 					{text = " | "},
-					{text = actionSetup.title.text, color = c.secondary}
+					{text = actionSetup.title.text, color = colors.secondary}
 				}
 			))
-			:color(actionSetup.color or c.active)
+			:color(actionSetup.color or colors.active)
 			:item(actionSetup.item)
-			:hoverColor(c.hover)
+			:hoverColor(colors.hover)
 		
 	end
 	

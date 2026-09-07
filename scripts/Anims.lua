@@ -345,7 +345,7 @@ local singKeybind = keybound.new(
 )
 
 -- Required script
-local s, pageNav, acts, c = pcall(require, "scripts.ActionWheel")
+local s, pageNav, acts, colors = pcall(require, "scripts.ActionWheel")
 if not s then return end -- Kills script early if ActionWheel.lua isnt found
 
 -- Check for if page already exists
@@ -413,70 +413,70 @@ function events.RENDER(delta, context)
 		if acts.animsPage then
 			acts.animsPage
 				:title(toJson(
-					{text = "Animation Settings", bold = true, color = c.primary}
+					{text = "Animation Settings", bold = true, color = colors.primary}
 				))
-				:hoverColor(c.hover)
+				:hoverColor(colors.hover)
 		end
 		
 		acts.animsSharkToggle
 			:title(toJson(
 				{
 					"",
-					{text = "Toggle Shark Animations\n\n", bold = true, color = c.primary},
-					{text = "Toggles the movement of the tail to be more shark based.", color = c.secondary}
+					{text = "Toggle Shark Animations\n\n", bold = true, color = colors.primary},
+					{text = "Toggles the movement of the tail to be more shark based.", color = colors.secondary}
 				}
 			))
-			:hoverColor(c.hover)
-			:toggleColor(c.active)
+			:hoverColor(colors.hover)
+			:toggleColor(colors.active)
 		
 		acts.animsCrawlToggle
 			:title(toJson(
 				{
 					"",
-					{text = "Toggle Crawl Animation\n\n", bold = true, color = c.primary},
-					{text = "Toggles crawling over standing when you are touching the ground.", color = c.secondary}
+					{text = "Toggle Crawl Animation\n\n", bold = true, color = colors.primary},
+					{text = "Toggles crawling over standing when you are touching the ground.", color = colors.secondary}
 				}
 			))
-			:hoverColor(c.hover)
-			:toggleColor(c.active)
+			:hoverColor(colors.hover)
+			:toggleColor(colors.active)
 		
 		acts.animsCrawlStyle
 			:title(toJson(
 				{
 					"",
-					{text = "Set Mount Positioning\n\n", bold = true, color = c.primary},
-					{text = "Left and Right click to set the orientation of your tail while mounted/sitting.\n\n", color = c.secondary},
-					{text = "Current direction: ", bold = true, color = c.secondary},
+					{text = "Set Mount Positioning\n\n", bold = true, color = colors.primary},
+					{text = "Left and Right click to set the orientation of your tail while mounted/sitting.\n\n", color = colors.secondary},
+					{text = "Current direction: ", bold = true, color = colors.secondary},
 					{text = mountDir.curr and "Up" or "Down"},
 					{text = " & "},
 					{text = mountFlip.curr and "Front" or "Back"}
 				}
 			))
-			:hoverColor(c.hover)
+			:hoverColor(colors.hover)
 		
 		acts.animsTwirl
 			:title(toJson(
-				{text = "Play Twirl animation", bold = true, color = c.primary}
+				{text = "Play Twirl animation", bold = true, color = colors.primary}
 			))
 		
 		acts.animsSingToggle
 			:title(toJson(
-				{text = "Play Singing animation", bold = true, color = c.primary}
+				{text = "Play Singing animation", bold = true, color = colors.primary}
 			))
 			:toggled(isSing.curr)
-			:hoverColor(c.hover)
-			:toggleColor(c.active)
+			:hoverColor(colors.hover)
+			:toggleColor(colors.active)
 		
 		acts.animsArmsToggle
 			:title(toJson(
 				{
 					"",
-					{text = "Arm Movement Toggle\n\n", bold = true, color = c.primary},
-					{text = "Toggles the movement swing movement of the arms.\nActions are not effected.", color = c.secondary}
+					{text = "Arm Movement Toggle\n\n", bold = true, color = colors.primary},
+					{text = "Toggles the movement swing movement of the arms.\nActions are not effected.", color = colors.secondary}
 				}
 			))
-			:hoverColor(c.hover)
-			:toggleColor(c.active)
+			:hoverColor(colors.hover)
+			:toggleColor(colors.active)
 		
 	end
 	

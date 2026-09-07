@@ -198,7 +198,7 @@ local smallKeybind = keybound.new(
 )
 
 -- Required script
-local s, pageNav, acts, c = pcall(require, "scripts.ActionWheel")
+local s, pageNav, acts, colors = pcall(require, "scripts.ActionWheel")
 if not s then return tailData end -- Kills script early if ActionWheel.lua isnt found
 
 -- Pages
@@ -315,51 +315,51 @@ function events.RENDER(delta, context)
 	if action_wheel:isEnabled() then
 		acts.tailPage
 			:title(toJson(
-				{text = "Tail Settings", bold = true, color = c.primary}
+				{text = "Tail Settings", bold = true, color = colors.primary}
 			))
-			:hoverColor(c.hover)
+			:hoverColor(colors.hover)
 		
 		local actionSetup = waterInfo[tailType.curr]
 		acts.tailStyle
 			:title(toJson(
 				{
 					"",
-					{text = "Tail Water Sensitivity\n\n", bold = true, color = c.primary},
-					{text = "Determines how your tail should form in contact with water.\n\n", color = c.secondary},
-					{text = "Current configuration: ", bold = true, color = c.secondary},
+					{text = "Tail Water Sensitivity\n\n", bold = true, color = colors.primary},
+					{text = "Determines how your tail should form in contact with water.\n\n", color = colors.secondary},
+					{text = "Current configuration: ", bold = true, color = colors.secondary},
 					{text = actionSetup.title.label.text, color = actionSetup.title.label.color},
 					{text = " | "},
-					{text = actionSetup.title.text, color = c.secondary}
+					{text = actionSetup.title.text, color = colors.secondary}
 				}
 			))
 			:color(vectors.hexToRGB(actionSetup.color))
 			:item(actionSetup.item.."{CustomPotionColor:"..tostring(0x0094FF).."}")
-			:hoverColor(c.hover)
+			:hoverColor(colors.hover)
 		
 		local actionSetup = waterInfo[earsType.curr]
 		acts.earsStyle
 			:title(toJson(
 				{
 					"",
-					{text = "Ears Water Sensitivity\n\n", bold = true, color = c.primary},
-					{text = "Determines how your ears should form in contact with water.\n\n", color = c.secondary},
-					{text = "Current configuration: ", bold = true, color = c.secondary},
+					{text = "Ears Water Sensitivity\n\n", bold = true, color = colors.primary},
+					{text = "Determines how your ears should form in contact with water.\n\n", color = colors.secondary},
+					{text = "Current configuration: ", bold = true, color = colors.secondary},
 					{text = actionSetup.title.label.text, color = actionSetup.title.label.color},
 					{text = " | "},
-					{text = actionSetup.title.text, color = c.secondary}
+					{text = actionSetup.title.text, color = colors.secondary}
 				}
 			))
 			:color(vectors.hexToRGB(actionSetup.color))
 			:item(actionSetup.item.."{CustomPotionColor:"..tostring(0x0094FF).."}")
-			:hoverColor(c.hover)
+			:hoverColor(colors.hover)
 		
 		acts.tailSmallToggle
 			:title(toJson(
 				{
 					"",
-					{text = "Toggle Small Tail\n\n", bold = true, color = c.primary},
-					{text = "Toggles the appearence of the tail into a smaller tail, only if the tail cannot form.\nScroll to control the size of the small tail.\n\n", color = c.secondary},
-					{text = "Small tail size:\n", bold = true, color = c.secondary},
+					{text = "Toggle Small Tail\n\n", bold = true, color = colors.primary},
+					{text = "Toggles the appearence of the tail into a smaller tail, only if the tail cannot form.\nScroll to control the size of the small tail.\n\n", color = colors.secondary},
+					{text = "Small tail size:\n", bold = true, color = colors.secondary},
 					{text = math.round(smallSize.curr * 100).."% Size"}
 				}
 			))
@@ -369,14 +369,14 @@ function events.RENDER(delta, context)
 				"medium_amethyst_bud"
 			)
 			:toggled(small.curr)
-			:hoverColor(c.hover)
-			:toggleColor(c.active)
+			:hoverColor(colors.hover)
+			:toggleColor(colors.active)
 		
 		acts.dryPage
 			:title(toJson(
-				{text = "Drying Settings", bold = true, color = c.primary}
+				{text = "Drying Settings", bold = true, color = colors.primary}
 			))
-			:hoverColor(c.hover)
+			:hoverColor(colors.hover)
 		
 		-- Timers
 		local timers = {
@@ -396,55 +396,55 @@ function events.RENDER(delta, context)
 			:title(toJson(
 				{
 					"",
-					{text = "Set Drying Timer\n\n", bold = true, color = c.primary},
-					{text = "Scroll to adjust how long it takes for you to dry.\nLeft click resets timer to 20 seconds.\n\n", color = c.secondary},
-					{text = "Drying timer:\n", bold = true, color = c.secondary},
+					{text = "Set Drying Timer\n\n", bold = true, color = colors.primary},
+					{text = "Scroll to adjust how long it takes for you to dry.\nLeft click resets timer to 20 seconds.\n\n", color = colors.secondary},
+					{text = "Drying timer:\n", bold = true, color = colors.secondary},
 					{text = cD.set.."\n\n"},
-					{text = cD.legs and "Legs form:\n" or "", bold = true, color = c.secondary},
+					{text = cD.legs and "Legs form:\n" or "", bold = true, color = colors.secondary},
 					{text = cD.legs and (cD.legs.."\n\n") or ""},
-					{text = "Tail fully dry:\n", bold = true, color = c.secondary},
+					{text = "Tail fully dry:\n", bold = true, color = colors.secondary},
 					{text = cD.tail.."\n\n"},
-					{text = "Ears fully dry:\n", bold = true, color = c.secondary},
+					{text = "Ears fully dry:\n", bold = true, color = colors.secondary},
 					{text = cD.ears.."\n\n"},
 					{text = "Hint: Holding a dry sponge will increase drying rate by x10!", color = "gray"}
 				}
 			))
 			:item((timers.tail ~= 0 or timers.ears ~= 0) and "wet_sponge" or "sponge")
-			:hoverColor(c.hover)
+			:hoverColor(colors.hover)
 		
 		acts.dryLegsTimer
 			:title(toJson(
 				{
 					"",
-					{text = "Set Legs Threshold\n\n", bold = true, color = c.primary},
-					{text = "Scroll to adjust the threshold for when the legs should form.\n\n", color = c.secondary},
-					{text = "Legs threshold:\n", bold = true, color = c.secondary},
+					{text = "Set Legs Threshold\n\n", bold = true, color = colors.primary},
+					{text = "Scroll to adjust the threshold for when the legs should form.\n\n", color = colors.secondary},
+					{text = "Legs threshold:\n", bold = true, color = colors.secondary},
 					{text = math.round(legsForm.curr * 100).."% Wet"}
 				}
 			))
-			:hoverColor(c.hover)
+			:hoverColor(colors.hover)
 		
 		acts.dryGradualToggle
 			:title(toJson(
 				{
 					"",
-					{text = "Toggle Gradual Dry\n\n", bold = true, color = c.primary},
-					{text = "Toggles the scaling of your tail to be gradual rather than instantly changing size.", color = c.secondary}
+					{text = "Toggle Gradual Dry\n\n", bold = true, color = colors.primary},
+					{text = "Toggles the scaling of your tail to be gradual rather than instantly changing size.", color = colors.secondary}
 				}
 			))
-			:hoverColor(c.hover)
-			:toggleColor(c.active)
+			:hoverColor(colors.hover)
+			:toggleColor(colors.active)
 		
 		acts.drySoundToggle
 			:title(toJson(
 				{
 					"",
-					{text = "Toggle Flop Sound\n\n", bold = true, color = c.primary},
-					{text = "Toggles flopping sound effects when landing on the ground.\nIf tail can dry, volume will gradually decrease over time until dry.", color = c.secondary}
+					{text = "Toggle Flop Sound\n\n", bold = true, color = colors.primary},
+					{text = "Toggles flopping sound effects when landing on the ground.\nIf tail can dry, volume will gradually decrease over time until dry.", color = colors.secondary}
 				}
 			))
-			:hoverColor(c.hover)
-			:toggleColor(c.active)
+			:hoverColor(colors.hover)
+			:toggleColor(colors.active)
 		
 	end
 	

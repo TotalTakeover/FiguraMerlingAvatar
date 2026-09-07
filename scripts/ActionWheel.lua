@@ -91,8 +91,8 @@ function events.ENTITY_INIT()
 end
 
 -- Provides color inputs (provided by script)
-local s, c = pcall(require, "scripts.ColorProperties")
-if not s then c = {} end
+local s, colors = pcall(require, "scripts.ColorProperties")
+if not s then colors = {} end
 
 -- Return functions, actions, and colors
-return pageNav, acts, c
+return pageNav, acts, colors

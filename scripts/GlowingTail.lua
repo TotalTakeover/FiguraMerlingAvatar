@@ -189,7 +189,7 @@ local toggleKeybind = keybound.new(
 )
 
 -- Required script
-local s, pageNav, acts, c = pcall(require, "scripts.ActionWheel")
+local s, pageNav, acts, colors = pcall(require, "scripts.ActionWheel")
 if not s then return end -- Kills script early if ActionWheel.lua isnt found
 
 -- Pages
@@ -237,57 +237,57 @@ function events.RENDER(delta, context)
 	if action_wheel:isEnabled() then
 		acts.glowPage
 			:title(toJson(
-				{text = "Glowing Settings", bold = true, color = c.primary}
+				{text = "Glowing Settings", bold = true, color = colors.primary}
 			))
-			:hoverColor(c.hover)
+			:hoverColor(colors.hover)
 		
 		acts.glowToggle
 			:title(toJson(
 				{
 					"",
-					{text = "Toggle Glowing\n\n", bold = true, color = c.primary},
-					{text = "Toggles glowing for the tail, and misc parts.\n\n", color = c.secondary},
+					{text = "Toggle Glowing\n\n", bold = true, color = colors.primary},
+					{text = "Toggles glowing for the tail, and misc parts.\n\n", color = colors.secondary},
 					{text = "WARNING: ", bold = true, color = "dark_red"},
 					{text = "This feature has a tendency to not work correctly.\nDue to the rendering properties of emissives, the tail may not glow.\nIf it does not work, please reload the avatar. Rinse and Repeat.\nThis is the only fix, I have tried everything.\n\n- Total", color = "red"}
 				}
 			))
 			:toggled(toggle.curr)
-			:hoverColor(c.hover)
-			:toggleColor(c.active)
+			:hoverColor(colors.hover)
+			:toggleColor(colors.active)
 		
 		acts.glowDynamic
 			:title(toJson(
 				{
 					"",
-					{text = "Toggle Dynamic Glowing\n\n", bold = true, color = c.primary},
-					{text = "Toggles glowing based on lightlevel.\nThe darker the location, the brighter your tail glows.", color = c.secondary}
+					{text = "Toggle Dynamic Glowing\n\n", bold = true, color = colors.primary},
+					{text = "Toggles glowing based on lightlevel.\nThe darker the location, the brighter your tail glows.", color = colors.secondary}
 				}
 			))
 			:toggleItem("light{BlockStateTag:{level:"..math.map(world.getLightLevel(player:getPos()), 0, 15, 15, 0).."}}")
-			:hoverColor(c.hover)
-			:toggleColor(c.active)
+			:hoverColor(colors.hover)
+			:toggleColor(colors.active)
 		
 		acts.glowWater
 			:title(toJson(
 				{
 					"",
-					{text = "Toggle Water Glowing\n\n", bold = true, color = c.primary},
-					{text = "Toggles the glowing sensitivity to water.\nAny water will cause your tail to glow.", color = c.secondary}
+					{text = "Toggle Water Glowing\n\n", bold = true, color = colors.primary},
+					{text = "Toggles the glowing sensitivity to water.\nAny water will cause your tail to glow.", color = colors.secondary}
 				}
 			))
-			:hoverColor(c.hover)
-			:toggleColor(c.active)
+			:hoverColor(colors.hover)
+			:toggleColor(colors.active)
 		
 		acts.glowUnique
 			:title(toJson(
 				{
 					"",
-					{text = "Toggle Unique Glowing\n\n", bold = true, color = c.primary},
-					{text = "Toggles the individual glowing of each part.\nThis relies on the other settings to be noticeable.", color = c.secondary}
+					{text = "Toggle Unique Glowing\n\n", bold = true, color = colors.primary},
+					{text = "Toggles the individual glowing of each part.\nThis relies on the other settings to be noticeable.", color = colors.secondary}
 				}
 			))
-			:hoverColor(c.hover)
-			:toggleColor(c.active)
+			:hoverColor(colors.hover)
+			:toggleColor(colors.active)
 		
 	end
 	
