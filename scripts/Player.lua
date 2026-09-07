@@ -86,29 +86,26 @@ end
 if not host:isHost() then return end
 
 -- Required script
-local s, pageNav, c = pcall(require, "scripts.ActionWheel")
+local s, pageNav, acts, c = pcall(require, "scripts.ActionWheel")
 if not s then return end -- Kills script early if ActionWheel.lua isnt found
 
 -- Pages
 local parentPage = action_wheel:getPage("Main")
 local playerPage = action_wheel:newPage("Player")
 
--- Actions table setup
-local a = {}
-
 -- Actions
-a.pageAct = parentPage:newAction()
+acts.playerPage = parentPage:newAction()
 	:item("armor_stand")
 	:onLeftClick(function() pageNav.descend(playerPage) end)
 
-a.vanillaSkinAct = playerPage:newAction()
+acts.playerVanillaToggle = playerPage:newAction()
 	:item("player_head{SkullOwner:"..avatar:getEntityName().."}")
 	:onToggle(function(bool)
 		skin:update(bool)
 	end)
 	:toggled(skin.curr)
 
-a.modelAct = playerPage:newAction()
+acts.playerModelToggle = playerPage:newAction()
 	:item("player_head")
 	:toggleItem("player_head{SkullOwner:MHF_Alex}")
 	:onToggle(function(bool)
@@ -120,12 +117,13 @@ a.modelAct = playerPage:newAction()
 function events.RENDER(delta, context)
 	
 	if action_wheel:isEnabled() then
-		a.pageAct
+		acts.playerPage
 			:title(toJson(
 				{text = "Player Settings", bold = true, color = c.primary}
 			))
+			:hoverColor(c.hover)
 		
-		a.vanillaSkinAct
+		acts.playerVanillaToggle
 			:title(toJson(
 				{
 					"",
@@ -133,8 +131,10 @@ function events.RENDER(delta, context)
 					{text = "Toggles the usage of your vanilla skin.", color = c.secondary}
 				}
 			))
+			:hoverColor(c.hover)
+			:toggleColor(c.active)
 		
-		a.modelAct
+		acts.playerModelToggle
 			:title(toJson(
 				{
 					"",
@@ -142,10 +142,8 @@ function events.RENDER(delta, context)
 					{text = "Adjust the model shape to use Default or Slim Proportions.\nWill be overridden by the vanilla skin toggle.", color = c.secondary}
 				}
 			))
-		
-		for _, act in pairs(a) do
-			act:hoverColor(c.hover):toggleColor(c.active)
-		end
+			:hoverColor(c.hover)
+			:toggleColor(c.active)
 		
 	end
 	

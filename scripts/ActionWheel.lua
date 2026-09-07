@@ -4,6 +4,9 @@ if not host:isHost() then return end
 -- Navigation setup
 local pageNav = {}
 
+-- Actions table
+local acts = {}
+
 -- Set starting page to main page
 local main = action_wheel:newPage("Main")
 action_wheel:setPage(main)
@@ -91,5 +94,5 @@ end
 local s, c = pcall(require, "scripts.ColorProperties")
 if not s then c = {} end
 
--- Return functions and colors
-return pageNav, c
+-- Return functions, actions, and colors
+return pageNav, acts, c

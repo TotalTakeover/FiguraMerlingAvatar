@@ -153,7 +153,7 @@ tail:addFunc(equipSound)
 if not host:isHost() then return end
 
 -- Required scripts
-local s, pageNav, c = pcall(require, "scripts.ActionWheel")
+local s, pageNav, acts, c = pcall(require, "scripts.ActionWheel")
 if not s then return end -- Kills script early if ActionWheel.lua isnt found
 pcall(require, "scripts.Player") -- Tries to find script, not required
 
@@ -161,15 +161,12 @@ pcall(require, "scripts.Player") -- Tries to find script, not required
 local parentPage = action_wheel:getPage("Player") or action_wheel:getPage("Main")
 local armorPage  = action_wheel:newPage("Armor")
 
--- Actions table setup
-local a = {}
-
 -- Actions
-a.pageAct = parentPage:newAction()
+acts.armorPage = parentPage:newAction()
 	:item("iron_chestplate")
 	:onLeftClick(function() pageNav.descend(armorPage) end)
 
-a.allAct = armorPage:newAction()
+acts.armorAllToggle = armorPage:newAction()
 	:item("armor_stand")
 	:toggleItem("netherite_chestplate")
 	:onToggle(function(bool)
@@ -180,35 +177,35 @@ a.allAct = armorPage:newAction()
 		tail:update(bool)
 	end)
 
-a.helmetAct = armorPage:newAction()
+acts.armorHelmetToggle = armorPage:newAction()
 	:item("iron_helmet")
 	:toggleItem("diamond_helmet")
 	:onToggle(function(bool)
 		helmet:update(bool)
 	end)
 
-a.chestplateAct = armorPage:newAction()
+acts.armorChestplateToggle = armorPage:newAction()
 	:item("iron_chestplate")
 	:toggleItem("diamond_chestplate")
 	:onToggle(function(bool)
 		chestplate:update(bool)
 	end)
 
-a.leggingsAct = armorPage:newAction()
+acts.armorLeggingsToggle = armorPage:newAction()
 	:item("iron_leggings")
 	:toggleItem("diamond_leggings")
 	:onToggle(function(bool)
 		leggings:update(bool)
 	end)
 
-a.bootsAct = armorPage:newAction()
+acts.armorBootsToggle = armorPage:newAction()
 	:item("iron_boots")
 	:toggleItem("diamond_boots")
 	:onToggle(function(bool)
 		boots:update(bool)
 	end)
 
-a.tailAct = armorPage:newAction()
+acts.armorTailToggle = armorPage:newAction()
 	:item("salmon")
 	:toggleItem("cod")
 	:onToggle(function(bool)
@@ -219,12 +216,13 @@ a.tailAct = armorPage:newAction()
 function events.RENDER(delta, context)
 	
 	if action_wheel:isEnabled() then
-		a.pageAct
+		acts.armorPage
 			:title(toJson(
 				{text = "Armor Settings", bold = true, color = c.primary}
 			))
+			:hoverColor(c.hover)
 		
-		a.allAct
+		acts.armorAllToggle
 			:title(toJson(
 				{
 					"",
@@ -233,8 +231,10 @@ function events.RENDER(delta, context)
 				}
 			))
 			:toggled(helmet.curr and chestplate.curr and leggings.curr and boots.curr and tail.curr)
+			:hoverColor(c.hover)
+			:toggleColor(c.active)
 		
-		a.helmetAct
+		acts.armorHelmetToggle
 			:title(toJson(
 				{
 					"",
@@ -243,8 +243,10 @@ function events.RENDER(delta, context)
 				}
 			))
 			:toggled(helmet.curr)
+			:hoverColor(c.hover)
+			:toggleColor(c.active)
 		
-		a.chestplateAct
+		acts.armorChestplateToggle
 			:title(toJson(
 				{
 					"",
@@ -253,8 +255,10 @@ function events.RENDER(delta, context)
 				}
 			))
 			:toggled(chestplate.curr)
+			:hoverColor(c.hover)
+			:toggleColor(c.active)
 		
-		a.leggingsAct
+		acts.armorLeggingsToggle
 			:title(toJson(
 				{
 					"",
@@ -263,8 +267,10 @@ function events.RENDER(delta, context)
 				}
 			))
 			:toggled(leggings.curr)
+			:hoverColor(c.hover)
+			:toggleColor(c.active)
 		
-		a.bootsAct
+		acts.armorBootsToggle
 			:title(toJson(
 				{
 					"",
@@ -273,8 +279,10 @@ function events.RENDER(delta, context)
 				}
 			))
 			:toggled(boots.curr)
+			:hoverColor(c.hover)
+			:toggleColor(c.active)
 		
-		a.tailAct
+		acts.armorTailToggle
 			:title(toJson(
 				{
 					"",
@@ -283,10 +291,8 @@ function events.RENDER(delta, context)
 				}
 			))
 			:toggled(tail.curr)
-		
-		for _, act in pairs(a) do
-			act:hoverColor(c.hover):toggleColor(c.active)
-		end
+			:hoverColor(c.hover)
+			:toggleColor(c.active)
 		
 	end
 	

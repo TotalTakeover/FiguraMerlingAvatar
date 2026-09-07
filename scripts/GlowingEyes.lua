@@ -103,7 +103,7 @@ local toggleKeybind = keybound.new(
 )
 
 -- Required scripts
-local s, pageNav, c = pcall(require, "scripts.ActionWheel")
+local s, pageNav, acts, c = pcall(require, "scripts.ActionWheel")
 if not s then return end -- Kills script early if ActionWheel.lua isnt found
 pcall(require, "scripts.GlowingTail") -- Tries to find script, not required
 
@@ -111,22 +111,19 @@ pcall(require, "scripts.GlowingTail") -- Tries to find script, not required
 local parentPage = action_wheel:getPage("Glow") or action_wheel:getPage("Main")
 local glowEyesPage = action_wheel:newPage("GlowEyes")
 
--- Actions table setup
-local a = {}
-
 -- Actions
-a.pageAct = parentPage:newAction()
+acts.glowEyesPage = parentPage:newAction()
 	:item("ender_eye")
 	:onLeftClick(function() pageNav.descend(glowEyesPage) end)
 
-a.toggleAct = glowEyesPage:newAction()
+acts.glowEyesToggle = glowEyesPage:newAction()
 	:item("ender_pearl")
 	:toggleItem("ender_eye")
 	:onToggle(function(bool)
 		toggle:update(bool)
 	end)
 
-a.powerAct = glowEyesPage:newAction()
+acts.glowEyesPower = glowEyesPage:newAction()
 	:item("cod")
 	:toggleItem("tropical_fish")
 	:onToggle(function(bool)
@@ -134,7 +131,7 @@ a.powerAct = glowEyesPage:newAction()
 	end)
 	:toggled(power.curr)
 
-a.nightVisionAct = glowEyesPage:newAction()
+acts.glowEyesNightVision = glowEyesPage:newAction()
 	:item("glass_bottle")
 	:toggleItem("potion{CustomPotionColor:" .. tostring(0x96C54F) .. "}")
 	:onToggle(function(bool)
@@ -142,7 +139,7 @@ a.nightVisionAct = glowEyesPage:newAction()
 	end)
 	:toggled(nightVision.curr)
 
-a.waterAct = glowEyesPage:newAction()
+acts.glowEyesWater = glowEyesPage:newAction()
 	:item("bucket")
 	:toggleItem("water_bucket")
 	:onToggle(function(bool)
@@ -154,12 +151,13 @@ a.waterAct = glowEyesPage:newAction()
 function events.RENDER(delta, context)
 	
 	if action_wheel:isEnabled() then
-		a.pageAct
+		acts.glowEyesPage
 			:title(toJson(
 				{text = "Glowing Eyes Settings", bold = true, color = c.primary}
 			))
+			:hoverColor(c.hover)
 		
-		a.toggleAct
+		acts.glowEyesToggle
 			:title(toJson(
 				{
 					"",
@@ -170,8 +168,10 @@ function events.RENDER(delta, context)
 				}
 			))
 			:toggled(toggle.curr)
+			:hoverColor(c.hover)
+			:toggleColor(c.active)
 		
-		a.powerAct
+		acts.glowEyesPower
 			:title(toJson(
 				{
 					"",
@@ -180,7 +180,7 @@ function events.RENDER(delta, context)
 				}
 			))
 		
-		a.nightVisionAct
+		acts.glowEyesNightVision
 			:title(toJson(
 				{
 					"",
@@ -190,8 +190,10 @@ function events.RENDER(delta, context)
 					{text = "the other subsettings.", color = c.secondary}
 				}
 			))
+			:hoverColor(c.hover)
+			:toggleColor(c.active)
 		
-		a.waterAct
+		acts.glowEyesWater
 			:title(toJson(
 				{
 					"",
@@ -199,10 +201,8 @@ function events.RENDER(delta, context)
 					{text = "Toggles the glowing sensitivity to water.\nThe eyes will only glow when underwater.", color = c.secondary}
 				}
 			))
-		
-		for _, act in pairs(a) do
-			act:hoverColor(c.hover):toggleColor(c.active)
-		end
+			:hoverColor(c.hover)
+			:toggleColor(c.active)
 		
 	end
 	

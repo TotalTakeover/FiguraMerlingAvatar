@@ -198,7 +198,7 @@ local smallKeybind = keybound.new(
 )
 
 -- Required script
-local s, pageNav, c = pcall(require, "scripts.ActionWheel")
+local s, pageNav, acts, c = pcall(require, "scripts.ActionWheel")
 if not s then return tailData end -- Kills script early if ActionWheel.lua isnt found
 
 -- Pages
@@ -206,30 +206,27 @@ local parentPage = action_wheel:getPage("Main")
 local tailPage   = action_wheel:newPage("Tail")
 local dryPage    = action_wheel:newPage("Dry")
 
--- Actions table setup
-local a = {}
-
 -- Set sensitivity type
 local function setSensitivityType(part, x)
 	return ((part + x - 1) % #waterTypes) + 1
 end
 
 -- Actions
-a.tailPageAct = parentPage:newAction()
+acts.tailPage = parentPage:newAction()
 	:item("tropical_fish")
 	:onLeftClick(function() pageNav.descend(tailPage) end)
 
-a.tailAct = tailPage:newAction()
+acts.tailStyle = tailPage:newAction()
 	:onLeftClick(function() tailType:update(setSensitivityType(tailType.curr, 1)) end)
 	:onRightClick(function() tailType:update(setSensitivityType(tailType.curr, -1)) end)
 	:onScroll(function(x) tailType:update(setSensitivityType(tailType.curr, x), 20) end)
 
-a.earsAct = tailPage:newAction()
+acts.earsStyle = tailPage:newAction()
 	:onLeftClick(function() earsType:update(setSensitivityType(earsType.curr, 1)) end)
 	:onRightClick(function() earsType:update(setSensitivityType(earsType.curr, -1)) end)
 	:onScroll(function(x) earsType:update(setSensitivityType(earsType.curr, x), 20) end)
 
-a.smallAct = tailPage:newAction()
+acts.tailSmallToggle = tailPage:newAction()
 	:item("small_amethyst_bud")
 	:onToggle(function(bool)
 		small:update(bool)
@@ -238,23 +235,23 @@ a.smallAct = tailPage:newAction()
 		smallSize:update(math.clamp(smallSize.curr + (x * 0.05), 0.25, 1), 20)
 	end)
 
-a.dryPageAct = tailPage:newAction()
+acts.dryPage = tailPage:newAction()
 	:item("sponge")
 	:onLeftClick(function() pageNav.descend(dryPage) end)
 
-a.dryAct = dryPage:newAction()
+acts.dryTimer = dryPage:newAction()
 	:onScroll(function(x)
 		dryTimer:update(math.clamp(dryTimer.curr + (x * 20), 0, 72000), 20)
 	end)
 	:onLeftClick(function() dryTimer:update(400) end)
 
-a.legsAct = dryPage:newAction()
+acts.dryLegsTimer = dryPage:newAction()
 	:item("rabbit_foot")
 	:onScroll(function(x)
 		legsForm:update(math.clamp(legsForm.curr + (x * 0.05), 0.25, 0.9), 20)
 	end)
 
-a.gradualAct = dryPage:newAction()
+acts.dryGradualToggle = dryPage:newAction()
 	:item("sugar")
 	:toggleItem("fermented_spider_eye")
 	:onToggle(function(bool)
@@ -262,7 +259,7 @@ a.gradualAct = dryPage:newAction()
 	end)
 	:toggled(gradual.curr)
 
-a.soundAct = dryPage:newAction()
+acts.drySoundToggle = dryPage:newAction()
 	:item("bucket")
 	:toggleItem("water_bucket")
 	:onToggle(function(bool)
@@ -316,13 +313,14 @@ end
 function events.RENDER(delta, context)
 	
 	if action_wheel:isEnabled() then
-		a.tailPageAct
+		acts.tailPage
 			:title(toJson(
 				{text = "Tail Settings", bold = true, color = c.primary}
 			))
+			:hoverColor(c.hover)
 		
 		local actionSetup = waterInfo[tailType.curr]
-		a.tailAct
+		acts.tailStyle
 			:title(toJson(
 				{
 					"",
@@ -336,9 +334,10 @@ function events.RENDER(delta, context)
 			))
 			:color(vectors.hexToRGB(actionSetup.color))
 			:item(actionSetup.item.."{CustomPotionColor:"..tostring(0x0094FF).."}")
+			:hoverColor(c.hover)
 		
 		local actionSetup = waterInfo[earsType.curr]
-		a.earsAct
+		acts.earsStyle
 			:title(toJson(
 				{
 					"",
@@ -352,8 +351,9 @@ function events.RENDER(delta, context)
 			))
 			:color(vectors.hexToRGB(actionSetup.color))
 			:item(actionSetup.item.."{CustomPotionColor:"..tostring(0x0094FF).."}")
+			:hoverColor(c.hover)
 		
-		a.smallAct
+		acts.tailSmallToggle
 			:title(toJson(
 				{
 					"",
@@ -369,11 +369,14 @@ function events.RENDER(delta, context)
 				"medium_amethyst_bud"
 			)
 			:toggled(small.curr)
+			:hoverColor(c.hover)
+			:toggleColor(c.active)
 		
-		a.dryPageAct
+		acts.dryPage
 			:title(toJson(
 				{text = "Drying Settings", bold = true, color = c.primary}
 			))
+			:hoverColor(c.hover)
 		
 		-- Timers
 		local timers = {
@@ -389,7 +392,7 @@ function events.RENDER(delta, context)
 			cD[k] = timeStr(v)
 		end
 		
-		a.dryAct
+		acts.dryTimer
 			:title(toJson(
 				{
 					"",
@@ -407,8 +410,9 @@ function events.RENDER(delta, context)
 				}
 			))
 			:item((timers.tail ~= 0 or timers.ears ~= 0) and "wet_sponge" or "sponge")
+			:hoverColor(c.hover)
 		
-		a.legsAct
+		acts.dryLegsTimer
 			:title(toJson(
 				{
 					"",
@@ -418,8 +422,9 @@ function events.RENDER(delta, context)
 					{text = math.round(legsForm.curr * 100).."% Wet"}
 				}
 			))
+			:hoverColor(c.hover)
 		
-		a.gradualAct
+		acts.dryGradualToggle
 			:title(toJson(
 				{
 					"",
@@ -427,8 +432,10 @@ function events.RENDER(delta, context)
 					{text = "Toggles the scaling of your tail to be gradual rather than instantly changing size.", color = c.secondary}
 				}
 			))
+			:hoverColor(c.hover)
+			:toggleColor(c.active)
 		
-		a.soundAct
+		acts.drySoundToggle
 			:title(toJson(
 				{
 					"",
@@ -436,10 +443,8 @@ function events.RENDER(delta, context)
 					{text = "Toggles flopping sound effects when landing on the ground.\nIf tail can dry, volume will gradually decrease over time until dry.", color = c.secondary}
 				}
 			))
-		
-		for _, act in pairs(a) do
-			act:hoverColor(c.hover):toggleColor(c.active)
-		end
+			:hoverColor(c.hover)
+			:toggleColor(c.active)
 		
 	end
 	

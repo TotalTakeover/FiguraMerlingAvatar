@@ -189,36 +189,33 @@ local toggleKeybind = keybound.new(
 )
 
 -- Required script
-local s, pageNav, c = pcall(require, "scripts.ActionWheel")
+local s, pageNav, acts, c = pcall(require, "scripts.ActionWheel")
 if not s then return end -- Kills script early if ActionWheel.lua isnt found
 
 -- Pages
 local parentPage = action_wheel:getPage("Main")
 local glowPage   = action_wheel:newPage("Glow")
 
--- Actions table setup
-local a = {}
-
 -- Actions
-a.pageAct = parentPage:newAction()
+acts.glowPage = parentPage:newAction()
 	:item("glow_ink_sac")
 	:onLeftClick(function() pageNav.descend(glowPage) end)
 
-a.toggleAct = glowPage:newAction()
+acts.glowToggle = glowPage:newAction()
 	:item("ink_sac")
 	:toggleItem("glow_ink_sac")
 	:onToggle(function(bool)
 		toggle:update(bool)
 	end)
 
-a.dynamicAct = glowPage:newAction()
+acts.glowDynamic = glowPage:newAction()
 	:item("light")
 	:onToggle(function(bool)
 		dynamic:update(bool)
 	end)
 	:toggled(dynamic.curr)
 
-a.waterAct = glowPage:newAction()
+acts.glowWater = glowPage:newAction()
 	:item("bucket")
 	:toggleItem("water_bucket")
 	:onToggle(function(bool)
@@ -226,7 +223,7 @@ a.waterAct = glowPage:newAction()
 	end)
 	:toggled(water.curr)
 
-a.uniqueAct = glowPage:newAction()
+acts.glowUnique = glowPage:newAction()
 	:item("prismarine_shard")
 	:toggleItem("prismarine_crystals")
 	:onToggle(function(bool)
@@ -238,12 +235,13 @@ a.uniqueAct = glowPage:newAction()
 function events.RENDER(delta, context)
 	
 	if action_wheel:isEnabled() then
-		a.pageAct
+		acts.glowPage
 			:title(toJson(
 				{text = "Glowing Settings", bold = true, color = c.primary}
 			))
+			:hoverColor(c.hover)
 		
-		a.toggleAct
+		acts.glowToggle
 			:title(toJson(
 				{
 					"",
@@ -254,8 +252,10 @@ function events.RENDER(delta, context)
 				}
 			))
 			:toggled(toggle.curr)
+			:hoverColor(c.hover)
+			:toggleColor(c.active)
 		
-		a.dynamicAct
+		acts.glowDynamic
 			:title(toJson(
 				{
 					"",
@@ -264,8 +264,10 @@ function events.RENDER(delta, context)
 				}
 			))
 			:toggleItem("light{BlockStateTag:{level:"..math.map(world.getLightLevel(player:getPos()), 0, 15, 15, 0).."}}")
+			:hoverColor(c.hover)
+			:toggleColor(c.active)
 		
-		a.waterAct
+		acts.glowWater
 			:title(toJson(
 				{
 					"",
@@ -273,8 +275,10 @@ function events.RENDER(delta, context)
 					{text = "Toggles the glowing sensitivity to water.\nAny water will cause your tail to glow.", color = c.secondary}
 				}
 			))
+			:hoverColor(c.hover)
+			:toggleColor(c.active)
 		
-		a.uniqueAct
+		acts.glowUnique
 			:title(toJson(
 				{
 					"",
@@ -282,10 +286,8 @@ function events.RENDER(delta, context)
 					{text = "Toggles the individual glowing of each part.\nThis relies on the other settings to be noticeable.", color = c.secondary}
 				}
 			))
-		
-		for _, act in pairs(a) do
-			act:hoverColor(c.hover):toggleColor(c.active)
-		end
+			:hoverColor(c.hover)
+			:toggleColor(c.active)
 		
 	end
 	
